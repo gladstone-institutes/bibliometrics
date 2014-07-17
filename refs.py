@@ -2,6 +2,7 @@ import nltk
 import lxml.etree
 import re
 import requests
+import wos
 
 def parse_multiline_numbered_list(s):
   list_elem_re = re.compile(r'^\d+\.\s+')
@@ -30,7 +31,6 @@ def split_by_sentences(lines):
 
 journal_re = re.compile(r'(?P<journal>[\w\s]+),?\s+(?P<year>\d{4}).*\;\s*(?P<volume>\d+).*\:\s*(?P<firstpage>\w+)')
 def parse_ref(raw):
-  print raw
   (authors, title, journraw) = (raw[0], raw[1], raw[-1])
   d = {'authors': authors,
        'title': title,
@@ -89,17 +89,26 @@ def pmid_by_author_title_search(ref):
     ref['pmid'] = ids[0]
   else:
     print 'Error: no results for: '
-    print ref['authors'], ref['title']
-    print req.url
+    print '  ', ref['authors'], '-', ref['title']
 
 def main():
-  with open('/Users/samadlotia/src/metrics/Kalydeco/Medical Review References.txt', 'r') as refsfile:
+  refs = {}
+  with open('Kalydeco/Medical Review References.txt', 'r') as refsfile:
     raw = refsfile.read()
     refs_raw = split_by_sentences(parse_multiline_numbered_list(raw))
     refs = map(parse_ref, refs_raw)
-    pmids_by_citmatch(refs)
-    for ref in refs:
-      if not 'pmid' in ref:
-        pmid_by_author_title_search(ref)
+  pmids_by_citmatch(refs)
+
+  for ref in refs:
+    if not 'pmid' in ref:
+      pmid_by_author_title_search(ref)
+
+  client = wos.Client()
+  for ref in refs:
+    if not 'pmid' in ref:
+      continue
+    ref['authors'] = clean_authors(ref['authors'])
+    doc = client.search(ref['title'], ref['authors'])
+    print ref['authors'], '-', ref['title'], ':', len(doc.cssselect('.search-results-item'))
 
 main()
