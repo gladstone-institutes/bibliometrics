@@ -22,12 +22,8 @@ def parse_multiline_numbered_list(s):
     elems.append(buf)
   return elems
 
-def split_by_sentence(line):
-  return filter(lambda p: p != '', [piece.strip() for piece in line.split('.')])
-
-def split_by_sentences(lines):
-  return map(split_by_sentence, lines)
-
+def split_by_period(line):
+  return [piece.strip() for piece in line.split('.') if piece != '']
 
 journal_re = re.compile(r'(?P<journal>[\w\s]+),?\s+(?P<year>\d{4}).*\;\s*(?P<volume>\d+).*\:\s*(?P<firstpage>\w+)')
 def parse_ref(raw):
@@ -40,26 +36,20 @@ def parse_ref(raw):
     d.update(m.groupdict())
   return d
 
-def ref_to_citmatch(ref, reqid):
-  d = dict(ref)
-  d['key'] = reqid
-  return '{journal}|{year}|{volume}|{firstpage}|{authors}|{key}'.format(**d)
-
-def refs_to_citmatch(refs):
+def make_citmatch_str(refs):
   citmatch_str = ''
   i = 0
   for ref in refs:
-    if ref.has_key('journal'):
-      citmatch_str += ref_to_citmatch(ref, i) + '|%0D\n'
+    if 'journal' in ref:
+      citmatch_str += '{journal}|{year}|{volume}|{firstpage}|{authors}|'.format(**ref) + str(i) + '|%0D\n'
     i += 1
   return citmatch_str
 
 pmid_re = re.compile(r'\d+')
 def pmids_by_citmatch(refs):
+  citmatch_str = make_citmatch_str(refs)
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/ecitmatch.cgi',
-          params={'db': 'pubmed',
-                  'retmode': 'xml',
-                  'bdata': refs_to_citmatch(refs)})
+          params={'db': 'pubmed', 'retmode': 'xml', 'bdata': citmatch_str})
   pmids_raw = req.text
   pmid_lines = pmids_raw.split('\n')
   for pmid_line in pmid_lines:
@@ -72,43 +62,53 @@ def pmids_by_citmatch(refs):
     if pmid_re.match(pmid):
       refs[index]['pmid'] = pmid
 
-def clean_authors(authors):
-  return ' '.join(re.sub(r'[^\w\s]+', '', authors).split(' ')[0:2])
+def first_author_only(authors_str):
+  alphanum_only = re.sub(r'[^\w\s]+', '', authors_str)
+  authors_pieces = alphanum_only.split(' ')
+  first_author = authors_pieces[0:2]
+  return ' '.join(first_author)
 
 def pmid_by_author_title_search(ref):
   #print ref
-  ref['authors'] = clean_authors(ref['authors'])
+  author = first_author_only(ref['authors'])
+  esearch_term = '({title}) AND ({author} [Author])'.format(title=ref['title'], author=author)
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
           params={'db': 'pubmed',
-                  'term': '({title}) AND ({authors} [Author])'.format(**ref)})
+                  'term': esearch_term})
   tree = lxml.etree.fromstring(req.text)
-  ids = map(lambda x: x.text, tree.xpath('/eSearchResult/IdList/Id'))
+  ids = tree.xpath('/eSearchResult/IdList/Id/text()')
   if ids:
     if len(ids) > 1:
       print 'Warning: multiple results for: ', ref['raw']
     ref['pmid'] = ids[0]
-  else:
-    print 'Error: no results for: '
-    print '  ', ref['authors'], '-', ref['title']
+
+def parse_refs(raw):
+  lines = parse_multiline_numbered_list(raw)
+  refs = []
+  for line in lines:
+    pieces = split_by_period(line)
+    refs.append(parse_ref(pieces))
+  return refs
+
+def populate_pmids(refs):
+  pmids_by_citmatch(refs)
+  for ref in refs:
+    if not 'pmid' in ref:
+      pmid_by_author_title_search(ref)
+    if not 'pmid' in ref:
+      print 'Warning: no PMID found:', ref['raw']
 
 def main():
   refs = {}
   with open('Kalydeco/Medical Review References.txt', 'r') as refsfile:
     raw = refsfile.read()
-    refs_raw = split_by_sentences(parse_multiline_numbered_list(raw))
-    refs = map(parse_ref, refs_raw)
-  pmids_by_citmatch(refs)
-
+    refs = parse_refs(raw)
+  populate_pmids(refs)
   for ref in refs:
-    if not 'pmid' in ref:
-      pmid_by_author_title_search(ref)
+    print ref['authors']
+    print ref['title']
+    if 'pmid' in ref:
+      print ref['pmid']
 
-  client = wos.Client()
-  for ref in refs:
-    if not 'pmid' in ref:
-      continue
-    ref['authors'] = clean_authors(ref['authors'])
-    doc = client.search(ref['title'], ref['authors'])
-    print ref['authors'], '-', ref['title'], ':', len(doc.cssselect('.search-results-item'))
 
 main()
