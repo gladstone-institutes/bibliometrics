@@ -1,0 +1,21 @@
+NCT02015507	clinical trial	20140201	An Open-Label, Phase 1 Study in Healthy Adult Subjects to Examine the Effects of Multiple-Dose Ciprofloxacin on Ivacaftor and VX-661 in Combination With Ivacaftor
+NCT00457821	clinical trial	20080801	Safety Study of Ivacaftor in Subjects With Cystic Fibrosis
+NCT01768663	clinical trial	20130901	A Phase 1 Study to Examine the Drug-Drug Interaction of Ciprofloxacin, Itraconazole, and Rifampin on the Combination of Lumacaftor With Ivacaftor in Healthy Adult Subjects
+NCT01060566	clinical trial	20100301	Study of VX-770 on Midazolam and Rosiglitazone and the Effect of Fluconazole on VX-770
+NCT01705145	clinical trial	20140301	Study of Ivacaftor in Cystic Fibrosis Subjects 2 Through 5 Years of Age With a CTFR Gating Mutation
+NCT01807923	clinical trial	20140401	A Study of Lumacaftor in Combination With Ivacaftor in Cystic Fibrosis Subjects Aged 12 Years and Older Who Are Homozygous for the F508del-CFTR Mutation (TRAFFIC)
+NCT01807949	clinical trial	20140401	A Study of Lumacaftor in Combination With Ivacaftor in Cystic Fibrosis Subjects Aged 12 Years and Older Who Are Homozygous for the F508del-CFTR Mutation (TRANSPORT)
+NCT01899105	clinical trial	20130801	A Phase 1 Study to Investigate the Food Effect of Lumacaftor in Combination With Ivacaftor
+NCT01614457	clinical trial	20131001	Study of Ivacaftor in Subjects With Cystic Fibrosis Who Have the R117H-CFTR Mutation (KONDUCT)
+NCT01614470	clinical trial	20131001	Study of Ivacaftor in Subjects With Cystic Fibrosis Who Have a Non-G551D CFTR Gating Mutation (KONNECTION)
+NCT01531673	clinical trial	20140301	Study of VX-661 Alone and in Combination With Ivacaftor in Subjects Homozygous or Heterozygous to the F508del-Cystic Fibrosis Transmembrane Conductance Regulator(CFTR) Mutation
+NCT00909532	clinical trial	20100701	Study of Ivacaftor in Cystic Fibrosis Subjects Aged 12 Years and Older With the G551D Mutation (STRIVE)
+NCT00909727	clinical trial	20101101	Study of Ivacaftor in Cystic Fibrosis Subjects Aged 6 to 11 Years With the G551D Mutation (ENVISION)
+NCT00953706	clinical trial	20100701	Study of Ivacaftor in Cystic Fibrosis Subjects Aged 12 Years and Older Homozygous for the F508del-CFTR Mutation (DISCOVER)
+NCT01888393	clinical trial	20131101	Study of Lumacaftor in Combination With Ivacaftor in Subjects With Moderate Hepatic Impairment and Healthy Subjects
+NCT01216046	clinical trial	20110501	Drug-Drug Interaction Study of VX-770 and VX-809 in Healthy Subjects
+NCT01018368	clinical trial	20100301	Study of VX-770 and Rifampin in Healthy Male Subjects
+NCT00966602	clinical trial	20091201	Drug-Drug Interaction Study of VX-809 and VX-770 in Healthy Subjects
+NCT01153542	clinical trial	20100801	Study of VX-770 on Desipramine
+NCT01262352	clinical trial	20111101	Study of the Effect of Ivacaftor on Lung Clearance Index in Subjects With Cystic Fibrosis and the G551D Mutation
+NCT01208285	clinical trial	20101201	Study of VX-770 in Subjects With Moderate Hepatic Impairment and in Matched Healthy Subjects
