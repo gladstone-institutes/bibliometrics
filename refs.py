@@ -169,14 +169,14 @@ class RefG:
   def _ref_node_on_new_id(self, ref):
     refid = self._encode_int(len(self.refs))
     self.refs[refid] = ref
-    self.G.add_node(refid)
+    self.G.add_node(refid, type='article', label=_ascii(ref['title']))
     return refid
     
   def _ref_node_on_pmid(self, ref):
     pmid = ref['pmid']
     if not pmid in self.refs:
       self.refs[pmid] = ref
-      self.G.add_node(pmid)
+      self.G.add_node(pmid, type='article', label=_ascii(ref['title']), pmid=pmid)
     return pmid
 
   def ref_node(self, ref):
@@ -185,45 +185,57 @@ class RefG:
     else:
       return self._ref_node_on_new_id(ref)
 
+  def author_node(self, name):
+    if not name in self.G.node:
+      self.G.add_node(name, type='author')
+    return name
+
+  def affiliation_node(self, institute):
+    if not institute in self.G.node:
+      self.G.add_node(institute, type='institute')
+    return institute
+
+  def grant_agency_node(self, grantagency):
+    if not grantagency in self.G.node:
+      self.G.add_node(grantagency, type='grantagency')
+    return grantagency
+
+  def mesh_term_node(self, term):
+    if not term in self.G.node:
+      self.G.add_node(term, type='meshterm')
+    return term
+
 def _ascii(s):
   return unicode(s).encode('ascii', 'replace')
 
 def add_refs_to_graph(refs, refg):
   for ref in refs:
-    refid = refg.ref_node(ref)
-    refg.G.node[refid]['type'] = 'article'
-    refg.G.node[refid]['label'] = _ascii(ref['title'])
-    if 'pmid' in ref:
-      refg.G.node[refid]['pmid'] = ref['pmid']
+    ref_node = refg.ref_node(ref)
     if 'pmcitcount' in ref:
-      refg.G.node[refid]['citcount'] = ref['pmcitcount']
+      refg.G.node[ref_node]['citcount'] = ref['pmcitcount']
     if 'pmauthors' in ref:
       for (author, affiliation) in ref['pmauthors']:
         author = _ascii(author)
-        if not author in refg.G.node:
-          refg.G.add_node(author, type='author')
-        refg.G.add_edge(refid, author)
+        author_node = refg.author_node(author)
+        refg.G.add_edge(ref_node, author_node)
         if affiliation:
           affiliation = _ascii(affiliation)
-          if not affiliation in refg.G.node:
-            refg.G.add_node(affiliation, type='institute')
-          refg.G.add_edge(author, affiliation)
+          affiliation_node = refg.affiliation_node(affiliation)
+          refg.G.add_edge(author_node, affiliation_node)
     if 'pmgrantagencies' in ref:
       for grantagency in ref['pmgrantagencies']:
         grantagency = _ascii(grantagency)
-        if not grantagency in refg.G.node:
-          refg.G.add_node(grantagency, type='grantagency')
-        refg.G.add_edge(refid, grantagency)
-    if False:
-      if 'pmmeshterms' in ref:
-        for terms in ref['pmmeshterms']:
-          for term in terms:
-            if not term in refg.G.node:
-              refg.G.add_node(term, type='mesh')
-          first = terms[0]
-          refg.G.add_edge(refid, first)
-          for i in range(0, len(terms) - 1):
-            refg.G.add_edge(terms[i], terms[i + 1])
+        grantagency_node = refg.grant_agency_node(grantagency)
+        refg.G.add_edge(ref_node, grantagency_node)
+    if 'pmmeshterms' in ref:
+      for terms in ref['pmmeshterms']:
+        first = terms[0]
+        first_node = refg.mesh_term_node(first)
+        refg.G.add_edge(ref_node, first_node)
+        for i in range(0, len(terms) - 1):
+          term_node_src = refg.mesh_term_node(terms[i])
+          term_node_trg = refg.mesh_term_node(terms[i + 1])
+          refg.G.add_edge(term_node_src, term_node_trg)
 
 
 def main():
