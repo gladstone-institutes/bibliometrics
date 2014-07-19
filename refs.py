@@ -208,9 +208,11 @@ class RefG:
 def _ascii(s):
   return unicode(s).encode('ascii', 'replace')
 
-def add_refs_to_graph(refs, refg):
+def add_refs_to_graph(root_name, refs, refg):
+  refg.G.add_node(root_name)
   for ref in refs:
     ref_node = refg.ref_node(ref)
+    refg.G.add_edge(ref_node, root_name)
     if 'pmcitcount' in ref:
       refg.G.node[ref_node]['citcount'] = ref['pmcitcount']
     if 'pmauthors' in ref:
@@ -227,27 +229,27 @@ def add_refs_to_graph(refs, refg):
         grantagency = _ascii(grantagency)
         grantagency_node = refg.grant_agency_node(grantagency)
         refg.G.add_edge(ref_node, grantagency_node)
-    if 'pmmeshterms' in ref:
-      for terms in ref['pmmeshterms']:
-        first = terms[0]
-        first_node = refg.mesh_term_node(first)
-        refg.G.add_edge(ref_node, first_node)
-        for i in range(0, len(terms) - 1):
-          term_node_src = refg.mesh_term_node(terms[i])
-          term_node_trg = refg.mesh_term_node(terms[i + 1])
-          refg.G.add_edge(term_node_src, term_node_trg)
+    if False:
+      if 'pmmeshterms' in ref:
+        for terms in ref['pmmeshterms']:
+          first = terms[0]
+          first_node = refg.mesh_term_node(first)
+          refg.G.add_edge(ref_node, first_node)
+          for i in range(0, len(terms) - 1):
+            term_node_src = refg.mesh_term_node(terms[i])
+            term_node_trg = refg.mesh_term_node(terms[i + 1])
+            refg.G.add_edge(term_node_src, term_node_trg)
 
-
-def main():
-  refs = {}
-  with open('Kalydeco/Medical Review References.txt', 'r') as refsfile:
-    raw = refsfile.read()
-    refs = parse_refs(raw)
-  populate_pmids(refs)
-  add_pubmed_info(pmid_map(refs))
-
+def main(input_file_paths):
   refg = RefG()
-  add_refs_to_graph(refs, refg)
-  refg.save_gml('test.gml')
+  for input_file_path in input_file_paths:
+    with open(input_file_path, 'r') as input_file:
+      root_name = input_file.readline()
+      raw = input_file.read()
+      refs = parse_refs(raw)
+      populate_pmids(refs)
+      add_pubmed_info(pmid_map(refs))
+      add_refs_to_graph(root_name, refs, refg)
+  refg.save_gml('output.gml')
 
-main()
+main(sys.argv[1:])
