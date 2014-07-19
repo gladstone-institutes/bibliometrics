@@ -1,8 +1,9 @@
+import sys
 import nltk
 import lxml.etree
 import re
 import requests
-import wos
+import networkx as nx
 
 def parse_multiline_numbered_list(s):
   list_elem_re = re.compile(r'^\d+\.\s+')
@@ -98,17 +99,143 @@ def populate_pmids(refs):
     if not 'pmid' in ref:
       print 'Warning: no PMID found:', ref['raw']
 
+def add_pubmed_info(pmid_to_refs):
+  pmids = ','.join(pmid_to_refs.keys())
+  req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
+                     params={'db': 'pubmed', 'id': pmids, 'rettype': 'xml'})
+  doc = lxml.etree.fromstring(req.content)
+  for article in doc.xpath('/PubmedArticleSet/PubmedArticle'):
+    pmid = article.xpath('PubmedData/ArticleIdList/ArticleId[@IdType=\'pubmed\']/text()')[0]
+
+    authors = []
+    for author in article.xpath('MedlineCitation/Article/AuthorList/Author'):
+      lastname = author.xpath('LastName/text()')
+      initials = author.xpath('Initials/text()')
+      if lastname and initials:
+        name = lastname[0] + ' ' + initials[0]
+      else:
+        continue
+      affiliation = author.xpath('Affiliation/text()')
+      affiliation = affiliation[0] if affiliation else None
+      authors.append((name, affiliation))
+
+    grantagencies = article.xpath('MedlineCitation/Article/GrantList[last()]/Grant/Agency/text()')
+
+    allterms = []
+    for meshheading in article.xpath('MedlineCitation/MeshHeadingList/MeshHeading'):
+      terms = meshheading.xpath('DescriptorName/text() | QualifierName/text()')
+      terms = map(lambda s: ('MeSH ' + s), terms)
+      allterms.append(terms)
+
+    citreq = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi',
+        params={'db': 'pubmed', 'linkname': 'pubmed_pubmed_citedin', 'id': pmid})
+    citdoc = lxml.etree.fromstring(citreq.content)
+    citcount = len(citdoc.xpath('/eLinkResult/LinkSet/LinkSetDb/Link'))
+
+    ref = pmid_to_refs[pmid]
+    ref['pmauthors'] = authors
+    ref['pmgrantagencies'] = grantagencies
+    ref['pmmeshterms'] = allterms
+    ref['pmcitcount'] = citcount
+
+def pmid_map(refs):
+  pmid_to_refs = {}
+  for ref in refs:
+    if 'pmid' in ref:
+      pmid_to_refs[ref['pmid']] = ref
+  return pmid_to_refs
+
+class RefG:
+  def __init__(self):
+    self.G = nx.MultiDiGraph()
+    self.refs = {}
+
+  def save_gml(self, path):
+    nx.write_gml(self.G, path)
+
+  def _encode_int(self, num):
+    letters = 'abcdefghijklmnopqrstuvwxyz'
+    nletters = len(letters)
+
+    if 0 <= num and num < nletters:
+      return letters[num]
+
+    s = ''
+    while num != 0:
+      num, i = divmod(num, nletters)
+      s = letters[i] + s
+    return s
+
+  def _ref_node_on_new_id(self, ref):
+    refid = self._encode_int(len(self.refs))
+    self.refs[refid] = ref
+    self.G.add_node(refid)
+    return refid
+    
+  def _ref_node_on_pmid(self, ref):
+    pmid = ref['pmid']
+    if not pmid in self.refs:
+      self.refs[pmid] = ref
+      self.G.add_node(pmid)
+    return pmid
+
+  def ref_node(self, ref):
+    if 'pmid' in ref:
+      return self._ref_node_on_pmid(ref)
+    else:
+      return self._ref_node_on_new_id(ref)
+
+def _ascii(s):
+  return unicode(s).encode('ascii', 'replace')
+
+def add_refs_to_graph(refs, refg):
+  for ref in refs:
+    refid = refg.ref_node(ref)
+    refg.G.node[refid]['type'] = 'article'
+    refg.G.node[refid]['label'] = _ascii(ref['title'])
+    if 'pmid' in ref:
+      refg.G.node[refid]['pmid'] = ref['pmid']
+    if 'pmcitcount' in ref:
+      refg.G.node[refid]['citcount'] = ref['pmcitcount']
+    if 'pmauthors' in ref:
+      for (author, affiliation) in ref['pmauthors']:
+        author = _ascii(author)
+        if not author in refg.G.node:
+          refg.G.add_node(author, type='author')
+        refg.G.add_edge(refid, author)
+        if affiliation:
+          affiliation = _ascii(affiliation)
+          if not affiliation in refg.G.node:
+            refg.G.add_node(affiliation, type='institute')
+          refg.G.add_edge(author, affiliation)
+    if 'pmgrantagencies' in ref:
+      for grantagency in ref['pmgrantagencies']:
+        grantagency = _ascii(grantagency)
+        if not grantagency in refg.G.node:
+          refg.G.add_node(grantagency, type='grantagency')
+        refg.G.add_edge(refid, grantagency)
+    if False:
+      if 'pmmeshterms' in ref:
+        for terms in ref['pmmeshterms']:
+          for term in terms:
+            if not term in refg.G.node:
+              refg.G.add_node(term, type='mesh')
+          first = terms[0]
+          refg.G.add_edge(refid, first)
+          for i in range(0, len(terms) - 1):
+            refg.G.add_edge(terms[i], terms[i + 1])
+
+
 def main():
   refs = {}
   with open('Kalydeco/Medical Review References.txt', 'r') as refsfile:
     raw = refsfile.read()
     refs = parse_refs(raw)
   populate_pmids(refs)
-  for ref in refs:
-    print ref['authors']
-    print ref['title']
-    if 'pmid' in ref:
-      print ref['pmid']
+  add_pubmed_info(pmid_map(refs))
 
+  refg = RefG()
+  add_refs_to_graph(refs, refg)
+  refg.save_gml('test.gml')
 
 main()
