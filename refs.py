@@ -170,14 +170,14 @@ class RefG:
   def _ref_node_on_new_id(self, ref):
     refid = self._encode_int(len(self.refs))
     self.refs[refid] = ref
-    self.G.add_node(refid, type='article', label=_ascii(ref['title']))
+    self.G.add_node(refid, type='article', title=_ascii(ref['title']))
     return refid
     
   def _ref_node_on_pmid(self, ref):
     pmid = ref['pmid']
     if not pmid in self.refs:
       self.refs[pmid] = ref
-      self.G.add_node(pmid, type='article', label=_ascii(ref['title']), pmid=pmid)
+      self.G.add_node(pmid, type='article', title=_ascii(ref['title']), pmid=pmid)
     return pmid
 
   def ref_node(self, ref):

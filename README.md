@@ -7,3 +7,11 @@
 1. Use the *poppler-util* package's *pdftotext* command to extract the text from the PDF.
 1. Copy the *Literature Review/References* section of the text file to its own file `Kalydeco/Medical Review References.txt`.
 1. Run the *refs.py* script, which reads from `Kalydeco/Medical Review References.txt`.
+
+# Steps to run refs.py
+
+1. Install virtualenv: `pip install virtualenv`
+1. Create `venv` in `metrics` directory: `virtualenv venv`
+1. Activate `venv`: `source venv/bin/activate`
+1. Install needed software: `pip install nltk lxml requests networkx`
+1. Run refs.py: `python refs.py Kalydeco/FDA*.txt Kalydeco/pubmed*.txt`
