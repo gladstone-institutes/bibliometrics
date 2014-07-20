@@ -49,6 +49,8 @@ def make_citmatch_str(refs):
 pmid_re = re.compile(r'\d+')
 def pmids_by_citmatch(refs):
   citmatch_str = make_citmatch_str(refs)
+  if not citmatch_str:
+    return
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/ecitmatch.cgi',
           params={'db': 'pubmed', 'retmode': 'xml', 'bdata': citmatch_str})
   pmids_raw = req.text
@@ -70,9 +72,8 @@ def first_author_only(authors_str):
   return ' '.join(first_author)
 
 def pmid_by_author_title_search(ref):
-  #print ref
   author = first_author_only(ref['authors'])
-  esearch_term = '({title}) AND ({author} [Author])'.format(title=ref['title'], author=author)
+  esearch_term = '({title}) AND ({author} [Author - First])'.format(title=ref['title'], author=author)
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
           params={'db': 'pubmed',
                   'term': esearch_term})
