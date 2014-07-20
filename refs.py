@@ -3,6 +3,7 @@ import nltk
 import lxml.etree
 import re
 import requests
+import requests_cache
 import networkx as nx
 
 def parse_multiline_numbered_list(s):
@@ -248,9 +249,9 @@ def add_refs_to_graph(root_name, refs, refg):
 def main(input_file_paths):
   refg = RefG()
   for input_file_path in input_file_paths:
-    print ' *', input_file_path 
     with open(input_file_path, 'r') as input_file:
-      root_name = input_file.readline()
+      root_name = input_file.readline().strip()
+      print ' * %s => "%s"' % (input_file_path, root_name)
       raw = input_file.read()
       refs = parse_refs(raw)
       if False:
@@ -262,4 +263,5 @@ def main(input_file_paths):
       add_refs_to_graph(root_name, refs, refg)
   refg.save_gml('output.gml')
 
+requests_cache.install_cache('req-cache')
 main(sys.argv[1:])
