@@ -1,27 +1,27 @@
 22047557
 1. Patient registry: 2008 annual data report to the Center directors. Bethesda, MD: Cystic Fibrosis Foundation; 2009.
-2. Farrell PM. The prevalence of cystic fibrosis in the European Union. J Cyst Fibros. 2008;7:450–3. [PubMed]
-3. Gibson RL, Burns JL, Ramsey BW. Pathophysiology and management of pulmonary infections in cystic fibrosis. Am J Respir Crit Care Med. 2003;168:918–51. [PubMed]
-4. Rowe SM, Miller S, Sorscher EJ. Cystic fibrosis. N Engl J Med. 2005;352:1992–2001. [PubMed]
-5. Welsh MJ, Ramsey BW, Accurso FJ, Cutting GR. Cystic fibrosis. In: Scriver CR, Beaudet AR, Sly W, Valle D, editors. The metabolic and molecular bases of inherited disease. 8. New York: McGraw-Hill; 2001. pp. 521–88.
-6. Kerem B, Rommens JM, Buchanan JA, et al. Identification of the cystic fibrosis gene: genetic analysis. Science. 1989;245:1073–80. [PubMed]
-7. Riordan JR, Rommens JM, Kerem B, et al. Identification of the cystic fibrosis gene: cloning and characterization of complementary DNA. Science. 1989;245:1066–73. [Erratum, Science 1989;245:1437.] [PubMed]
-8. LeGrys VA. Sweat analysis proficiency testing for cystic fibrosis. Pediatr Pulmonol. 2000;30:476–80. [PubMed]
-9. McKone EF, Emerson SS, Edwards KL, Aitken ML. Effect of genotype on phenotype and mortality in cystic fibrosis: a retrospective cohort study. Lancet. 2003;361:1671–6. [PubMed]
-10. Van Goor F, Hadida S, Grootenhuis PD, et al. Rescue of CF airway epithelial cell function in vitro by a CFTR potentiator, VX-770. Proc Natl Acad Sci U S A. 2009;106:18825–30. [PMC free article] [PubMed]
-11. Accurso FJ, Rowe SM, Clancy JP, et al. Effect of VX-770 in persons with cystic fibrosis and the G551D-CFTR mutation. N Engl J Med. 2010;363:1991–2003. [PMC free article] [PubMed]
-12. Farrell PM, Rosenstein BJ, White TB, et al. Guidelines for diagnosis of cystic fibrosis in newborns through older adults: Cystic Fibrosis Foundation consensus report. J Pediatr. 2008;153:S4–S14. [PMC free article] [PubMed]
-13. Knudson RJ, Lebowitz MD, Holberg CJ, Burrows B. Changes in the normal maximal expiratory flow-volume curve with growth and aging. Am Rev Respir Dis. 1983;127:725–34. [PubMed]
-14. Fuchs HJ, Borowitz DS, Christiansen DH, et al. Effect of aerosolized recombinant human DNase on exacerbations of respiratory symptoms and on pulmonary function in patients with cystic fibrosis. N Engl J Med. 1994;331:637–42. [PubMed]
-15. Quittner AL, Buu A, Messer MA, Modi AC, Watrous M. Development and validation of The Cystic Fibrosis Questionnaire in the United States: a health-related quality-of-life measure for cystic fibrosis. Chest. 2005;128:2347–54. [PubMed]
-16. Welsh MJ, Smith AE. Molecular mechanisms of CFTR chloride channel dysfunction in cystic fibrosis. Cell. 1993;73:1251–4. [PubMed]
-17. Ramsey BW, Pepe MS, Quan JM, et al. Intermittent administration of inhaled tobramycin in patients with cystic fibrosis. N Engl J Med. 1999;340:23–30. [PubMed]
-18. Elkins MR, Robinson M, Rose BR, et al. A controlled trial of long-term inhaled hypertonic saline in patients with cystic fibrosis. N Engl J Med. 2006;354:229–40. [PubMed]
-19. Flume PA, O’Sullivan BP, Robinson KA, et al. Cystic fibrosis pulmonary guidelines: chronic medications for maintenance of lung health. Am J Respir Crit Care Med. 2007;176:957–69. [PubMed]
-20. Sanders DB, Bittner RC, Rosenfeld M, Hoffman LR, Redding GJ, Goss CH. Failure to recover to baseline pulmonary function after cystic fibrosis pulmonary exacerbation. Am J Respir Crit Care Med. 2010;182:627–32. [PubMed]
-21. Quittner AL, Modi AC, Wainwright C, Otto K, Kirihara J, Montgomery AB. Determination of the minimal clinically important difference scores for the Cystic Fibrosis Questionnaire-Revised respiratory symptom scale in two populations of patients with cystic fibrosis and chronic Pseudomonas aeruginosa airway infection. Chest. 2009;135:1610–8. [PMC free article] [PubMed]
-22. Saiman L, Marshall BC, Mayer-Hamblett N, et al. Azithromycin in patients with cystic fibrosis chronically infected with Pseudomonas aeruginosa: a randomized controlled trial. JAMA. 2003;290:1749–56. [PubMed]
-23. Saiman L, Anstead M, Mayer-Hamblett N, et al. Effect of azithromycin on pulmonary function in patients with cystic fibrosis uninfected with Pseudomonas aeruginosa: a randomized controlled trial. JAMA. 2010;303:1707–15. [PubMed]
-24. Durie PR, Pencharz PB. A rational approach to the nutritional care of patients with cystic fibrosis. J R Soc Med. 1989;82(Suppl 16):11–20. [PMC free article] [PubMed]
-25. Rich DP, Anderson MP, Gregory RJ. Expression of cystic fibrosis transmembrane conductance regulator corrects defective chloride channel regulation in cystic fibrosis airway epithelial cells. Nature. 1990;347:358–63. [PubMed]
-26. Goss CH, Mayer-Hamblett N, Kronmal RA, Williams J, Ramsey BW. Laboratory parameter profiles among patients with cystic fibrosis. J Cyst Fibros. 2007;6:117–23. [PubMed]
+2. Farrell PM. The prevalence of cystic fibrosis in the European Union. J Cyst Fibros 2008;7:450-3.
+3. Gibson RL, Burns JL, Ramsey BW. Pathophysiology and management of pulmonary infections in cystic fibrosis. Am J Respir Crit Care Med 2003;168:918-51.
+4. Rowe SM, Miller S, Sorscher EJ. Cystic fibrosis. N Engl J Med 2005;352:1992-2001.
+5. Welsh MJ, Ramsey BW, Accurso FJ, Cutting GR. Cystic fibrosis In: Scriver CR, Beaudet AR, Sly W, Valle D, editors. The metabolic and molecular bases of inherited disease. 8. New York: McGraw-Hill; 2001. pp. 521-88.
+6. Kerem B, Rommens JM, Buchanan JA, et al. Identification of the cystic fibrosis gene: genetic analysis. Science 1989;245:1073-80.
+7. Riordan JR, Rommens JM, Kerem B, et al. Identification of the cystic fibrosis gene: cloning and characterization of complementary DNA. Science 1989;245:1066-73.
+8. LeGrys VA. Sweat analysis proficiency testing for cystic fibrosis. Pediatr Pulmonol 2000;30:476-80.
+9. McKone EF, Emerson SS, Edwards KL, Aitken ML. Effect of genotype on phenotype and mortality in cystic fibrosis: a retrospective cohort study. Lancet 2003;361:1671-6.
+10. Van Goor F, Hadida S, Grootenhuis PD, et al. Rescue of CF airway epithelial cell function in vitro by a CFTR potentiator, VX-770. Proc Natl Acad Sci USA 2009;106:18825-30.
+11. Accurso FJ, Rowe SM, Clancy JP, et al. Effect of VX-770 in persons with cystic fibrosis and the G551D-CFTR mutation. N Engl J Med 2010;363:1991-2003.
+12. Farrell PM, Rosenstein BJ, White TB, et al. Guidelines for diagnosis of cystic fibrosis in newborns through older adults: Cystic Fibrosis Foundation consensus report. J Pediatr 2008;153:S4-S14.
+13. Knudson RJ, Lebowitz MD, Holberg CJ, Burrows B. Changes in the normal maximal expiratory flow-volume curve with growth and aging. Am Rev Respir Dis 1983;127:725-34.
+14. Fuchs HJ, Borowitz DS, Christiansen DH, et al. Effect of aerosolized recombinant human DNase on exacerbations of respiratory symptoms and on pulmonary function in patients with cystic fibrosis. N Engl J Med 1994;331:637-42.
+15. Quittner AL, Buu A, Messer MA, Modi AC, Watrous M. Development and validation of The Cystic Fibrosis Questionnaire in the United States: a health-related quality-of-life measure for cystic fibrosis. Chest 2005;128:2347-54.
+16. Welsh MJ, Smith AE. Molecular mechanisms of CFTR chloride channel dysfunction in cystic fibrosis. Cell 1993;73:1251-4.
+17. Ramsey BW, Pepe MS, Quan JM, et al. Intermittent administration of inhaled tobramycin in patients with cystic fibrosis. N Engl J Med 1999;340:23-30.
+18. Elkins MR, Robinson M, Rose BR, et al. A controlled trial of long-term inhaled hypertonic saline in patients with cystic fibrosis. N Engl J Med 2006;354:229-40.
+19. Flume PA, O’Sullivan BP, Robinson KA, et al. Cystic fibrosis pulmonary guidelines: chronic medications for maintenance of lung health. Am J Respir Crit Care Med. 2007;176:957-69.
+20. Sanders DB, Bittner RC, Rosenfeld M, Hoffman LR, Redding GJ, Goss CH. Failure to recover to baseline pulmonary function after cystic fibrosis pulmonary exacerbation. Am J Respir Crit Care Med 2010;182:627-32.
+21. Quittner AL, Modi AC, Wainwright C, Otto K, Kirihara J, Montgomery AB. Determination of the minimal clinically important difference scores for the Cystic Fibrosis Questionnaire-Revised respiratory symptom scale in two populations of patients with cystic fibrosis and chronic Pseudomonas aeruginosa airway infection. Chest 2009;135:1610-8.
+22. Saiman L, Marshall BC, Mayer-Hamblett N, et al. Azithromycin in patients with cystic fibrosis chronically infected with Pseudomonas aeruginosa: a randomized controlled trial. JAMA 2003;290:1749-56.
+23. Saiman L, Anstead M, Mayer-Hamblett N, et al. Effect of azithromycin on pulmonary function in patients with cystic fibrosis uninfected with Pseudomonas aeruginosa: a randomized controlled trial. JAMA 2010;303:1707-15.
+24. Durie PR, Pencharz PB. A rational approach to the nutritional care of patients with cystic fibrosis. J R Soc Med 1989;82(Suppl 16):11-20.
+25. Rich DP, Anderson MP, Gregory RJ. Expression of cystic fibrosis transmembrane conductance regulator corrects defective chloride channel regulation in cystic fibrosis airway epithelial cells. Nature 1990;347:358-63.
+26. Goss CH, Mayer-Hamblett N, Kronmal RA, Williams J, Ramsey BW. Laboratory parameter profiles among patients with cystic fibrosis. J Cyst Fibros 2007;6:117-23.

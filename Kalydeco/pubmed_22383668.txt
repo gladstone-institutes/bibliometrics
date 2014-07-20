@@ -1,19 +1,19 @@
 22383668
-1. Rowe SM, Miller S, Sorscher EJ. Cystic fibrosis. N Engl J Med. 2005;352(19):1992-2001 [PubMed]
-2. McKone EF, Emerson SS, Edwards KL, Aitken ML. Effect of genotype on phenotype and mortality in cystic fibrosis: a retrospective cohort study. Lancet. 2003;361(9370):1671-1676 [PubMed]
-3. Kerem B, Rommens JM, Buchanan JA, et al. Identification of the cystic fibrosis gene: genetic analysis. Science. 1989;245(4922):1073-1080 [PubMed]
-4. Riordan JR, Rommens JM, Kerem B, et al. Identification of the cystic fibrosis gene: cloning and characterization of complementary DNA. Science. 1989;245(4922):1066-1073 [PubMed]
-5. Rommens JM, Iannuzzi MC, Kerem B, et al. Identification of the cystic fibrosis gene: chromosome walking and jumping. Science. 1989;245(4922):1059-1065 [PubMed]
+1. Rowe SM, Miller S, Sorscher EJ. Cystic fibrosis. N Engl J Med 2005;352(19):1992-2001
+2. McKone EF, Emerson SS, Edwards KL, Aitken ML. Effect of genotype on phenotype and mortality in cystic fibrosis: a retrospective cohort study. Lancet 2003;361(9370):1671-1676
+3. Kerem B, Rommens JM, Buchanan JA, et al. Identification of the cystic fibrosis gene: genetic analysis. Science 1989;245(4922):1073-1080
+4. Riordan JR, Rommens JM, Kerem B, et al. Identification of the cystic fibrosis gene: cloning and characterization of complementary DNA. Science 1989;245(4922):1066-1073
+5. Rommens JM, Iannuzzi MC, Kerem B, et al. Identification of the cystic fibrosis gene: chromosome walking and jumping. Science 1989;245(4922):1059-1065
 6. Cystic Fibrosis Foundation Patient Registry 2009 Annual Data Report to the Center Directors. Bethesda, MD:2010
-7. Denning GM, Anderson MP, Amara JF, Marshall J, Smith AE, Welsh MJ. Processing of mutant cystic fibrosis transmembrane conductance regulator is temperature-sensitive. Nature. 1992;358(6389):761-764 [PubMed]
-8. Kartner N, Augustinas O, Jensen TJ, Naismith AL, Riordan JR. Mislocalization of delta F508 CFTR in cystic fibrosis sweat gland. Nat Genet. 1992;1(5):321-327 [PubMed]
-9. Van Goor F, Straley KS, Cao D, et al. Rescue of DeltaF508-CFTR trafficking and gating in human cystic fibrosis airway primary cultures by small molecules. Am J Physiol Lung Cell Mol Physiol. 2006;290(6):L1117-L1130 [PubMed]
-10. Van Goor F, Hadida S, Grootenhuis PD, et al. Rescue of CF airway epithelial cell function in vitro by a CFTR potentiator, VX-770. Proc Natl Acad Sci U S A. 2009;106(44):18825-18830 [PMC free article] [PubMed]
-11. Bobadilla JL, Macek M, Jr, Fine JP, Farrell PM. Cystic fibrosis: a worldwide analysis of CFTR mutations—correlation with incidence data and application to screening. Hum Mutat. 2002;19(6):575-606 [PubMed]
-12. Accurso FJ, Rowe SM, Clancy JP, et al. Effect of VX-770 in persons with cystic fibrosis and the G551D-CFTR mutation. N Engl J Med. 2010;363(21):1991-2003 [PMC free article] [PubMed]
-13. Bronsveld I, Mekus F, Bijman J, et al. Chloride conductance and genetic background modulate the cystic fibrosis phenotype of Delta F508 homozygous twins and siblings. J Clin Invest. 2001;108(11):1705-1715 [PMC free article] [PubMed]
-14. Veeze HJ, Halley DJ, Bijman J, de Jongste JC, de Jonge HR, Sinaasappel M. Determinants of mild clinical symptoms in cystic fibrosis patients. Residual chloride secretion measured in rectal biopsies in relation to the genotype. J Clin Invest. 1994;93(2):461-466 [PMC free article] [PubMed]
-15. Quittner AL, Buu A, Messer MA, Modi AC, Watrous M. Development and validation of The Cystic Fibrosis Questionnaire in the United States: a health-related quality-of-life measure for cystic fibrosis. Chest. 2005;128(4):2347-2354 [PubMed]
-16. American Thoracic Society Standardization of spirometry, 1994 update. Am J Respir Crit Care Med. 1995;152(3):1107-1136 [PubMed]
-17. Rose JB, Ellis L, John B, et al. Does the Macroduct collection system reliably define sweat chloride concentration in subjects with intermediate results?. Clin Biochem. 2009;42(12):1260-1264 [PubMed]
-18. Fuchs HJ, Borowitz DS, Christiansen DH, et al. The Pulmozyme Study Group Effect of aerosolized recombinant human DNase on exacerbations of respiratory symptoms and on pulmonary function in patients with cystic fibrosis. N Engl J Med. 1994;331(10):637-642 [PubMed]
+7. Denning GM, Anderson MP, Amara JF, Marshall J, Smith AE, Welsh MJ. Processing of mutant cystic fibrosis transmembrane conductance regulator is temperature-sensitive. Nature 1992;358(6389):761-764
+8. Kartner N, Augustinas O, Jensen TJ, Naismith AL, Riordan JR. Mislocalization of delta F508 CFTR in cystic fibrosis sweat gland. Nat Genet 1992;1(5):321-327
+9. Van Goor F, Straley KS, Cao D, et al. Rescue of DeltaF508-CFTR trafficking and gating in human cystic fibrosis airway primary cultures by small molecules. Am J Physiol Lung Cell Mol Physiol 2006;290(6):L1117-L1130
+10. Van Goor F, Hadida S, Grootenhuis PD, et al. Rescue of CF airway epithelial cell function in vitro by a CFTR potentiator, VX-770. Proc Natl Acad Sci USA 2009;106(44):18825-18830
+11. Bobadilla JL, Macek M, Jr, Fine JP, Farrell PM. Cystic fibrosis: a worldwide analysis of CFTR mutations-correlation with incidence data and application to screening. Hum Mutat 2002;19(6):575-606
+12. Accurso FJ, Rowe SM, Clancy JP, et al. Effect of VX-770 in persons with cystic fibrosis and the G551D-CFTR mutation. N Engl J Med 2010;363(21):1991-2003
+13. Bronsveld I, Mekus F, Bijman J, et al. Chloride conductance and genetic background modulate the cystic fibrosis phenotype of Delta F508 homozygous twins and siblings. J Clin Invest 2001;108(11):1705-1715
+14. Veeze HJ, Halley DJ, Bijman J, de Jongste JC, de Jonge HR, Sinaasappel M. Determinants of mild clinical symptoms in cystic fibrosis patients. Residual chloride secretion measured in rectal biopsies in relation to the genotype. J Clin Invest 1994;93(2):461-466
+15. Quittner AL, Buu A, Messer MA, Modi AC, Watrous M. Development and validation of The Cystic Fibrosis Questionnaire in the United States: a health-related quality-of-life measure for cystic fibrosis. Chest 2005;128(4):2347-2354
+16. American Thoracic Society Standardization of spirometry, 1994 update. Am J Respir Crit Care Med 1995;152(3):1107-1136
+17. Rose JB, Ellis L, John B, et al. Does the Macroduct collection system reliably define sweat chloride concentration in subjects with intermediate results?. Clin Biochem 2009;42(12):1260-1264
+18. Fuchs HJ, Borowitz DS, Christiansen DH, et al. The Pulmozyme Study Group Effect of aerosolized recombinant human DNase on exacerbations of respiratory symptoms and on pulmonary function in patients with cystic fibrosis. N Engl J Med 1994;331(10):637-642

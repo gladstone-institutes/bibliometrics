@@ -58,9 +58,9 @@ def pmids_by_citmatch(refs):
   for pmid_line in pmid_lines:
     pmid_line = pmid_line.strip()
     if not pmid_line: continue
-    pieces = pmid_line.split('||')
-    pmid_info = pieces[1]
-    (index, pmid) = pmid_info.split('|')
+    pieces = pmid_line.split('|')
+    pmid = pieces[-1]
+    index = pieces[-2]
     index = int(index)
     if pmid_re.match(pmid):
       refs[index]['pmid'] = pmid
@@ -248,10 +248,15 @@ def add_refs_to_graph(root_name, refs, refg):
 def main(input_file_paths):
   refg = RefG()
   for input_file_path in input_file_paths:
+    print ' *', input_file_path 
     with open(input_file_path, 'r') as input_file:
       root_name = input_file.readline()
       raw = input_file.read()
       refs = parse_refs(raw)
+      if False:
+        for ref in refs:
+          print ref
+        continue
       populate_pmids(refs)
       add_pubmed_info(pmid_map(refs))
       add_refs_to_graph(root_name, refs, refg)

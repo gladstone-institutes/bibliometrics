@@ -1,20 +1,20 @@
 21083385
-1. Welsh MJ, Ramsey BW, Accurso F, Cutting GR. Cystic fibrosis. In: Scriver CR, Beaudet AL, Sly WS, Valle D, editors. Metabolic & molecular bases of inherited disease. 8. Vol. 3. New York: McGraw-Hill; 2001. pp. 5121–88.
-2. Knowles M, Gatzy J, Boucher R. Relative ion permeability of normal and cystic fibrosis nasal epithelium. J Clin Invest. 1983;71:1410–7. [PMC free article] [PubMed]
-3. Welsh MJ. An apical-membrane chloride channel in human tracheal epithelium. Science. 1986;232:1648–50. [PubMed]
+1. Welsh MJ, Ramsey BW, Accurso F, Cutting GR. Cystic fibrosis In: Scriver CR, Beaudet AL, Sly WS, Valle D, editors. Metabolic & molecular bases of inherited disease. 8. Vol. 3. New York: McGraw-Hill; 2001. pp. 5121-88.
+2. Knowles M, Gatzy J, Boucher R. Relative ion permeability of normal and cystic fibrosis nasal epithelium. J Clin Invest 1983;71:1410–7. 
+3. Welsh MJ. An apical-membrane chloride channel in human tracheal epithelium. Science 1986;232:1648-50.
 4. Patient registry: 2007 annual data report to the center directors. Bethesda, MD: Cystic Fibrosis Foundation; 2008.
-5. Sawicki GS, Sellers DE, Robinson WM. High treatment burden in adults with cystic fibrosis: challenges to disease self-management. J Cyst Fibros. 2009;8:91–6. [PMC free article] [PubMed]
-6. Amaral MD, Kunzelmann K. Molecular targeting of CFTR as a therapeutic approach to cystic fibrosis. Trends Pharmacol Sci. 2007;28:334–41. [Erratum, Trends Pharmacol Sci 2007;28:447.] [PubMed]
-7. Yang Y, Devor DC, Engelhardt JF, et al. Molecular basis of defective anion transport in L cells expressing recombinant forms of CFTR. Hum Mol Genet. 1993;2:1253–61. [PubMed]
-8. Van Goor F, Hadida S, Grootenhuis PD, et al. Rescue of CF airway epithelial cell function in vitro by a CFTR potentiator, VX-770. Proc Natl Acad Sci U S A. 2009;106:18825–30. [PMC free article] [PubMed]
-9. Farrell PM, Rosenstein BJ, White TB, et al. Guidelines for diagnosis of cystic fibrosis in newborns through older adults: Cystic Fibrosis Foundation consensus report. J Pediatr. 2008;153:S4–S14. [PMC free article] [PubMed]
-10. Hankinson JL, Odencrantz JR, Fedan KB. Spirometric reference values from a sample of the general U.S. population. Am J Respir Crit Care Med. 1999;159:179–87. [PubMed]
-11. Rowe SM, Accurso F, Clancy JP. Detection of cystic fibrosis transmembrane conductance regulator activity in early-phase clinical trials. Proc Am Thorac Soc. 2007;4:387–98. [PMC free article] [PubMed]
-12. Quittner AL, Buu A, Messer MA, Modi AC, Watrous M. Development and validation of the Cystic Fibrosis Questionnaire in the United States: a health-related quality-of-life measure for cystic fibrosis. Chest. 2005;128:2347–54. [PubMed]
-13. Quittner AL, Modi AC, Wainwright C, Otto K, Kirihara J, Montgomery AB. Determination of the minimal clinically important difference scores for the Cystic Fibrosis Questionnaire-Revised respiratory symptom scale in two populations of patients with cystic fibrosis and chronic Pseudomonas aeruginosa airway infection. Chest. 2009;135:1610–8. [PMC free article] [PubMed]
-14. Alton EW, Stern M, Farley R, et al. Cationic lipid-mediated CFTR gene transfer to the lungs and nose of patients with cystic fibrosis: a double-blind placebo-controlled trial. Lancet. 1999;353:947–54. [PubMed]
-15. Kerem E, Hirawat S, Armoni S, et al. Effectiveness of PTC124 treatment of cystic fibrosis caused by nonsense mutations: a prospective phase II trial. Lancet. 2008;372:719–27. [PubMed]
-16. Konstan MW, Davis PB, Wagener JS, et al. Compacted DNA nanoparticles administered to the nasal mucosa of cystic fibrosis subjects are safe and demonstrate partial to complete cystic fibrosis transmembrane regulator reconstitution. Hum Gene Ther. 2004;15:1255–69. [PubMed]
-17. Wilschanski M, Yahav Y, Yaacov Y, et al. Gentamicin-induced correction of CFTR function in patients with cystic fibrosis and CFTR stop mutations. N Engl J Med. 2003;349:1433–41. [PubMed]
-18. Anbar RD, Lapey A, Khaw KT, et al. Does lithium carbonate affect the ion transport abnormality in cystic fibrosis? Pediatr Pulmonol. 1990;8:82–8. [PubMed]
-19. Sermet-Gaudelus I, Renouil M, Fajac A, et al. In vitro prediction of stopcodon suppression by intravenous gentamicin in patients with cystic fibrosis: a pilot study. BMC Med. 2007;5:5. [PMC free article] [PubMed]
+5. Sawicki GS, Sellers DE, Robinson WM. High treatment burden in adults with cystic fibrosis: challenges to disease self-management. J Cyst Fibros 2009;8:91–6.
+6. Amaral MD, Kunzelmann K. Molecular targeting of CFTR as a therapeutic approach to cystic fibrosis. Trends Pharmacol Sci 2007;28:334–41. 
+7. Yang Y, Devor DC, Engelhardt JF, et al. Molecular basis of defective anion transport in L cells expressing recombinant forms of CFTR. Hum Mol Genet 1993;2:1253-61.
+8. Van Goor F, Hadida S, Grootenhuis PD, et al. Rescue of CF airway epithelial cell function in vitro by a CFTR potentiator, VX-770. Proc Natl Acad Sci USA 2009;106:18825–30. 
+9. Farrell PM, Rosenstein BJ, White TB, et al. Guidelines for diagnosis of cystic fibrosis in newborns through older adults: Cystic Fibrosis Foundation consensus report. J Pediatr 2008;153:S4–S14. 
+10. Hankinson JL, Odencrantz JR, Fedan KB. Spirometric reference values from a sample of the general U.S. population. Am J Respir Crit Care Med 1999;159:179–87. 
+11. Rowe SM, Accurso F, Clancy JP. Detection of cystic fibrosis transmembrane conductance regulator activity in early-phase clinical trials. Proc Am Thorac Soc 2007;4:387–98. 
+12. Quittner AL, Buu A, Messer MA, Modi AC, Watrous M. Development and validation of the Cystic Fibrosis Questionnaire in the United States: a health-related quality-of-life measure for cystic fibrosis. Chest 2005;128:2347–54. 
+13. Quittner AL, Modi AC, Wainwright C, Otto K, Kirihara J, Montgomery AB. Determination of the minimal clinically important difference scores for the Cystic Fibrosis Questionnaire-Revised respiratory symptom scale in two populations of patients with cystic fibrosis and chronic Pseudomonas aeruginosa airway infection. Chest 2009;135:1610–8. 
+14. Alton EW, Stern M, Farley R, et al. Cationic lipid-mediated CFTR gene transfer to the lungs and nose of patients with cystic fibrosis: a double-blind placebo-controlled trial. Lancet 1999;353:947–54. 
+15. Kerem E, Hirawat S, Armoni S, et al. Effectiveness of PTC124 treatment of cystic fibrosis caused by nonsense mutations: a prospective phase II trial. Lancet 2008;372:719–27. 
+16. Konstan MW, Davis PB, Wagener JS, et al. Compacted DNA nanoparticles administered to the nasal mucosa of cystic fibrosis subjects are safe and demonstrate partial to complete cystic fibrosis transmembrane regulator reconstitution. Hum Gene Ther 2004;15:1255–69. 
+17. Wilschanski M, Yahav Y, Yaacov Y, et al. Gentamicin-induced correction of CFTR function in patients with cystic fibrosis and CFTR stop mutations. N Engl J Med 2003;349:1433–41. 
+18. Anbar RD, Lapey A, Khaw KT, et al. Does lithium carbonate affect the ion transport abnormality in cystic fibrosis?. Pediatr Pulmonol 1990;8:82-8. 
+19. Sermet-Gaudelus I, Renouil M, Fajac A, et al. In vitro prediction of stopcodon suppression by intravenous gentamicin in patients with cystic fibrosis: a pilot study. BMC Med 2007;5:5.
