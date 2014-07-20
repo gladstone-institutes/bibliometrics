@@ -147,7 +147,7 @@ def pmid_map(refs):
 
 class RefG:
   def __init__(self):
-    self.G = nx.MultiDiGraph()
+    self.G = nx.DiGraph()
     self.refs = {}
 
   def save_gml(self, path):
@@ -228,7 +228,11 @@ def add_refs_to_graph(root_name, refs, refg):
       for grantagency in ref['pmgrantagencies']:
         grantagency = _ascii(grantagency)
         grantagency_node = refg.grant_agency_node(grantagency)
-        refg.G.add_edge(ref_node, grantagency_node)
+        if grantagency_node in nx.all_neighbors(refg.G, ref_node):
+          count = refg.G.edge[ref_node][grantagency_node]['count']
+          refg.G.edge[ref_node][grantagency_node]['count'] = count + 1
+        else:
+          refg.G.add_edge(ref_node, grantagency_node, count=1)
     if False:
       if 'pmmeshterms' in ref:
         for terms in ref['pmmeshterms']:
