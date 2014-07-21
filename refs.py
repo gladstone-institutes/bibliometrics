@@ -38,18 +38,17 @@ def parse_ref(raw):
     d.update(m.groupdict())
   return d
 
-def make_citmatch_str(refs):
+def make_citmatch_str(refs, lo, hi):
   citmatch_str = ''
-  i = 0
-  for ref in refs:
+  for i in range(lo, hi):
+    ref = refs[i]
     if 'journal' in ref:
       citmatch_str += '{journal}|{year}|{volume}|{firstpage}|{authors}|'.format(**ref) + str(i) + '|%0D\n'
-    i += 1
   return citmatch_str
 
 pmid_re = re.compile(r'\d+')
-def pmids_by_citmatch(refs):
-  citmatch_str = make_citmatch_str(refs)
+def pmids_by_citmatch(refs, lo, hi):
+  citmatch_str = make_citmatch_str(refs, lo, hi)
   if not citmatch_str:
     return
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/ecitmatch.cgi',
@@ -93,8 +92,16 @@ def parse_refs(raw):
     refs.append(parse_ref(pieces))
   return refs
 
+def split_range(n, m):
+  low = 0
+  for i in range(n / m + 1):
+    high = min(low + m, n)
+    yield (low, high)
+    low = high
+
 def populate_pmids(refs):
-  pmids_by_citmatch(refs)
+  for (lo, hi) in split_range(50, len(refs)):
+    pmids_by_citmatch(refs, lo, hi)
   for ref in refs:
     if not 'pmid' in ref:
       pmid_by_author_title_search(ref)
@@ -241,7 +248,12 @@ class RefG:
     return term
 
 def _ascii(s):
-  return unicode(s).encode('ascii', 'replace')
+  #print s
+  #return unicode(s).encode('ascii', 'replace')
+  print s
+  print type(s)
+  print
+  return unicode(s)
 
 def add_refs_to_graph(root_name, refs, refg):
   refg.G.add_node(root_name)
