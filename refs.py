@@ -101,6 +101,21 @@ def populate_pmids(refs):
     if not 'pmid' in ref:
       print 'Warning: no PMID found:', ref['raw']
 
+pm_months = [
+  'Jan',
+  'Feb',
+  'Mar',
+  'Apr',
+  'May',
+  'Jun',
+  'Jul',
+  'Aug',
+  'Sep',
+  'Oct',
+  'Nov',
+  'Dec'
+]
+
 def add_pubmed_info(pmid_to_refs):
   pmids = ','.join(pmid_to_refs.keys())
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
@@ -120,6 +135,22 @@ def add_pubmed_info(pmid_to_refs):
       affiliation = author.xpath('Affiliation/text()')
       affiliation = affiliation[0] if affiliation else None
       authors.append((name, affiliation))
+    
+    pubdate_str = ''
+    pubdate_elem = article.xpath('MedlineCitation/Article/Journal/JournalIssue/PubDate')[0]
+    pubdate_yr = pubdate_elem.xpath('Year/text()')
+    if pubdate_yr:
+      pubdate_str += pubdate_yr[0]
+      pubdate_mon = pubdate_elem.xpath('Month/text()')
+      if pubdate_mon:
+        pubdate_str += '%02d' % (pm_months.index(pubdate_mon[0]) + 1)
+        pubdate_day = pubdate_elem.xpath('Day/text()')
+        if pubdate_day:
+          pubdate_str += '%02d' % int(pubdate_day[0])
+        else:
+          pubdate_str += '00'
+      else:
+        pubdate_str += '0000'
 
     grantagencies = article.xpath('MedlineCitation/Article/GrantList[last()]/Grant/Agency/text()')
 
@@ -139,6 +170,8 @@ def add_pubmed_info(pmid_to_refs):
     ref['pmgrantagencies'] = grantagencies
     ref['pmmeshterms'] = allterms
     ref['pmcitcount'] = citcount
+    if pubdate_str:
+      ref['pmpubdate'] = int(pubdate_str)
 
 def pmid_map(refs):
   pmid_to_refs = {}
@@ -217,15 +250,24 @@ def add_refs_to_graph(root_name, refs, refg):
     refg.G.add_edge(ref_node, root_name)
     if 'pmcitcount' in ref:
       refg.G.node[ref_node]['citcount'] = ref['pmcitcount']
+    pubdate = None
+    if 'pmpubdate' in ref:
+      refg.G.node[ref_node]['pubdate'] = ref['pmpubdate']
+      pubdate = ref['pmpubdate']
     if 'pmauthors' in ref:
       for (author, affiliation) in ref['pmauthors']:
         author = _ascii(author)
         author_node = refg.author_node(author)
         refg.G.add_edge(ref_node, author_node)
+        if pubdate:
+          refg.G.node[author_node]['pubdate'] = min(pubdate, refg.G.node[author_node].get('pubdate', 30000000))
         if affiliation:
           affiliation = _ascii(affiliation)
           affiliation_node = refg.affiliation_node(affiliation)
           refg.G.add_edge(author_node, affiliation_node)
+          author_pubdate = refg.G.node[author_node].get('pubdate')
+          if author_pubdate:
+            refg.G.node[affiliation_node]['pubdate'] = min(author_pubdate, refg.G.node[affiliation_node].get('pubdate', 30000000))
     if 'pmgrantagencies' in ref:
       for grantagency in ref['pmgrantagencies']:
         grantagency = _ascii(grantagency)
@@ -249,9 +291,9 @@ def add_refs_to_graph(root_name, refs, refg):
 def main(input_file_paths):
   refg = RefG()
   for input_file_path in input_file_paths:
+    print ' *', input_file_path
     with open(input_file_path, 'r') as input_file:
       root_name = input_file.readline().strip()
-      print ' * %s => "%s"' % (input_file_path, root_name)
       raw = input_file.read()
       refs = parse_refs(raw)
       if False:
