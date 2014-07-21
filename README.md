@@ -13,5 +13,5 @@
 1. Install virtualenv: `pip install virtualenv`
 1. Create `venv` in `metrics` directory: `virtualenv venv`
 1. Activate `venv`: `source venv/bin/activate`
-1. Install needed software: `pip install nltk lxml requests requests-cache networkx`
+1. Install needed software: `pip install lxml requests requests-cache networkx`
 1. Run refs.py: `python refs.py Kalydeco/FDA*.txt Kalydeco/pubmed*.txt`

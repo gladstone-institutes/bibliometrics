@@ -1,31 +1,31 @@
 import sys
-import nltk
 import lxml.etree
 import re
 import requests
 import requests_cache
 import networkx as nx
+import codecs
 
-def parse_multiline_numbered_list(s):
+def parse_multiline_numbered_list(lines):
   list_elem_re = re.compile(r'^\d+\.\s+')
-  lines = nltk.tokenize.LineTokenizer().tokenize(s)
   elems = list()
-  buf = ''
+  buf = u''
   for line in lines:
+    line = line.strip()
     m = list_elem_re.match(line)
     if m:
-      if buf != '':
-        elems.append(buf)
+      if len(buf) > 0:
+        elems.append(buf.strip())
       cleaned = line[m.end():]
       buf = cleaned
     else:
-      buf += ' ' + line
-  if buf != '':
-    elems.append(buf)
+      buf += u' ' + line
+  if len(buf) > 0:
+    elems.append(buf.strip())
   return elems
 
 def split_by_period(line):
-  return [piece.strip() for piece in line.split('.') if piece != '']
+  return [piece.strip() for piece in line.split(u'.') if len(piece) > 0]
 
 journal_re = re.compile(r'(?P<journal>[\w\s]+),?\s+(?P<year>\d{4}).*\;\s*(?P<volume>\d+).*\:\s*(?P<firstpage>\w+)')
 def parse_ref(raw):
@@ -39,11 +39,11 @@ def parse_ref(raw):
   return d
 
 def make_citmatch_str(refs, lo, hi):
-  citmatch_str = ''
+  citmatch_str = u''
   for i in range(lo, hi):
     ref = refs[i]
     if 'journal' in ref:
-      citmatch_str += '{journal}|{year}|{volume}|{firstpage}|{authors}|'.format(**ref) + str(i) + '|%0D\n'
+      citmatch_str += u'{journal}|{year}|{volume}|{firstpage}|{authors}|'.format(**ref) + unicode(i) + u'|%0D\n'
   return citmatch_str
 
 pmid_re = re.compile(r'\d+')
@@ -59,7 +59,7 @@ def pmids_by_citmatch(refs, lo, hi):
     pmid_line = pmid_line.strip()
     if not pmid_line: continue
     pieces = pmid_line.split('|')
-    pmid = pieces[-1]
+    pmid = pieces[-1].encode('utf-8')
     index = pieces[-2]
     index = int(index)
     if pmid_re.match(pmid):
@@ -73,7 +73,7 @@ def first_author_only(authors_str):
 
 def pmid_by_author_title_search(ref):
   author = first_author_only(ref['authors'])
-  esearch_term = '({title}) AND ({author} [Author - First])'.format(title=ref['title'], author=author)
+  esearch_term = u'({title}) AND ({author} [Author - First])'.format(title=ref['title'], author=author)
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
           params={'db': 'pubmed',
                   'term': esearch_term})
@@ -81,11 +81,11 @@ def pmid_by_author_title_search(ref):
   ids = tree.xpath('/eSearchResult/IdList/Id/text()')
   if ids:
     if len(ids) > 1:
-      print 'Warning: multiple results for: ', ref['raw']
-    ref['pmid'] = ids[0]
+      print '  Multiple results for: ', ref['raw']
+    ref['pmid'] = ids[0].encode('utf-8')
 
-def parse_refs(raw):
-  lines = parse_multiline_numbered_list(raw)
+def parse_refs(lines):
+  lines = parse_multiline_numbered_list(lines)
   refs = []
   for line in lines:
     pieces = split_by_period(line)
@@ -94,7 +94,7 @@ def parse_refs(raw):
 
 def split_range(n, m):
   low = 0
-  for i in range(n / m + 1):
+  for i in range(m / n + 1):
     high = min(low + m, n)
     yield (low, high)
     low = high
@@ -106,7 +106,7 @@ def populate_pmids(refs):
     if not 'pmid' in ref:
       pmid_by_author_title_search(ref)
     if not 'pmid' in ref:
-      print 'Warning: no PMID found:', ref['raw']
+      print '  No PMID found:', ref['raw']
 
 pm_months = [
   'Jan',
@@ -136,14 +136,14 @@ def add_pubmed_info(pmid_to_refs):
       lastname = author.xpath('LastName/text()')
       initials = author.xpath('Initials/text()')
       if lastname and initials:
-        name = lastname[0] + ' ' + initials[0]
+        name = unicode(lastname[0] + u' ' + initials[0])
       else:
         continue
       affiliation = author.xpath('Affiliation/text()')
-      affiliation = affiliation[0] if affiliation else None
+      affiliation = unicode(affiliation[0]) if affiliation else None
       authors.append((name, affiliation))
     
-    pubdate_str = ''
+    pubdate_str = u''
     pubdate_elem = article.xpath('MedlineCitation/Article/Journal/JournalIssue/PubDate')[0]
     pubdate_yr = pubdate_elem.xpath('Year/text()')
     if pubdate_yr:
@@ -159,7 +159,7 @@ def add_pubmed_info(pmid_to_refs):
       else:
         pubdate_str += '0000'
 
-    grantagencies = article.xpath('MedlineCitation/Article/GrantList[last()]/Grant/Agency/text()')
+    grantagencies = map(unicode, article.xpath('MedlineCitation/Article/GrantList[last()]/Grant/Agency/text()'))
 
     allterms = []
     for meshheading in article.xpath('MedlineCitation/MeshHeadingList/MeshHeading'):
@@ -193,7 +193,7 @@ class RefG:
     self.refs = {}
 
   def save_gml(self, path):
-    nx.write_gml(self.G, path)
+    nx.write_graphml(self.G, path)
 
   def _encode_int(self, num):
     letters = 'abcdefghijklmnopqrstuvwxyz'
@@ -211,14 +211,14 @@ class RefG:
   def _ref_node_on_new_id(self, ref):
     refid = self._encode_int(len(self.refs))
     self.refs[refid] = ref
-    self.G.add_node(refid, type='article', title=_ascii(ref['title']))
+    self.G.add_node(refid, type='article', title=ref['title'])
     return refid
     
   def _ref_node_on_pmid(self, ref):
     pmid = ref['pmid']
     if not pmid in self.refs:
       self.refs[pmid] = ref
-      self.G.add_node(pmid, type='article', title=_ascii(ref['title']), pmid=pmid)
+      self.G.add_node(pmid, type='article', title=ref['title'], pmid=pmid)
     return pmid
 
   def ref_node(self, ref):
@@ -247,14 +247,6 @@ class RefG:
       self.G.add_node(term, type='meshterm')
     return term
 
-def _ascii(s):
-  #print s
-  #return unicode(s).encode('ascii', 'replace')
-  print s
-  print type(s)
-  print
-  return unicode(s)
-
 def add_refs_to_graph(root_name, refs, refg):
   refg.G.add_node(root_name)
   for ref in refs:
@@ -268,13 +260,11 @@ def add_refs_to_graph(root_name, refs, refg):
       pubdate = ref['pmpubdate']
     if 'pmauthors' in ref:
       for (author, affiliation) in ref['pmauthors']:
-        author = _ascii(author)
         author_node = refg.author_node(author)
         refg.G.add_edge(ref_node, author_node)
         if pubdate:
           refg.G.node[author_node]['pubdate'] = min(pubdate, refg.G.node[author_node].get('pubdate', 30000000))
         if affiliation:
-          affiliation = _ascii(affiliation)
           affiliation_node = refg.affiliation_node(affiliation)
           refg.G.add_edge(author_node, affiliation_node)
           author_pubdate = refg.G.node[author_node].get('pubdate')
@@ -282,7 +272,6 @@ def add_refs_to_graph(root_name, refs, refg):
             refg.G.node[affiliation_node]['pubdate'] = min(author_pubdate, refg.G.node[affiliation_node].get('pubdate', 30000000))
     if 'pmgrantagencies' in ref:
       for grantagency in ref['pmgrantagencies']:
-        grantagency = _ascii(grantagency)
         grantagency_node = refg.grant_agency_node(grantagency)
         if grantagency_node in nx.all_neighbors(refg.G, ref_node):
           count = refg.G.edge[ref_node][grantagency_node]['count']
@@ -303,19 +292,16 @@ def add_refs_to_graph(root_name, refs, refg):
 def main(input_file_paths):
   refg = RefG()
   for input_file_path in input_file_paths:
-    print ' *', input_file_path
-    with open(input_file_path, 'r') as input_file:
-      root_name = input_file.readline().strip()
-      raw = input_file.read()
-      refs = parse_refs(raw)
-      if False:
-        for ref in refs:
-          print ref
-        continue
+    print
+    print input_file_path
+    with codecs.open(input_file_path, encoding='utf-8') as input_file:
+      lines = input_file.readlines()
+      root_name = lines[0]
+      refs = parse_refs(lines[1:])
       populate_pmids(refs)
       add_pubmed_info(pmid_map(refs))
       add_refs_to_graph(root_name, refs, refg)
-  refg.save_gml('output.gml')
+  refg.save_gml('output.xml')
 
 requests_cache.install_cache('req-cache')
 main(sys.argv[1:])
