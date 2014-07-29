@@ -1,3 +1,4 @@
+import logging
 import sys
 import lxml.etree
 import re
@@ -53,6 +54,8 @@ def pmids_by_citmatch(refs, lo, hi):
     return
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/ecitmatch.cgi',
           params={'db': 'pubmed', 'retmode': 'xml', 'bdata': citmatch_str})
+  logging.debug('ecitmatch request: %s', req.url)
+  logging.debug('ecitmatch response: %s', req.text)
   pmids_raw = req.text
   pmid_lines = pmids_raw.split('\n')
   for pmid_line in pmid_lines:
@@ -77,11 +80,13 @@ def pmid_by_author_title_search(ref):
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
           params={'db': 'pubmed',
                   'term': esearch_term})
+  logging.debug('request: %s', req.url)
+  logging.debug('response: %s', req.text)
   tree = lxml.etree.fromstring(req.text)
   ids = tree.xpath('/eSearchResult/IdList/Id/text()')
   if ids:
     if len(ids) > 1:
-      print '  Multiple results for: ', ref['raw']
+      logging.warn('Multiple results for: %s', ref['raw'])
     ref['pmid'] = ids[0].encode('utf-8')
 
 def parse_refs(lines):
@@ -106,7 +111,7 @@ def populate_pmids(refs):
     if not 'pmid' in ref:
       pmid_by_author_title_search(ref)
     if not 'pmid' in ref:
-      print '  No PMID found:', ref['raw']
+      logging.warn('No PMID found: %s', ref['raw'])
 
 pm_months = [
   'Jan',
@@ -292,8 +297,7 @@ def add_refs_to_graph(root_name, refs, refg):
 def main(input_file_paths):
   refg = RefG()
   for input_file_path in input_file_paths:
-    print
-    print input_file_path
+    logging.info('Reading: %s', input_file_path)
     with codecs.open(input_file_path, encoding='utf-8') as input_file:
       lines = input_file.readlines()
       root_name = lines[0]
@@ -303,5 +307,6 @@ def main(input_file_paths):
       add_refs_to_graph(root_name, refs, refg)
   refg.save_gml('output.xml')
 
+logging.basicConfig(level=logging.INFO, format='[%(levelname)s %(funcName)s] %(message)s')
 requests_cache.install_cache('req-cache')
 main(sys.argv[1:])
