@@ -1,0 +1,4 @@
+*.pyc
+output.xml
+*.sqlite
+venv/
