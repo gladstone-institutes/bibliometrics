@@ -1,4 +1,3 @@
-import logging
 import sys
 import lxml.etree
 import re
@@ -7,6 +6,11 @@ import requests_cache
 import networkx as nx
 import xgmml
 import codecs
+import argparse
+import os
+import os.path
+import unicodecsv
+from io import BytesIO
 
 def parse_multiline_numbered_list(lines):
   list_elem_re = re.compile(r'^\d+\.\s+')
@@ -55,7 +59,6 @@ def pmids_by_citmatch(refs, lo, hi):
     return
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/ecitmatch.cgi',
           params={'db': 'pubmed', 'retmode': 'xml', 'bdata': citmatch_str})
-  logging.debug('ecitmatch: %s', req.url)
   pmids_raw = req.text
   pmid_lines = pmids_raw.split('\n')
   for pmid_line in pmid_lines:
@@ -74,7 +77,6 @@ def first_author_only(authors_str):
   first_author = authors_pieces[0:2]
   return ' '.join(first_author)
 
-from io import BytesIO
 def xmlget(url, params):
   req = requests.get(url, params=params)
   content = BytesIO(req.content)
@@ -82,15 +84,16 @@ def xmlget(url, params):
   return lxml.etree.parse(content, parser)
 
 def pmid_by_author_title_search(ref):
-  author = first_author_only(ref['authors'])
-  esearch_term = u'({title}) AND ({author} [Author - First])'.format(title=ref['title'], author=author)
+  if ref['authors'] == 'None':
+    esearch_term = u'({title}[Title])'.format(title=ref['title'])
+  else:
+    author = first_author_only(ref['authors'])
+    esearch_term = u'({title} [Title]) AND ({author} [Author - First])'.format(title=ref['title'], author=author)
   tree = xmlget('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
           params={'db': 'pubmed',
                   'term': esearch_term})
   ids = tree.xpath('/eSearchResult/IdList/Id/text()')
-  if ids:
-    if len(ids) > 1:
-      logging.warn('Multiple results for: %s', ref['raw'])
+  if ids and len(ids) == 1:
     ref['pmid'] = ids[0].encode('utf-8')
 
 def parse_refs(lines):
@@ -114,8 +117,6 @@ def populate_pmids(refs):
   for ref in refs:
     if not 'pmid' in ref:
       pmid_by_author_title_search(ref)
-    if not 'pmid' in ref:
-      logging.warn('No PMID found: %s', ref['raw'])
 
 pm_months = [
   'Jan',
@@ -302,19 +303,43 @@ def add_refs_to_graph(root_name, refs, refg):
             term_node_trg = refg.mesh_term_node(terms[i + 1])
             refg.G.add_edge(term_node_src, term_node_trg)
 
-def main(input_file_paths):
-  refg = RefG()
-  for input_file_path in input_file_paths:
-    logging.info('Reading: %s', input_file_path)
-    with codecs.open(input_file_path, encoding='utf-8') as input_file:
-      lines = input_file.readlines()
+def main(input_file_paths, output_file_path, no_match_file_path):
+  with open(no_match_file_path, 'w') as no_match_file:
+    no_match_writer = unicodecsv.writer(no_match_file, encoding='utf-8')
+    no_match_writer.writerow(['Input File', 'Authors', 'Title', 'Journal', 'Year', 'Volume', 'First page', 'Raw'])
+    refg = RefG()
+    for input_file_path in input_file_paths:
+      no_match_writer.writerow([input_file_path])
+
+      with codecs.open(input_file_path, encoding='utf-8') as input_file:
+        lines = input_file.readlines()
       root_name = lines[0]
       refs = parse_refs(lines[1:])
       populate_pmids(refs)
       add_pubmed_info(pmid_map(refs))
       add_refs_to_graph(root_name, refs, refg)
-  refg.save('output.xml')
 
-logging.basicConfig(level=logging.INFO, format='[%(levelname)s %(funcName)s] %(message)s')
-requests_cache.install_cache('req-cache')
-main(sys.argv[1:])
+      for ref in refs:
+        if ref.get('pmid'): continue
+        no_match_writer.writerow(['', ref.get('authors', ''), ref.get('title', ''), ref.get('journal', ''), ref.get('year', ''), ref.get('volume', ''), ref.get('firstpage', ''), unicode(ref['raw'])])
+    refg.save(output_file_path)
+
+def unique_filename(name, extension):
+  filename = '%s.%s' % (name, extension)
+  i = 0
+  while os.path.exists(filename):
+    i += 1
+    filename = '%s %d.%s' % (name, i, extension)
+  return filename
+
+def parse_args(args):
+  p = argparse.ArgumentParser()
+  p.add_argument('input', nargs='+', help='List of input reference files')
+  p.add_argument('-o', '--output', nargs='?', help='Output XGMML file name', default=unique_filename('output', 'xml'))
+  p.add_argument('-n', '--no-match-output', nargs='?', help='Output CSV file of references without PMID matches', default=os.devnull)
+  return p.parse_args(args)
+
+args = parse_args(sys.argv[1:])
+#logging.basicConfig(level=logging.INFO, format='[%(levelname)s %(funcName)s] %(message)s')
+requests_cache.install_cache('.req-cache')
+main(args.input, args.output, args.no_match_output)
