@@ -74,14 +74,19 @@ def first_author_only(authors_str):
   first_author = authors_pieces[0:2]
   return ' '.join(first_author)
 
+from io import BytesIO
+def xmlget(url, params):
+  req = requests.get(url, params=params)
+  content = BytesIO(req.content)
+  parser = lxml.etree.XMLParser(recover=True, encoding='utf-8')
+  return lxml.etree.parse(content, parser)
+
 def pmid_by_author_title_search(ref):
   author = first_author_only(ref['authors'])
   esearch_term = u'({title}) AND ({author} [Author - First])'.format(title=ref['title'], author=author)
-  req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
+  tree = xmlget('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
           params={'db': 'pubmed',
                   'term': esearch_term})
-  logging.debug('esearch: %s', req.url)
-  tree = lxml.etree.fromstring(req.text)
   ids = tree.xpath('/eSearchResult/IdList/Id/text()')
   if ids:
     if len(ids) > 1:
@@ -129,10 +134,8 @@ pm_months = [
 
 def add_pubmed_info(pmid_to_refs):
   pmids = ','.join(pmid_to_refs.keys())
-  req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
+  doc = xmlget('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
                      params={'db': 'pubmed', 'id': pmids, 'rettype': 'xml'})
-  logging.debug('efetch: %s', req.url)
-  doc = lxml.etree.fromstring(req.content)
   for article in doc.xpath('/PubmedArticleSet/PubmedArticle'):
     pmid = article.xpath('PubmedData/ArticleIdList/ArticleId[@IdType=\'pubmed\']/text()')[0]
 
@@ -312,6 +315,6 @@ def main(input_file_paths):
       add_refs_to_graph(root_name, refs, refg)
   refg.save('output.xml')
 
-logging.basicConfig(level=logging.WARNING, format='[%(levelname)s %(funcName)s] %(message)s')
+logging.basicConfig(level=logging.INFO, format='[%(levelname)s %(funcName)s] %(message)s')
 requests_cache.install_cache('req-cache')
 main(sys.argv[1:])
