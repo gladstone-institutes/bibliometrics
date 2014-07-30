@@ -5,6 +5,7 @@ import re
 import requests
 import requests_cache
 import networkx as nx
+import xgmml
 import codecs
 
 def parse_multiline_numbered_list(lines):
@@ -54,8 +55,7 @@ def pmids_by_citmatch(refs, lo, hi):
     return
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/ecitmatch.cgi',
           params={'db': 'pubmed', 'retmode': 'xml', 'bdata': citmatch_str})
-  logging.debug('ecitmatch request: %s', req.url)
-  logging.debug('ecitmatch response: %s', req.text)
+  logging.debug('ecitmatch: %s', req.url)
   pmids_raw = req.text
   pmid_lines = pmids_raw.split('\n')
   for pmid_line in pmid_lines:
@@ -80,8 +80,7 @@ def pmid_by_author_title_search(ref):
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
           params={'db': 'pubmed',
                   'term': esearch_term})
-  logging.debug('request: %s', req.url)
-  logging.debug('response: %s', req.text)
+  logging.debug('esearch: %s', req.url)
   tree = lxml.etree.fromstring(req.text)
   ids = tree.xpath('/eSearchResult/IdList/Id/text()')
   if ids:
@@ -132,6 +131,7 @@ def add_pubmed_info(pmid_to_refs):
   pmids = ','.join(pmid_to_refs.keys())
   req = requests.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
                      params={'db': 'pubmed', 'id': pmids, 'rettype': 'xml'})
+  logging.debug('efetch: %s', req.url)
   doc = lxml.etree.fromstring(req.content)
   for article in doc.xpath('/PubmedArticleSet/PubmedArticle'):
     pmid = article.xpath('PubmedData/ArticleIdList/ArticleId[@IdType=\'pubmed\']/text()')[0]
@@ -166,6 +166,8 @@ def add_pubmed_info(pmid_to_refs):
 
     grantagencies = map(unicode, article.xpath('MedlineCitation/Article/GrantList[last()]/Grant/Agency/text()'))
 
+    pubtypes = map(unicode, article.xpath('MedlineCitation/Article/PublicationTypeList/PublicationType/text()'))
+
     allterms = []
     for meshheading in article.xpath('MedlineCitation/MeshHeadingList/MeshHeading'):
       terms = meshheading.xpath('DescriptorName/text() | QualifierName/text()')
@@ -182,6 +184,7 @@ def add_pubmed_info(pmid_to_refs):
     ref['pmgrantagencies'] = grantagencies
     ref['pmmeshterms'] = allterms
     ref['pmcitcount'] = citcount
+    ref['pmpubtypes'] = pubtypes
     if pubdate_str:
       ref['pmpubdate'] = int(pubdate_str)
 
@@ -197,8 +200,8 @@ class RefG:
     self.G = nx.DiGraph()
     self.refs = {}
 
-  def save_gml(self, path):
-    nx.write_graphml(self.G, path)
+  def save(self, path):
+    xgmml.write(self.G, path)
 
   def _encode_int(self, num):
     letters = 'abcdefghijklmnopqrstuvwxyz'
@@ -263,6 +266,8 @@ def add_refs_to_graph(root_name, refs, refg):
     if 'pmpubdate' in ref:
       refg.G.node[ref_node]['pubdate'] = ref['pmpubdate']
       pubdate = ref['pmpubdate']
+    if 'pmpubtypes' in ref:
+      refg.G.node[ref_node]['pubtypes'] = ref['pmpubtypes']
     if 'pmauthors' in ref:
       for (author, affiliation) in ref['pmauthors']:
         author_node = refg.author_node(author)
@@ -305,8 +310,8 @@ def main(input_file_paths):
       populate_pmids(refs)
       add_pubmed_info(pmid_map(refs))
       add_refs_to_graph(root_name, refs, refg)
-  refg.save_gml('output.xml')
+  refg.save('output.xml')
 
-logging.basicConfig(level=logging.INFO, format='[%(levelname)s %(funcName)s] %(message)s')
+logging.basicConfig(level=logging.WARNING, format='[%(levelname)s %(funcName)s] %(message)s')
 requests_cache.install_cache('req-cache')
 main(sys.argv[1:])
