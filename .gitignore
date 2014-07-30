@@ -1,4 +1,5 @@
 *.pyc
-output.xml
+*.xml
+*.csv
 *.sqlite
 venv/
