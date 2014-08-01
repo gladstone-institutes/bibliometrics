@@ -1,6 +1,10 @@
+import re
+import time
 import suds
 import ref
 import lxml.etree
+
+_date_re = re.compile(r'(?P<yr>\d{4})-(?P<mon>\d{2})-(?P<day>\d{2})')
 
 class WoSRef(ref.Ref):
   def __init__(self, records):
@@ -10,7 +14,10 @@ class WoSRef(ref.Ref):
     self.title = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:titles/ns:title[@type='item']/text()", namespaces=ns)[0]
     self.journal = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:titles/ns:title[@type='source']/text()", namespaces=ns)[0]
     pubinfo = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:pub_info", namespaces=ns)[0]
-    (self.issue, self.volume, self.pubdate) = (pubinfo.attrib['issue'], pubinfo.attrib['vol'], pubinfo.attrib['sortdate'])
+    (self.issue, self.volume, self.pubdate) = (pubinfo.attrib.get('issue'), pubinfo.attrib.get('vol'), pubinfo.attrib.get('sortdate'))
+    if self.pubdate:
+      m = _date_re.match(self.pubdate)
+      self.pubdate = int(m.group('yr') + m.group('mon') + m.group('day'))
 
     self.institutions = {}
     num_institutions = int(records.xpath("/ns:records/ns:REC/ns:static_data/ns:fullrecord_metadata/ns:addresses", namespaces=ns)[0].attrib['count'])
@@ -25,9 +32,25 @@ class WoSRef(ref.Ref):
     for i in range(1, num_authors + 1):
       author_tag = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:names/ns:name[@seq_no='%d']" % i, namespaces=ns)[0]
       author_name = author_tag.xpath("ns:wos_standard/text()", namespaces=ns)[0]
-      affiliation_indices = map(int, author_tag.attrib['addr_no'].split(' '))
+      affiliation_indices = map(int, author_tag.attrib['addr_no'].split(' ')) if 'addr_no' in author_tag.attrib else None
 
       self.authors.append((author_name, affiliation_indices))
+
+class WoSCitedRef(ref.Ref):
+  def __init__(self, record):
+    self.author = record.citedAuthor
+    if hasattr(record, 'timesCited'):
+      self.citcount = int(record.timesCited)
+    if hasattr(record, 'year'):
+      self.year = int(record.year)
+    if hasattr(record, 'page'):
+      self.page = int(record.page)
+    if hasattr(record, 'volume'):
+      self.volume = record.volume
+    if hasattr(record, 'citedTitle'):
+      self.title = record.citedTitle
+    if hasattr(record, 'citedWork'):
+      self.journal = record.citedWork
 
 class Client:
   def __init__(self):
@@ -40,24 +63,34 @@ class Client:
   def close(self):
     self.authclient.service.closeSession()
 
-  def search(self, author, title):
+  def search(self, author, title, journal=None, year=None):
     qp = self.searchclient.factory.create('queryParameters')
     qp.databaseId = 'WOS'
     qp.userQuery = 'TI=(%s) AND AU=(%s)' % (title, author)
+    if journal:
+      qp.userQuery += ' AND SO=(%s) AND PY=(%s)' % (journal, year)
     qp.queryLanguage = 'en'
 
     rp = self.searchclient.factory.create('retrieveParameters')
     rp.firstRecord = 1
     rp.count = 100
 
+    time.sleep(1) # throttle requests
     results = self.searchclient.service.search(qp, rp)
 
-    if results.recordsFound == 0:
-      print 'Nothing found'
-      return None
-    elif results.recordsFound > 1:
-      print 'Ambiguous results'
+    if not results.recordsFound == 1:
       return None
 
     records = lxml.etree.fromstring(results.records)
     return WoSRef(records)
+
+  def citations(self, ref):
+    rp = self.searchclient.factory.create('retrieveParameters')
+    rp.firstRecord = 1
+    rp.count = 100
+
+    citedrefs = []
+    results = self.searchclient.service.citedReferences('WOS', ref.wosid, 'en', rp)
+    for record in results.references:
+      citedrefs.append(WoSCitedRef(record))
+    return citedrefs
