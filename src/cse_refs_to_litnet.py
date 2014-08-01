@@ -6,14 +6,14 @@ import sys
 import unicodecsv
 import ref
 import pubmed
-import pubmednet
+import litnet
 
 def main(input_file_paths, output_file_path, no_match_file_path):
   client = pubmed.Client()
   with open(no_match_file_path, 'w') as no_match_file:
     no_match_writer = unicodecsv.writer(no_match_file, encoding='utf-8')
     no_match_writer.writerow(['Input File', 'Authors', 'Title', 'Journal', 'Year', 'Volume', 'First page', 'Raw'])
-    refg = pubmednet.RefG()
+    refg = litnet.RefG()
     for input_file_path in input_file_paths:
       no_match_writer.writerow([input_file_path])
 
@@ -23,8 +23,8 @@ def main(input_file_paths, output_file_path, no_match_file_path):
       refs = ref.parse_cse_refs(lines[1:])
       client.add_pmids(refs)
       (pubmed_refs, non_pubmed_refs) = client.to_pubmed_refs(refs)
-      pubmednet.add_refs_to_graph(root_name, pubmed_refs, refg)
-      pubmednet.add_non_pubmed_refs_to_graph(root_name, non_pubmed_refs, refg)
+      litnet.add_pubmed_refs_to_graph(root_name, pubmed_refs, refg)
+      litnet.add_nodata_refs_to_graph(root_name, non_pubmed_refs, refg)
 
       for r in refs:
         if hasattr(r, 'pmid'): continue

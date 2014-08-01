@@ -62,13 +62,13 @@ class RefG:
     return term
 
 
-def add_non_pubmed_refs_to_graph(root_name, refs, refg):
+def add_nodata_refs_to_graph(root_name, refs, refg):
   refg.G.add_node(root_name)
   for ref in refs:
     ref_node = refg.ref_node(ref)
     refg.G.add_edge(ref_node, root_name)
 
-def add_refs_to_graph(root_name, refs, refg, include_meshterms=False):
+def add_pubmed_refs_to_graph(root_name, refs, refg, include_meshterms=False):
   refg.G.add_node(root_name)
   for ref in refs:
     ref_node = refg.ref_node(ref)
