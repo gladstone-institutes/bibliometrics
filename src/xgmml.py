@@ -4,11 +4,13 @@ from lxml.builder import E
 import codecs
 import types
 
-def _serialize_attrs(d):
+def _serialize_attrs(d, node):
   xattrs = list()
   for k, v in d.items():
     if type(v) == types.UnicodeType or type(v) == types.StringType:
-      xattr = E.att({'name': k, 'value': v, 'type': 'string'})
+      xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
+    elif type(v) == lxml.etree._ElementStringResult or type(v) == lxml.etree._ElementUnicodeResult:
+      xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
     elif type(v) == types.IntType:
       xattr = E.att({'name': k, 'value': str(v), 'type': 'integer'})
     elif type(v) == types.ListType:
@@ -16,6 +18,8 @@ def _serialize_attrs(d):
       for val in v:
         if type(val) == types.UnicodeType or type(val) == types.StringType:
           xval = E.att({'name': k, 'value': val, 'type': 'string'})
+        elif type(val) == lxml.etree._ElementStringResult or type(val) == lxml.etree._ElementUnicodeResult:
+          xattr = E.att({'name': k, 'value': unicode(val), 'type': 'string'})
         elif type(val) == types.IntType:
           xval = E.att({'name': k, 'value': str(val), 'type': 'integer'})
         else:
@@ -33,7 +37,7 @@ def write(G, path):
   for node_id in range(len(nodes)):
     node = nodes[node_id]
     xnode = E.node({'id': str(node_id), 'label': node})
-    xattrs = _serialize_attrs(G.node[node])
+    xattrs = _serialize_attrs(G.node[node], node)
     xnode.extend(xattrs)
     xG.append(xnode)
 
