@@ -81,13 +81,15 @@ def add_refs_to_graph(root_name, refs, refg, include_meshterms=False):
     for (author, affiliation) in ref.authors:
       author_node = refg.author_node(author)
       refg.G.add_edge(ref_node, author_node)
-      refg.G.node[author_node]['pubdate'] = min(ref.pubdate, refg.G.node[author_node].get('pubdate', 30000000))
-      if affiliation:
-        affiliation_node = refg.affiliation_node(affiliation)
-        refg.G.add_edge(author_node, affiliation_node)
-        author_pubdate = refg.G.node[author_node].get('pubdate')
-        if author_pubdate:
-          refg.G.node[affiliation_node]['pubdate'] = min(author_pubdate, refg.G.node[affiliation_node].get('pubdate', 30000000))
+      
+      if ref.pubdate:
+        refg.G.node[author_node]['pubdate'] = min(ref.pubdate, refg.G.node[author_node].get('pubdate', 30000000))
+        if affiliation:
+          affiliation_node = refg.affiliation_node(affiliation)
+          refg.G.add_edge(author_node, affiliation_node)
+          author_pubdate = refg.G.node[author_node].get('pubdate')
+          if author_pubdate:
+            refg.G.node[affiliation_node]['pubdate'] = min(author_pubdate, refg.G.node[affiliation_node].get('pubdate', 30000000))
 
     for grantagency in ref.grantagencies:
       grantagency_node = refg.grant_agency_node(grantagency)

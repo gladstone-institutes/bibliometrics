@@ -157,8 +157,7 @@ class PubMedRef(ref.Ref):
       else:
         pubdate_str += '0000'
 
-    if pubdate_str:
-      self.pubdate = int(pubdate_str)
+    self.pubdate = int(pubdate_str) if pubdate_str else None
 
     self.grantagencies = map(unicode, article.xpath('MedlineCitation/Article/GrantList[last()]/Grant/Agency/text()'))
 

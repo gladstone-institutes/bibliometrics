@@ -7,7 +7,9 @@ import types
 def _serialize_attrs(d, node):
   xattrs = list()
   for k, v in d.items():
-    if type(v) == types.UnicodeType or type(v) == types.StringType:
+    if v == None:
+      continue
+    elif type(v) == types.UnicodeType or type(v) == types.StringType:
       xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
     elif type(v) == lxml.etree._ElementStringResult or type(v) == lxml.etree._ElementUnicodeResult:
       xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
