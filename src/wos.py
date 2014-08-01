@@ -1,58 +1,63 @@
-import requests
-import lxml.html
+import suds
+import ref
+import lxml.etree
+
+class WoSRef(ref.Ref):
+  def __init__(self, records):
+    ns = {'ns': records.nsmap[None]}
+
+    self.wosid = records.xpath("/ns:records/ns:REC/ns:UID/text()", namespaces=ns)[0]
+    self.title = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:titles/ns:title[@type='item']/text()", namespaces=ns)[0]
+    self.journal = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:titles/ns:title[@type='source']/text()", namespaces=ns)[0]
+    pubinfo = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:pub_info", namespaces=ns)[0]
+    (self.issue, self.volume, self.pubdate) = (pubinfo.attrib['issue'], pubinfo.attrib['vol'], pubinfo.attrib['sortdate'])
+
+    self.institutions = {}
+    num_institutions = int(records.xpath("/ns:records/ns:REC/ns:static_data/ns:fullrecord_metadata/ns:addresses", namespaces=ns)[0].attrib['count'])
+    for i in range(1, num_institutions + 1):
+      institution_tag = records.xpath("/ns:records/ns:REC/ns:static_data/ns:fullrecord_metadata/ns:addresses/ns:address_name/ns:address_spec[@addr_no='%d']" % i, namespaces=ns)[0]
+      institution_address = institution_tag.xpath("ns:full_address", namespaces=ns)[0].text
+
+      self.institutions[i] = institution_address 
+
+    self.authors = []
+    num_authors = int(records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:names", namespaces=ns)[0].attrib['count'])
+    for i in range(1, num_authors + 1):
+      author_tag = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:names/ns:name[@seq_no='%d']" % i, namespaces=ns)[0]
+      author_name = author_tag.xpath("ns:wos_standard/text()", namespaces=ns)[0]
+      affiliation_indices = map(int, author_tag.attrib['addr_no'].split(' '))
+
+      self.authors.append((author_name, affiliation_indices))
 
 class Client:
   def __init__(self):
-    self.headers = {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 5.1; rv:31.0) Gecko/20100101 Firefox/31.0'
-      }
-    self.session = requests.Session()
-    self.session.get('http://isiknowledge.com', headers=self.headers)
-    self.sid = self.session.cookies['SID']
+    self.authclient = suds.client.Client('http://search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate?wsdl')
+    session = self.authclient.service.authenticate()
+    header = {'Cookie': ('SID="%s"' % session)}
+    self.searchclient = suds.client.Client('http://search.webofknowledge.com/esti/wokmws/ws/WokSearch?wsdl')
+    self.searchclient.set_options(headers=header)
 
-  def search(self, title, author):
-    data = self._search_form(title, author)
-    resp = self.session.post('http://apps.webofknowledge.com/UA_GeneralSearch.do', headers=self.headers, data=data)
-    doc = lxml.html.document_fromstring(resp.content)
-    return doc
+  def close(self):
+    self.authclient.service.closeSession()
 
-  def _search_form(self, title, author):
-    return { 
-        'SID': self.sid,
-        'sa_params': 'UA||' + self.sid + '|http://apps.webofknowledge.com|\'',
-        'value(input1)': title,
-        'value(input2)': author,
+  def search(self, author, title):
+    qp = self.searchclient.factory.create('queryParameters')
+    qp.databaseId = 'WOS'
+    qp.userQuery = 'TI=(%s) AND AU=(%s)' % (title, author)
+    qp.queryLanguage = 'en'
 
-        'fieldCount': '2',
-        'value(select1)': 'TI',
-        'value(hidInput1)': '', 
-        'value(bool_1_2)': 'AND',
-        'value(select2)': 'AU',
-        'value(hidInput2)': '', 
+    rp = self.searchclient.factory.create('retrieveParameters')
+    rp.firstRecord = 1
+    rp.count = 100
 
-        'action': 'search',
-        'product': 'UA',
-        'search_mode': 'GeneralSearch',
-        'max_field_count': '25',
-        'max_field_notice': 'Notice',
-        'input_invalid_notice': 'Invalid',
-        'exp_notice': 'Search Error',
-        'input_invalid_notice_limits': 'Note: Fields',
-        'formUpdated': 'true',
-        'x': '64',
-        'y': '30',
-        'limitStatus': 'expanded',
-        'ss_lemmatization': 'On',
-        'ss_spellchecking': 'Suggest',
-        'SinceLastVisit_UTC': '', 
-        'SinceLastVisit_DATE': '', 
-        'period': 'Range Selection',
-        'range': 'ALL',
-        'startYear': '1898',
-        'endYear': '2014',
-        'ssStatus': 'display:none',
-        'ss_showsuggestions': 'ON',
-        'ss_query_language': 'auto',
-        'ss_numDefaultGeneralSearchFields': '1',
-        'rs_sort_by': 'PY.D;LD.D;SO.A;VL.D;PG.A;AU.A'
-      }
+    results = self.searchclient.service.search(qp, rp)
+
+    if results.recordsFound == 0:
+      print 'Nothing found'
+      return None
+    elif results.recordsFound > 1:
+      print 'Ambiguous results'
+      return None
+
+    records = lxml.etree.fromstring(results.records)
+    return WoSRef(records)
