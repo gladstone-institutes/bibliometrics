@@ -29,7 +29,7 @@ def _make_citmatch_str(refs, lo, hi):
   citmatch_str = u''
   for i in range(lo, hi):
     ref = refs[i]
-    if hasattr(ref, 'journal'):
+    if hasattr(ref, 'journal') and hasattr(ref, 'year') and hasattr(ref, 'volume') and hasattr(ref, 'firstpage') and hasattr(ref, 'authors_str'):
       citmatch_str += (ref.journal     + '|' + \
                        ref.year        + '|' + \
                        ref.volume      + '|' + \
@@ -91,22 +91,21 @@ class Client:
       if not hasattr(ref, 'pmid'):
         _pmid_by_author_title_scrape(ref)
 
-  def to_pubmed_refs(self, refs):
+  def add_pubmed_data(self, refs):
     pmids = []
-    non_pubmed_refs = []
     for ref in refs:
       if hasattr(ref, 'pmid'):
         pmids.append(ref.pmid)
-      else:
-        non_pubmed_refs.append(ref)
     pmids_str = ','.join(pmids)
     doc = _xmlget('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
                      params={'db': 'pubmed', 'id': pmids_str, 'rettype': 'xml'})
     articles = doc.xpath('/PubmedArticleSet/PubmedArticle')
-    pubmed_refs = []
     for article in articles:
-      pubmed_refs.append(PubMedRef(article))
-    return (pubmed_refs, non_pubmed_refs)
+      pubmed_ref = PubMedRef(article)
+      for ref in refs:
+        if hasattr(ref, 'pmid') and ref.pmid == pubmed_ref.pmid:
+          ref.pubmed = pubmed_ref
+
 
 _pm_months = [
   'Jan',

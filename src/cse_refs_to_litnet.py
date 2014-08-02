@@ -6,10 +6,12 @@ import sys
 import unicodecsv
 import ref
 import pubmed
+import wos
 import litnet
 
 def main(input_file_paths, output_file_path, no_match_file_path):
-  client = pubmed.Client()
+  pm_client = pubmed.Client()
+  wos_client = wos.Client()
   with open(no_match_file_path, 'w') as no_match_file:
     no_match_writer = unicodecsv.writer(no_match_file, encoding='utf-8')
     no_match_writer.writerow(['Input File', 'Authors', 'Title', 'Journal', 'Year', 'Volume', 'First page', 'Raw'])
@@ -20,18 +22,26 @@ def main(input_file_paths, output_file_path, no_match_file_path):
       with codecs.open(input_file_path, encoding='utf-8') as input_file:
         lines = input_file.readlines()
       root_name = lines[0]
-      refs = ref.parse_cse_refs(lines[1:])
-      client.add_pmids(refs)
-      (pubmed_refs, non_pubmed_refs) = client.to_pubmed_refs(refs)
-      litnet.add_pubmed_refs_to_graph(root_name, pubmed_refs, refg)
-      litnet.add_nodata_refs_to_graph(root_name, non_pubmed_refs, refg)
+      cse_refs = ref.parse_cse_refs(lines[1:])
 
-      for r in refs:
+      pm_client.add_pmids(cse_refs)
+      pm_client.add_pubmed_data(cse_refs)
+
+      for r in cse_refs:
+        if hasattr(r, 'journal'):
+          wos_ref = wos_client.search(r.first_author(), r.title, r.journal, r.year)
+          if wos_ref:
+            r.wos = wos_ref
+
+      litnet.add_refs_to_graph(root_name, cse_refs, refg)
+
+      for r in cse_refs:
         if hasattr(r, 'pmid'): continue
         refdata = r.aslist()
         refdata.insert(0, '')
         no_match_writer.writerow(refdata)
     refg.save(output_file_path)
+  wos_client.close()
 
 def unique_filename(name, extension):
   filename = '%s.%s' % (name, extension)

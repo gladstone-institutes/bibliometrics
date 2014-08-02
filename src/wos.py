@@ -38,19 +38,23 @@ class WoSRef(ref.Ref):
 
 class WoSCitedRef(ref.Ref):
   def __init__(self, record):
-    self.author = record.citedAuthor
+    if hasattr(record, 'citedAuthor'):
+      self.authors_str = record.citedAuthor
     if hasattr(record, 'timesCited'):
       self.citcount = int(record.timesCited)
     if hasattr(record, 'year'):
-      self.year = int(record.year)
+      self.year = record.year
     if hasattr(record, 'page'):
-      self.page = int(record.page)
+      self.firstpage = record.page
     if hasattr(record, 'volume'):
       self.volume = record.volume
     if hasattr(record, 'citedTitle'):
       self.title = record.citedTitle
     if hasattr(record, 'citedWork'):
       self.journal = record.citedWork
+
+  def first_author(self):
+    return self.authors_str
 
 class Client:
   def __init__(self):
@@ -82,7 +86,12 @@ class Client:
       return None
 
     records = lxml.etree.fromstring(results.records)
-    return WoSRef(records)
+    wosref = WoSRef(records)
+    wosref.citations = self.citations(wosref)
+
+    #with open('%s.xml' % wosref.wosid, 'w') as f: f.write(results.records)
+
+    return wosref
 
   def citations(self, ref):
     rp = self.searchclient.factory.create('retrieveParameters')
@@ -92,5 +101,7 @@ class Client:
     citedrefs = []
     results = self.searchclient.service.citedReferences('WOS', ref.wosid, 'en', rp)
     for record in results.references:
-      citedrefs.append(WoSCitedRef(record))
+      citedref = WoSCitedRef(record)
+      if hasattr(citedref, 'authors_str') and hasattr(citedref, 'title'):
+        citedrefs.append(citedref)
     return citedrefs

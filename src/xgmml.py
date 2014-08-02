@@ -1,6 +1,7 @@
 from xml.etree.ElementTree import ElementTree
 import lxml.etree
 from lxml.builder import E
+import suds
 import codecs
 import types
 
@@ -13,6 +14,8 @@ def _serialize_attrs(d, node):
       xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
     elif type(v) == lxml.etree._ElementStringResult or type(v) == lxml.etree._ElementUnicodeResult:
       xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
+    elif type(v) == suds.sax.text.Text:
+      xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
     elif type(v) == types.IntType:
       xattr = E.att({'name': k, 'value': str(v), 'type': 'integer'})
     elif type(v) == types.ListType:
@@ -21,6 +24,8 @@ def _serialize_attrs(d, node):
         if type(val) == types.UnicodeType or type(val) == types.StringType:
           xval = E.att({'name': k, 'value': val, 'type': 'string'})
         elif type(val) == lxml.etree._ElementStringResult or type(val) == lxml.etree._ElementUnicodeResult:
+          xattr = E.att({'name': k, 'value': unicode(val), 'type': 'string'})
+        elif type(val) == suds.sax.text.Text:
           xattr = E.att({'name': k, 'value': unicode(val), 'type': 'string'})
         elif type(val) == types.IntType:
           xval = E.att({'name': k, 'value': str(val), 'type': 'integer'})
