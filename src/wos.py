@@ -3,6 +3,8 @@ import time
 import suds
 import ref
 import lxml.etree
+import os.path
+import pickle
 
 _date_re = re.compile(r'(?P<yr>\d{4})-(?P<mon>\d{2})-(?P<day>\d{2})')
 
@@ -37,7 +39,9 @@ class WoSRef(ref.Ref):
       self.authors.append((author_name, affiliation_indices))
 
 class WoSCitedRef(ref.Ref):
-  def __init__(self, record):
+  def __init__(self, record_dict):
+    record = ref.Ref()
+    record.__dict__.update(record_dict)
     if hasattr(record, 'citedAuthor'):
       self.authors_str = record.citedAuthor
     if hasattr(record, 'timesCited'):
@@ -56,6 +60,11 @@ class WoSCitedRef(ref.Ref):
   def first_author(self):
     return self.authors_str
 
+def _serializable(obj):
+  return {k: v for (k, v) in obj.__dict__.items() if not k.startswith('__')}
+
+_cache_path = '.wos-cache.pkl'
+
 class Client:
   def __init__(self):
     self.authclient = suds.client.Client('http://search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate?wsdl')
@@ -63,16 +72,30 @@ class Client:
     header = {'Cookie': ('SID="%s"' % session)}
     self.searchclient = suds.client.Client('http://search.webofknowledge.com/esti/wokmws/ws/WokSearch?wsdl')
     self.searchclient.set_options(headers=header)
+    
+    self.cache = {}
+    if os.path.isfile(_cache_path):
+      with open(_cache_path, 'rb') as cache_file:
+        try:
+          self.cache = pickle.load(cache_file)
+        except Exception as e:
+          print 'Failed to load cache:', str(e)
 
   def close(self):
     self.authclient.service.closeSession()
+    
+  def _flush_cache(self):
+    with open(_cache_path, 'wb') as cache_file:
+      pickle.dump(self.cache, cache_file)
 
-  def search(self, author, title, journal=None, year=None):
+  def _cached_search(self, userQuery):
+    cache_key = 'search:%s' % userQuery
+    if cache_key in self.cache:
+      return self.cache[cache_key]
+
     qp = self.searchclient.factory.create('queryParameters')
     qp.databaseId = 'WOS'
-    qp.userQuery = 'TI=(%s) AND AU=(%s)' % (title, author)
-    if journal:
-      qp.userQuery += ' AND SO=(%s) AND PY=(%s)' % (journal, year)
+    qp.userQuery = userQuery
     qp.queryLanguage = 'en'
 
     rp = self.searchclient.factory.create('retrieveParameters')
@@ -80,12 +103,23 @@ class Client:
     rp.count = 100
 
     time.sleep(1) # throttle requests
-    results = self.searchclient.service.search(qp, rp)
+    results_raw = self.searchclient.service.search(qp, rp)
 
-    if not results.recordsFound == 1:
+    results = _serializable(results_raw)
+    self.cache[cache_key] = results
+    self._flush_cache()
+    return results
+
+  def search(self, author, title, journal=None, year=None):
+    userQuery = 'TI=(%s) AND AU=(%s)' % (title, author)
+    if journal:
+      userQuery += ' AND SO=(%s) AND PY=(%s)' % (journal, year)
+
+    results = self._cached_search(userQuery)
+    if not results['recordsFound'] == 1:
       return None
 
-    records = lxml.etree.fromstring(results.records)
+    records = lxml.etree.fromstring(results['records'])
     wosref = WoSRef(records)
     wosref.citations = self.citations(wosref)
 
@@ -93,14 +127,27 @@ class Client:
 
     return wosref
 
-  def citations(self, ref):
+  def _cached_citations(self, wosid):
+    cache_key = 'citations:%s' % wosid
+    if cache_key in self.cache:
+      return self.cache[cache_key]
+
     rp = self.searchclient.factory.create('retrieveParameters')
     rp.firstRecord = 1
     rp.count = 100
 
+    results_raw = self.searchclient.service.citedReferences('WOS', wosid, 'en', rp)
+    results = map(_serializable, results_raw.references)
+
+    self.cache[cache_key] = results
+    self._flush_cache()
+
+    return results
+
+  def citations(self, ref):
+    results = self._cached_citations(ref.wosid)
     citedrefs = []
-    results = self.searchclient.service.citedReferences('WOS', ref.wosid, 'en', rp)
-    for record in results.references:
+    for record in results:
       citedref = WoSCitedRef(record)
       if hasattr(citedref, 'authors_str') and hasattr(citedref, 'title'):
         citedrefs.append(citedref)
