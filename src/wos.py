@@ -25,9 +25,10 @@ class WoSRef(ref.Ref):
     num_institutions = int(records.xpath("/ns:records/ns:REC/ns:static_data/ns:fullrecord_metadata/ns:addresses", namespaces=ns)[0].attrib['count'])
     for i in range(1, num_institutions + 1):
       institution_tag = records.xpath("/ns:records/ns:REC/ns:static_data/ns:fullrecord_metadata/ns:addresses/ns:address_name/ns:address_spec[@addr_no='%d']" % i, namespaces=ns)[0]
-      institution_address = institution_tag.xpath("ns:full_address", namespaces=ns)[0].text
+      address = institution_tag.xpath("ns:full_address", namespaces=ns)[0].text
+      organizations = map(unicode, institution_tag.xpath("ns:organizations/ns:organization/text()", namespaces=ns))
 
-      self.institutions[i] = institution_address 
+      self.institutions[i] = (address, organizations)
 
     self.authors = []
     num_authors = int(records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:names", namespaces=ns)[0].attrib['count'])
@@ -123,7 +124,7 @@ class Client:
     wosref = WoSRef(records)
     wosref.citations = self.citations(wosref)
 
-    #with open('%s.xml' % wosref.wosid, 'w') as f: f.write(results.records)
+    with open('%s.xml' % wosref.wosid, 'w') as f: f.write(results['records'])
 
     return wosref
 

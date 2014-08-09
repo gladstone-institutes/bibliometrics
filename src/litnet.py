@@ -1,14 +1,15 @@
 import networkx as nx
 import xgmml
 import pubmed
+from itertools import izip, chain
 
 class RefG:
   def __init__(self):
     self.G = nx.DiGraph()
     self.refs = {}
 
-  def save(self, path):
-    xgmml.write(self.G, path)
+  def save(self, name, path):
+    xgmml.write(self.G, name, path)
 
   def _encode_int(self, num):
     letters = 'abcdefghijklmnopqrstuvwxyz'
@@ -52,11 +53,13 @@ class RefG:
       return self._ref_node_on_new_id(ref)
 
   def author_node(self, name):
+    name = name.title()
     if not name in self.G.node:
       self.G.add_node(name, type='author')
     return name
 
   def affiliation_node(self, institute):
+    institute = institute.title()
     if not institute in self.G.node:
       self.G.add_node(institute, type='institute')
     return institute
@@ -75,10 +78,20 @@ def add_wos_data(refg, ref_node, ref, include_citations=False):
   refg.G.node[ref_node]['pubdate'] = ref.pubdate
 
   affiliations = {}
-  for (affiliation_index, affiliation) in ref.institutions.items():
-    affiliation_node = refg.affiliation_node(affiliation)
+  for (affiliation_index, (address, organizations)) in ref.institutions.items():
+    affiliation_node = refg.affiliation_node(address)
     refg.G.node[affiliation_node]['pubdate'] = min(ref.pubdate, refg.G.node[affiliation_node].get('pubdate', 30000000))
     affiliations[affiliation_index] = affiliation_node 
+
+    for organization in organizations:
+      organization_node = refg.affiliation_node(organization)
+      refg.G.node[organization_node]['pubdate'] = min(ref.pubdate, refg.G.node[organization_node].get('pubdate', 30000000))
+
+    for (src, trg) in izip(chain([address], organizations), organizations):
+      src_node = refg.affiliation_node(src)
+      trg_node = refg.affiliation_node(trg)
+      refg.G.add_edge(src_node, trg_node)
+
 
   for (author, affiliation_indices) in ref.authors:
     author_node = refg.author_node(author)

@@ -10,23 +10,15 @@ def _serialize_attrs(d, node):
   for k, v in d.items():
     if v == None:
       continue
-    elif type(v) == types.UnicodeType or type(v) == types.StringType:
-      xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
-    elif type(v) == lxml.etree._ElementStringResult or type(v) == lxml.etree._ElementUnicodeResult:
-      xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
-    elif type(v) == suds.sax.text.Text:
+    elif isinstance(v, basestring):
       xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
     elif type(v) == types.IntType:
       xattr = E.att({'name': k, 'value': str(v), 'type': 'integer'})
     elif type(v) == types.ListType:
       xattr = E.att({'name': k, 'type': 'list'})
       for val in v:
-        if type(val) == types.UnicodeType or type(val) == types.StringType:
-          xval = E.att({'name': k, 'value': val, 'type': 'string'})
-        elif type(val) == lxml.etree._ElementStringResult or type(val) == lxml.etree._ElementUnicodeResult:
-          xattr = E.att({'name': k, 'value': unicode(val), 'type': 'string'})
-        elif type(val) == suds.sax.text.Text:
-          xattr = E.att({'name': k, 'value': unicode(val), 'type': 'string'})
+        if isinstance(val, basestring):
+          xval = E.att({'name': k, 'value': unicode(val), 'type': 'string'})
         elif type(val) == types.IntType:
           xval = E.att({'name': k, 'value': str(val), 'type': 'integer'})
         else:
@@ -38,8 +30,8 @@ def _serialize_attrs(d, node):
   return xattrs
 
 
-def write(G, path):
-  xG = E.graph({'label': 'Network', 'directed': '1'}, namespace='http://www.cs.rpi.edu/XGMML')
+def write(G, name, path):
+  xG = E.graph({'label': name, 'directed': '1'}, namespace='http://www.cs.rpi.edu/XGMML')
   nodes = G.nodes()
   for node_id in range(len(nodes)):
     node = nodes[node_id]
