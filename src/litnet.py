@@ -26,8 +26,9 @@ class RefG:
 
   def _ref_node_on_new_id(self, ref):
     refid = self._encode_int(len(self.refs))
+    year = ('%s0000' % ref.year) if hasattr(ref, 'year') else None
     self.refs[refid] = ref
-    self.G.add_node(refid, type='article', title=ref.title)
+    self.G.add_node(refid, type='article', title=ref.title, pubdate=year)
     return refid
     
   def _ref_node_on_wos(self, ref):
