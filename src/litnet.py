@@ -53,7 +53,7 @@ class RefG:
       return self._ref_node_on_new_id(ref)
 
   def author_node(self, name):
-    name = name.title()
+    name = name.title().replace(',', '')
     if not name in self.G.node:
       self.G.add_node(name, type='author')
     return name
