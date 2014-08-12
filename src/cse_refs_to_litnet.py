@@ -10,7 +10,6 @@ import litnet
 import clinicaltrials
 
 def main(input_file_path, output_file_path):
-  refg = litnet.RefG()
   pm_client = pubmed.Client()
   wos_client = wos.Client()
   ct_client = clinicaltrials.Client()
@@ -30,14 +29,29 @@ def main(input_file_path, output_file_path):
       if wos_ref:
         r.wos = wos_ref
 
+  trials = ct_client.search(drugname)
+  for trial in trials:
+    pm_client.add_pubmed_data(trial.refs)
+
+  refg = litnet.RefG()
   root_node = drugname
   refg.G.add_node(root_node)
+
   fda_node = 'FDA NDA'
   refg.G.add_node(fda_node)
   refg.G.add_edge(root_node, fda_node)
   litnet.add_refs_to_graph(fda_node, cse_refs, refg)
 
+  for trial in trials:
+    trial_node = trial.nctid
+    refg.G.add_node(trial_node, title=trial.title, type='clinicaltrial')
+    refg.G.add_edge(root_node, trial_node)
+
+    if trial.refs:
+      litnet.add_refs_to_graph(trial_node, trial.refs, refg)
+
   refg.save(drugname, output_file_path)
+
   wos_client.close()
 
 def parse_args(args):
