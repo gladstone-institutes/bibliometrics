@@ -92,10 +92,7 @@ class Client:
         _pmid_by_author_title_scrape(ref)
 
   def add_pubmed_data(self, refs):
-    pmids = []
-    for ref in refs:
-      if hasattr(ref, 'pmid'):
-        pmids.append(ref.pmid)
+    pmids = [ref.pmid for ref in refs if hasattr(ref, 'pmid')]
     pmids_str = ','.join(pmids)
     doc = _xmlget('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
                      params={'db': 'pubmed', 'id': pmids_str, 'rettype': 'xml'})
