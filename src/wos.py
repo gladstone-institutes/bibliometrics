@@ -124,7 +124,7 @@ class Client:
     wosref = WoSRef(records)
     wosref.citations = self.citations(wosref)
 
-    with open('%s.xml' % wosref.wosid, 'w') as f: f.write(results['records'])
+    #with open('%s.xml' % wosref.wosid, 'w') as f: f.write(results['records'])
 
     return wosref
 
