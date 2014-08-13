@@ -29,10 +29,6 @@ def main(input_file_path, output_file_path):
       if wos_ref:
         r.wos = wos_ref
 
-  trials = ct_client.search(drugname)
-  for trial in trials:
-    pm_client.add_pubmed_data(trial.refs)
-
   refg = litnet.RefG()
   root_node = drugname
   refg.G.add_node(root_node)
@@ -42,12 +38,19 @@ def main(input_file_path, output_file_path):
   refg.G.add_edge(root_node, fda_node)
   litnet.add_refs_to_graph(fda_node, cse_refs, refg)
 
+  trials = ct_client.search(drugname)
   for trial in trials:
     trial_node = trial.nctid
     refg.G.add_node(trial_node, title=trial.title, type='clinicaltrial')
     refg.G.add_edge(root_node, trial_node)
 
     if trial.refs:
+      pm_client.add_pubmed_data(trial.refs)
+      for trialref in trial.refs:
+        r = trialref.pubmed
+        wos_ref = wos_client.search(r.first_author(), r.title, r.journal, r.year)
+        if wos_ref:
+          trialref.wos = wos_ref
       litnet.add_refs_to_graph(trial_node, trial.refs, refg)
 
   refg.save(drugname, output_file_path)

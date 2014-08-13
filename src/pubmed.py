@@ -154,6 +154,10 @@ class PubMedRef(ref.Ref):
         pubdate_str += '0000'
 
     self.pubdate = int(pubdate_str) if pubdate_str else None
+    self.year = pubdate_yr[0] if pubdate_yr else None
+
+    journal = article.xpath('MedlineCitation/MedlineJournalInfo/MedlineTA/text()')
+    self.journal = journal[0] if journal else None
 
     self.grantagencies = map(unicode, article.xpath('MedlineCitation/Article/GrantList[last()]/Grant/Agency/text()'))
 
@@ -168,3 +172,6 @@ class PubMedRef(ref.Ref):
         params={'db': 'pubmed', 'linkname': 'pubmed_pubmed_citedin', 'id': self.pmid})
     citdoc = lxml.etree.fromstring(citreq.content)
     self.citcount = len(citdoc.xpath('/eLinkResult/LinkSet/LinkSetDb/Link'))
+
+  def first_author(self):
+    return self.authors[0][0]
