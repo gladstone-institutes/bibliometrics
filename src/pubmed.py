@@ -138,13 +138,14 @@ class PubMedRef(ref.Ref):
     self.title = article.xpath('MedlineCitation/Article/ArticleTitle/text()')[0]
 
     pubdate_str = u''
-    pubdate_elem = article.xpath('MedlineCitation/Article/Journal/JournalIssue/PubDate')[0]
+    #pubdate_elem = article.xpath('MedlineCitation/Article/Journal/JournalIssue/PubDate')[0]
+    pubdate_elem = article.xpath('PubmedData/History/PubMedPubDate[@PubStatus="pubmed"]')[0]
     pubdate_yr = pubdate_elem.xpath('Year/text()')
     if pubdate_yr:
       pubdate_str += pubdate_yr[0]
       pubdate_mon = pubdate_elem.xpath('Month/text()')
       if pubdate_mon:
-        pubdate_str += '%02d' % (_pm_months.index(pubdate_mon[0]) + 1)
+        pubdate_str += '%02d' % int(pubdate_mon[0])
         pubdate_day = pubdate_elem.xpath('Day/text()')
         if pubdate_day:
           pubdate_str += '%02d' % int(pubdate_day[0])
