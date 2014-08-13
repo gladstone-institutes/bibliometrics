@@ -154,13 +154,40 @@ def add_pubmed_data(refg, ref_node, ref, include_meshterms=False):
         term_node_trg = refg.mesh_term_node(terms[i + 1])
         refg.G.add_edge(term_node_src, term_node_trg)
 
+def add_wos_and_pubmed_data(refg, ref_node, wos_ref, pubmed_ref):
+  add_wos_data(refg, ref_node, wos_ref)
+
+  refg.G.node[ref_node]['pmid'] = pubmed_ref.pmid
+  refg.G.node[ref_node]['citcount'] = pubmed_ref.citcount
+  refg.G.node[ref_node]['pubtypes'] = pubmed_ref.pubtypes
+
+  for grantagency in pubmed_ref.grantagencies:
+    grantagency_node = refg.grant_agency_node(grantagency)
+    if grantagency_node in nx.all_neighbors(refg.G, ref_node):
+      count = refg.G.edge[ref_node][grantagency_node]['count']
+      refg.G.edge[ref_node][grantagency_node]['count'] = count + 1
+    else:
+      refg.G.add_edge(ref_node, grantagency_node, count=1)
+
 def add_refs_to_graph(root_name, refs, refg):
   refg.G.add_node(root_name)
+  counts = {'wos_pubmed': 0, 'wos': 0, 'pubmed': 0, 'unknown': 0}
   for ref in refs:
     ref_node = refg.ref_node(ref)
     refg.G.add_edge(ref_node, root_name)
 
-    if hasattr(ref, 'wos'):
+    if hasattr(ref, 'wos') and hasattr(ref, 'pubmed'):
+      add_wos_and_pubmed_data(refg, ref_node, ref.wos, ref.pubmed)
+      counts['wos_pubmed'] += 1
+    elif hasattr(ref, 'wos'):
       add_wos_data(refg, ref_node, ref.wos)
+      counts['wos'] += 1
     elif hasattr(ref, 'pubmed'):
       add_pubmed_data(refg, ref_node, ref.pubmed)
+      counts['pubmed'] += 1
+    else:
+      counts['unknown'] += 1
+
+  for k, v in counts.items():
+    print k.ljust(10), ':', '%3d' % v
+  print
