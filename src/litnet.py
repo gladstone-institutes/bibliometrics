@@ -26,9 +26,7 @@ class RefG:
 
   def _ref_node_on_new_id(self, ref):
     refid = self._encode_int(len(self.refs))
-    #year = ('%s0000' % ref.year) if hasattr(ref, 'year') else None
     self.refs[refid] = ref
-    #self.G.add_node(refid, type='article', title=ref.title, pubdate=year)
     self.G.add_node(refid, type='article', title=ref.title)
     if hasattr(ref, 'year'):
       self.G.node[refid]['pubdate'] = int('%s0000' % ref.year)
@@ -103,14 +101,9 @@ def add_wos_data(refg, ref_node, ref, include_citations=True):
 
     refg.G.node[author_node]['pubdate'] = min(ref.pubdate, refg.G.node[author_node].get('pubdate', 30000000))
 
-    if affiliation_indices:
-      for affiliation_index in affiliation_indices:
-        affiliation_node = affiliations[affiliation_index]
-        refg.G.add_edge(author_node, affiliation_node)
-    else:
-      for affiliation_index in affiliations:
-        affiliation_node = affiliations[affiliation_index]
-        refg.G.add_edge(ref_node, affiliation_node)
+    for affiliation_index in affiliations:
+      affiliation_node = affiliations[affiliation_index]
+      refg.G.add_edge(ref_node, affiliation_node)
   
   if include_citations:
     pm_client = pubmed.Client()
@@ -138,7 +131,7 @@ def add_pubmed_data(refg, ref_node, ref, include_meshterms=False):
       refg.G.node[author_node]['pubdate'] = min(ref.pubdate, refg.G.node[author_node].get('pubdate', 30000000))
       if affiliation:
         affiliation_node = refg.affiliation_node(affiliation)
-        refg.G.add_edge(author_node, affiliation_node)
+        refg.G.add_edge(ref_node, affiliation_node)
         author_pubdate = refg.G.node[author_node].get('pubdate')
         if author_pubdate:
           refg.G.node[affiliation_node]['pubdate'] = min(author_pubdate, refg.G.node[affiliation_node].get('pubdate', 30000000))
