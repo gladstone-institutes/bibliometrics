@@ -169,25 +169,27 @@ def add_wos_and_pubmed_data(refg, ref_node, wos_ref, pubmed_ref):
     else:
       refg.G.add_edge(ref_node, grantagency_node, count=1)
 
+_counts = {'wos_pubmed': 0, 'wos': 0, 'pubmed': 0, 'unknown': 0}
+
 def add_refs_to_graph(root_name, refs, refg):
   refg.G.add_node(root_name)
-  counts = {'wos_pubmed': 0, 'wos': 0, 'pubmed': 0, 'unknown': 0}
   for ref in refs:
     ref_node = refg.ref_node(ref)
     refg.G.add_edge(ref_node, root_name)
 
     if hasattr(ref, 'wos') and hasattr(ref, 'pubmed'):
       add_wos_and_pubmed_data(refg, ref_node, ref.wos, ref.pubmed)
-      counts['wos_pubmed'] += 1
+      _counts['wos_pubmed'] += 1
     elif hasattr(ref, 'wos'):
       add_wos_data(refg, ref_node, ref.wos)
-      counts['wos'] += 1
+      _counts['wos'] += 1
     elif hasattr(ref, 'pubmed'):
       add_pubmed_data(refg, ref_node, ref.pubmed)
-      counts['pubmed'] += 1
+      _counts['pubmed'] += 1
     else:
-      counts['unknown'] += 1
+      _counts['unknown'] += 1
 
-  for k, v in counts.items():
+def print_stats():
+  for k, v in _counts.items():
     print k.ljust(10), ':', '%3d' % v
   print

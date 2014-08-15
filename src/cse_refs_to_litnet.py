@@ -17,13 +17,15 @@ def main(input_file_path, output_file_path):
   with codecs.open(input_file_path, encoding='utf-8') as input_file:
     lines = input_file.readlines()
 
-  drugname = lines[0]
+  drugname = lines[0].strip()
   cse_refs = ref.parse_cse_refs(lines[1:])
 
   pm_client.add_pmids(cse_refs)
   pm_client.add_pubmed_data(cse_refs)
 
   for r in cse_refs:
+    if not hasattr(r, 'pmid'):
+      print 'No PMID:', r.title
     if hasattr(r, 'journal'):
       wos_ref = wos_client.search(r.first_author(), r.title, r.journal, r.year)
       if wos_ref:
@@ -55,6 +57,9 @@ def main(input_file_path, output_file_path):
           trialref.wos = wos_ref
       litnet.add_refs_to_graph(trial_node, trial.refs, refg)
 
+  litnet.print_stats()
+  if not output_file_path:
+    output_file_path = drugname + '.xml'
   refg.save(drugname, output_file_path)
 
   wos_client.close()
@@ -62,7 +67,7 @@ def main(input_file_path, output_file_path):
 def parse_args(args):
   p = argparse.ArgumentParser()
   p.add_argument('input', nargs=1, help='Input reference file')
-  p.add_argument('-o', '--output', nargs='?', help='Output XGMML file name', default='output.xml')
+  p.add_argument('-o', '--output', nargs='?', help='Output XGMML file name', default='')
   return p.parse_args(args)
 
 args = parse_args(sys.argv[1:])
