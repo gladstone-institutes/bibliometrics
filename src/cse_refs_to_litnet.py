@@ -47,6 +47,8 @@ def main(input_file_path, output_file_path):
     if trial.refs:
       pm_client.add_pubmed_data(trial.refs)
       for trialref in trial.refs:
+        if not hasattr(trialref, 'pubmed'):
+          continue
         r = trialref.pubmed
         wos_ref = wos_client.search(r.first_author(), r.title, r.journal, r.year)
         if wos_ref:

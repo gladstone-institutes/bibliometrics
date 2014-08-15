@@ -9,13 +9,14 @@ import ref
 class ClinicalTrial:
   def __init__(self, doc):
     self.nctid = doc.xpath('/clinical_study/id_info/nct_id/text()')[0]
-    self.title = doc.xpath('/clinical_study/official_title/text()')[0]
+    self.title = doc.xpath('/clinical_study/official_title/text() | /clinical_study/brief_title/text()')[0]
     self.refs = []
     for reftag in doc.xpath('/clinical_study/reference | /clinical_study/results_reference'):
       cseref = reftag.xpath('citation/text()')[0]
-      pmid = reftag.xpath('PMID/text()')[0]
+      pmid = reftag.xpath('PMID/text()')
       r = ref.CseRef(cseref)
-      r.pmid = pmid
+      if pmid:
+        r.pmid = pmid[0]
       self.refs.append(r)
 
     completion_date_str = doc.xpath('/clinical_study/completion_date/text()')
