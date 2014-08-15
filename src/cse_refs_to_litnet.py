@@ -35,7 +35,7 @@ def main(input_file_path, output_file_path):
   root_node = drugname
   refg.G.add_node(root_node)
 
-  fda_node = 'FDA NDA'
+  fda_node = 'FDA NDA ' + drugname
   refg.G.add_node(fda_node)
   refg.G.add_edge(root_node, fda_node)
   litnet.add_refs_to_graph(fda_node, cse_refs, refg)
