@@ -5,41 +5,41 @@ import ref
 import lxml.etree
 import os.path
 import pickle
+import datetime
 
 _date_re = re.compile(r'(?P<yr>\d{4})-(?P<mon>\d{2})-(?P<day>\d{2})')
 
 class WoSRef(ref.Ref):
-  def __init__(self, records):
-    ns = {'ns': records.nsmap[None]}
+  def __init__(self, record, ns):
 
-    self.wosid = records.xpath("/ns:records/ns:REC/ns:UID/text()", namespaces=ns)[0]
-    self.title = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:titles/ns:title[@type='item']/text()", namespaces=ns)[0]
-    self.journal = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:titles/ns:title[@type='source']/text()", namespaces=ns)[0]
-    pubinfo = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:pub_info", namespaces=ns)[0]
+    self.wosid = record.xpath("ns:UID/text()", namespaces=ns)[0]
+    self.title = record.xpath("ns:static_data/ns:summary/ns:titles/ns:title[@type='item']/text()", namespaces=ns)[0]
+    self.journal = record.xpath("ns:static_data/ns:summary/ns:titles/ns:title[@type='source']/text()", namespaces=ns)[0]
+    pubinfo = record.xpath("ns:static_data/ns:summary/ns:pub_info", namespaces=ns)[0]
     (self.issue, self.volume, self.pubdate) = (pubinfo.attrib.get('issue'), pubinfo.attrib.get('vol'), pubinfo.attrib.get('sortdate'))
     if self.pubdate:
       m = _date_re.match(self.pubdate)
       self.pubdate = int(m.group('yr') + m.group('mon') + m.group('day'))
 
     self.institutions = {}
-    num_institutions = int(records.xpath("/ns:records/ns:REC/ns:static_data/ns:fullrecord_metadata/ns:addresses", namespaces=ns)[0].attrib['count'])
+    num_institutions = int(record.xpath("ns:static_data/ns:fullrecord_metadata/ns:addresses", namespaces=ns)[0].attrib['count'])
     for i in range(1, num_institutions + 1):
-      institution_tag = records.xpath("/ns:records/ns:REC/ns:static_data/ns:fullrecord_metadata/ns:addresses/ns:address_name/ns:address_spec[@addr_no='%d']" % i, namespaces=ns)[0]
+      institution_tag = record.xpath("ns:static_data/ns:fullrecord_metadata/ns:addresses/ns:address_name/ns:address_spec[@addr_no='%d']" % i, namespaces=ns)[0]
       address = institution_tag.xpath("ns:full_address", namespaces=ns)[0].text
       organizations = map(unicode, institution_tag.xpath("ns:organizations/ns:organization/text()", namespaces=ns))
 
       self.institutions[i] = (address, organizations)
 
     self.authors = []
-    num_authors = int(records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:names", namespaces=ns)[0].attrib['count'])
+    num_authors = int(record.xpath("ns:static_data/ns:summary/ns:names", namespaces=ns)[0].attrib['count'])
     for i in range(1, num_authors + 1):
-      author_tag = records.xpath("/ns:records/ns:REC/ns:static_data/ns:summary/ns:names/ns:name[@seq_no='%d']" % i, namespaces=ns)[0]
+      author_tag = record.xpath("ns:static_data/ns:summary/ns:names/ns:name[@seq_no='%d']" % i, namespaces=ns)[0]
       author_name = author_tag.xpath("ns:wos_standard/text()", namespaces=ns)[0]
       affiliation_indices = map(int, author_tag.attrib['addr_no'].split(' ')) if 'addr_no' in author_tag.attrib else None
 
       self.authors.append((author_name, affiliation_indices))
 
-class WoSCitedRef(ref.Ref):
+class WoSBiblioRef(ref.Ref):
   def __init__(self, record_dict):
     record = ref.Ref()
     record.__dict__.update(record_dict)
@@ -121,16 +121,16 @@ class Client:
     if not results['recordsFound'] == 1:
       return None
 
-    records = lxml.etree.fromstring(results['records'])
-    wosref = WoSRef(records)
-    wosref.citations = self.citations(wosref)
+    doc = lxml.etree.fromstring(results['records'])
+    ns = {'ns': doc.nsmap[None]}
 
-    #with open('%s.xml' % wosref.wosid, 'w') as f: f.write(results['records'])
+    record = doc.xpath('/ns:records/ns:REC', namespaces=ns)
+    wosref = WoSRef(record[0], ns)
 
     return wosref
 
-  def _cached_citations(self, wosid):
-    cache_key = 'citations:%s' % wosid
+  def _cached_biblio(self, wosid):
+    cache_key = 'biblio:%s' % wosid
     if cache_key in self.cache:
       return self.cache[cache_key]
 
@@ -146,11 +146,47 @@ class Client:
 
     return results
 
-  def citations(self, ref):
-    results = self._cached_citations(ref.wosid)
+  def biblio(self, wosref):
+    results = self._cached_biblio(wosref.wosid)
     citedrefs = []
     for record in results:
-      citedref = WoSCitedRef(record)
+      citedref = WoSBiblioRef(record)
       if hasattr(citedref, 'authors_str') and hasattr(citedref, 'title'):
         citedrefs.append(citedref)
     return citedrefs
+
+  def _cached_citations(self, wosid):
+    cache_key = 'citations:%s' % wosid
+    if cache_key in self.cache:
+      return self.cache[cache_key]
+
+    timespan = self.searchclient.factory.create('timeSpan')
+    timespan.begin = datetime.date(1900, 1, 1)
+    timespan.end = datetime.date.today()
+
+    rp = self.searchclient.factory.create('retrieveParameters')
+    rp.firstRecord = 1
+    rp.count = 100
+
+    edition = self.searchclient.factory.create('editionDesc')
+    edition.collection = 'WOS'
+    edition.edition = 'SCI'
+
+    time.sleep(1) # throttle requests
+    results_raw = self.searchclient.service.citingArticles('WOS', wosid, [edition], timespan, 'en', rp)
+    results = _serializable(results_raw)
+    self.cache[cache_key] = results
+    self._flush_cache()
+    return results
+
+  def citations(self, wosref):
+    results = self._cached_citations(wosref.wosid)
+
+    doc = lxml.etree.fromstring(results['records'])
+    ns = {'ns': doc.nsmap[None]}
+
+    citations = []
+    for record in doc.xpath('/ns:records/ns:REC', namespaces=ns):
+      citations.append(WoSRef(record, ns))
+
+    return citations

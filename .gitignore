@@ -3,4 +3,5 @@
 *.csv
 *.sqlite
 *.pkl
+.venv/
 venv/
