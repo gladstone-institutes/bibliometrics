@@ -1,40 +1,40 @@
 Sofosbuvir
-1. Backus, LI, D Boothroyd, B Phillips, P Belperio, J Halloran, L Mole. A Sustained
+1. Backus LI, Boothroyd D, Phillips B, Belperio P, Halloran J, Mole L. A Sustained
 Virologic Response Reduces Risk of All-Cause Mortality in Patients With Hepatitis C.
 Clin Gastroenterol Hepatol 2012;9(6):509-516
-2. Ghany, MG, DB Strader, DL Thomas, LB Seeff. Diagnosis, Management, and
+2. Ghany MG, Strader DB, Thomas DL, Seeff LB. Diagnosis, Management, and
 Treatment of Hepatitis C: An Update. HEPATOLOGY 2009;49:1335-1374.
-3. Ghany MG et al. An Update on Treatment of Genotype 1 Chronic Hepatitis
+3. Ghany MG. An Update on Treatment of Genotype 1 Chronic Hepatitis
 C Virus Infection: 2011 Practice Guideline by the American Association for the
 Study of Liver Diseases. Hepatology 2011;54(4):1433–1444. 
-4. Kim, WR. The Burden of Hepatitis C in the United States. Hepatology 2012.
+4. Kim WR. The Burden of Hepatitis C in the United States. Hepatology 2012.
 36(Suppl):S30-S34.
 5. Ly KN, Xing J, Klevens RM, Jiles RB, Ward JW, Holmberg SD. The increasing burden
 of mortality from viral hepatitis in the United States between 1999 and 2007.
 Ann Intern Med 2012;156(4):271-8.
-6. Manos, MM, WK Zhao, VA Shvachko, N Volkova, CP Quesenberry, Viral Hepatitis
-Registry, Kaiser Permanente Division of Research, Oakland, CA. Long Term
+6. Manos MM, WK Zhao, VA Shvachko, N Volkova, CP Quesenberry, Viral Hepatitis
+Registry, Kaiser Permanente Division of Research Oakland CA. Long Term
 Outcomes in Patients Treated With Peg-Interferon/Ribavirin Therapy for Hepatitis C:
 The Substantial Effect of Sustained Viral Response (SVR) on Liver Disease, Mortality
 and Diabetes. 13th International Symposium on Viral Hepatitis and Liver Disease 2009;
 Abstract PL-3.
-7. Shiratori, Y, Y Ito, O Yokosuka, F Imazeki, R Nakata, N Tanaka, Y Arakawa, E
-Hashimoto, K Hirota, H Yoshida, Y Ohashi, M Omata; Tokyo-Chiba Hepatitis Research
+7. Shiratori Y, Ito Y, Yokosuka O, Imazeki F, Nakata R, Tanaka N, Arakawa Y,
+Hashimoto E, Hirota K, Yoshida H, Ohashi Y, Omata M, Tokyo-Chiba Hepatitis Research
 Group. Antiviral Therapy for Cirrhotic Hepatitis C: Association With Reduced
 Hepatocellular Carcinoma Development and Improved Survival. Ann Intern Med 2005
 ;142(2):105-14.
-8. Singal AG, M Volk, D Jensen, et al. A sustained viral response is associated with
+8. Singal AG, M Volk, D Jensen. A sustained viral response is associated with
 reduced liver related morbidity and mortality in patients with hepatitis C virus. Clin
 Gastroenterol Hepatol 2010; 8:280–288.
 9. van der Meer AJ, Veldt BJ, Feld JJ, Wedemeyer H, Dufour JF, Lammert F, Duarte-Rojo
 A, Heathcote EJ, Manns MP, Kuske L, Zeuzem S, Hofmann WP, de Knegt RJ, Hansen
 BE, Janssen HL. Association between sustained virological response and allcause mortality among patients with chronic hepatitis C and advanced hepatic fibrosis.
 JAMA 2012;308(24):2584-2593
-10. Veldt, BJ, EJ Heathcote, H Wedemeyer, J Reichen, WP Hofmann, S Zeuzem, MP
-Manns, BE Hansen, SW Schalm, HL Janssen. Sustained Virologic Response and
+10. Veldt BJ, Heathcote EJ, Wedemeyer H, Reichen J, Hofmann WP, Zeuzem S, MP
+Manns, Hansen BE, Schalm SW, Janssen HL. Sustained Virologic Response and
 Clinical Outcomes in Patients With Chronic Hepatitis C and Advanced Fibrosis. Ann
 Intern Med 2007;147:677-684.
-11. Yoshida, H, Y Shiratori, M Moriyama, et al. Interferon Therapy Reduces the Risk
+11. Yoshida H, Shiratori Y, Moriyama M. Interferon Therapy Reduces the Risk
 for Hepatocellular Carcinoma: National Surveillance Program of Cirrhotic and
 Noncirrhotic Patients With Chronic Hepatitis C in Japan, IHIT Study Group, Inhibition of
 Hepatocarcinogenesis by Interferon Therapy. Ann Intern Med 1999;131(3):174-81.

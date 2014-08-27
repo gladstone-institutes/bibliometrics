@@ -39,6 +39,14 @@ def _make_citmatch_str(refs, lo, hi):
                        '%0D\n')
   return citmatch_str
 
+def _ref_to_citmatch_str(ref, refkey):
+  return ref['journal']       + '|' + \
+         ref['year']          + '|' + \
+         ref['volume']        + '|' + \
+         ref['firstpage']     + '|' + \
+         ref['authors'][0][0] + '|' + \
+         refkey
+
 _pmid_re = re.compile(r'\d+')
 def _pmids_by_citmatch(refs, lo, hi):
   citmatch_str = _make_citmatch_str(refs, lo, hi)
