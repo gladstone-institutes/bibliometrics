@@ -2,7 +2,7 @@ import re
 
 _journal_re = re.compile(r'(?P<journal>[\w\s]+),?\s+(?P<year>\d{4}).*\;\s*(?P<volume>\d+).*\:\s*(?P<firstpage>\w+)')
 
-def _parse_cse_ref(citstr):
+def parse_cse_ref(citstr):
   pieces = [piece.strip() for piece in citstr.split(u'.') if len(piece) > 0]
   (authors_str, title, journraw) = (pieces[0], pieces[1], pieces[-1])
 
@@ -40,4 +40,4 @@ def _parse_multiline_numbered_list(lines):
 
 def parse_cse_refs(lines):
   cit_strs = _parse_multiline_numbered_list(lines)
-  return [_parse_cse_ref(cit_str) for cit_str in cit_strs]
+  return [parse_cse_ref(cit_str) for cit_str in cit_strs]

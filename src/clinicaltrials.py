@@ -4,23 +4,28 @@ import zipfile
 import lxml.etree
 import os
 import dateutil.parser
-import ref
+import refparse
+from util import xpath_str
 
-class ClinicalTrial:
-  def __init__(self, doc):
-    self.nctid = doc.xpath('/clinical_study/id_info/nct_id/text()')[0]
-    self.title = doc.xpath('/clinical_study/official_title/text() | /clinical_study/brief_title/text()')[0]
-    self.refs = []
-    for reftag in doc.xpath('/clinical_study/reference | /clinical_study/results_reference'):
-      cseref = reftag.xpath('citation/text()')[0]
-      pmid = reftag.xpath('PMID/text()')
-      r = ref.CseRef(cseref)
-      if pmid:
-        r.pmid = pmid[0]
-      self.refs.append(r)
+def _parse_clinical_trial(doc):
+  t = {}
+  t['nctid'] = xpath_str(doc, '/clinical_study/id_info/nct_id/text()')
+  t['title'] = xpath_str(doc, '/clinical_study/official_title/text() | /clinical_study/brief_title/text()')
+  refs = []
+  for reftag in doc.xpath('/clinical_study/reference | /clinical_study/results_reference'):
+    cseref_str = xpath_str(reftag, 'citation/text()')
+    ref = refparse.parse_cse_ref(cseref_str)
+    pmid = xpath_str(reftag, 'PMID/text()')
+    if pmid:
+      ref['pmid'] = pmid
+    refs.append(ref)
+  t['biblio'] = refs
 
-    completion_date_str = doc.xpath('/clinical_study/completion_date/text()')
-    self.completion_date = dateutil.parser.parse(completion_date_str[0]) if completion_date_str else None
+  completion_date_str = xpath_str(doc, '/clinical_study/completion_date/text()')
+  completion_date = dateutil.parser.parse(completion_date_str) if completion_date_str else None
+  t['completion_date'] = completion_date 
+  
+  return t
 
 class Client:
   def __init__(self):
@@ -35,9 +40,7 @@ class Client:
       for name in archive.namelist():
         with archive.open(name, 'r') as docfile:
           doc = lxml.etree.parse(docfile)
-          trial = ClinicalTrial(doc)
+          trial = _parse_clinical_trial(doc)
           trials.append(trial)
     os.remove(tmppath)
     return trials
-    
-
