@@ -1,13 +1,12 @@
 from xml.etree.ElementTree import ElementTree
 import lxml.etree
 from lxml.builder import E
-import suds
 import codecs
 import types
 
-def _serialize_attrs(d, node):
+def _serialize_attrs(elem):
   xattrs = list()
-  for k, v in d.items():
+  for k, v in elem.attributes().items():
     if v == None:
       continue
     elif isinstance(v, basestring):
@@ -22,30 +21,31 @@ def _serialize_attrs(d, node):
         elif type(val) == types.IntType:
           xval = E.att({'name': k, 'value': str(val), 'type': 'integer'})
         else:
-          raise Exception('Cannot serialize attribute of type %s of node %s' % (type(val), node))
+          raise Exception('Cannot serialize attribute of type %s of %s' % (type(val), elem))
         xattr.append(xval)
     else:
-      raise Exception('Cannot serialize attribute of type %s of node %s' % (type(v), node))
+      raise Exception('Cannot serialize attribute of type %s of %s' % (type(v), elem))
     xattrs.append(xattr)
   return xattrs
 
+def _graph_to_xml_tree(g, name):
+  xg = E.graph({'label': name, 'directed': '1'}, namespace='http://www.cs.rpi.edu/XGMML')
+  for v in g.vs:
+    xv = E.node({'id': str(v.index)})
+    xattrs = _serialize_attrs(v)
+    xv.extend(xattrs)
+    xg.append(xv)
 
-def write(G, name, path):
-  xG = E.graph({'label': name, 'directed': '1'}, namespace='http://www.cs.rpi.edu/XGMML')
-  nodes = G.nodes()
-  for node_id in range(len(nodes)):
-    node = nodes[node_id]
-    xnode = E.node({'id': str(node_id), 'label': node})
-    xattrs = _serialize_attrs(G.node[node], node)
-    xnode.extend(xattrs)
-    xG.append(xnode)
+  for e in g.es:
+    (src, trg) = e.tuple
+    xe = E.edge({'source': str(src), 'target': str(trg)})
+    xattrs = _serialize_attrs(e)
+    xe.extend(xattrs)
+    xg.append(xe)
 
-  for src in G.edge:
-    src_id = nodes.index(src)
-    for trg in G.edge[src]:
-      trg_id = nodes.index(trg)
-      xedge = E.edge({'source': str(src_id), 'target': str(trg_id)})
-      xG.append(xedge)
+  return xg
 
-  t = ElementTree(xG)
+def write(g, name, path):
+  xg = _graph_to_xml_tree(g, name)
+  t = ElementTree(xg)
   t.write(path, xml_declaration=True, encoding='UTF-8')
