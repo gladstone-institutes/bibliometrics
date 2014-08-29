@@ -133,6 +133,7 @@ class Client:
         return self.cache[cache_key]
       result = func(self, arg)
       self.cache[cache_key] = result
+      self._flush_cache()
       return result
     return inner
 
@@ -175,10 +176,7 @@ class Client:
 
   def biblio(self, wosref):
     results = self._biblio(wosref['wosid'])
-    records = []
-    for record in results:
-      if 'authors' in record and 'title' in record:
-        records.append(record)
+    records = [record for record in results if 'authors' in record and 'title' in record]
     return records
 
   @_cache

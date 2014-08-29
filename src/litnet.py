@@ -1,195 +1,98 @@
-import networkx as nx
+import igraph
 import xgmml
-import pubmed
-from itertools import izip, chain
+from itertools import chain
 
-class RefG:
+class LitNet:
   def __init__(self):
-    self.G = nx.DiGraph()
-    self.refs = {}
+    self.g = igraph.Graph()
+
+    self.pmid_to_v = {}
+    self.wosid_to_v = {}
+    self.title_to_v = {}
+
+    self.author_to_v = {}
+    self.institution_to_v = {}
 
   def save(self, name, path):
-    xgmml.write(self.G, name, path)
+    xgmml.write(self.g, name, path)
 
-  def _encode_int(self, num):
-    letters = 'abcdefghijklmnopqrstuvwxyz'
-    nletters = len(letters)
+  def layout(self, alg='fr', scale=8.0):
+    l = self.g.layout(alg)
+    for v_index in range(self.g.vcount()):
+      x, y = l[v_index]
+      x *= scale
+      y *= scale
+      (self.g.vs[v_index]['x'], self.g.vs[v_index]['y']) = (x,y)
 
-    if 0 <= num and num < nletters:
-      return letters[num]
+  def add_v(self, **attrs):
+    index = self.g.vcount()
+    self.g.add_vertex(**attrs)
+    return index
 
-    s = ''
-    while num != 0:
-      num, i = divmod(num, nletters)
-      s = letters[i] + s
-    return s
+  def _get_ref_index(self, ref):
+    for (id_key, id_dict) in [('pmid', self.pmid_to_v), ('wosid', self.wosid_to_v), ('title', self.title_to_v)]:
+      if id_key in ref:
+        id_val = ref[id_key]
+        if id_val in id_dict:
+          return id_dict[id_val]
+    return self.add_v()
 
-  def _ref_node_on_new_id(self, ref):
-    refid = self._encode_int(len(self.refs))
-    self.refs[refid] = ref
-    self.G.add_node(refid, type='article', title=ref.title)
-    if hasattr(ref, 'year'):
-      self.G.node[refid]['pubdate'] = int('%s0000' % ref.year)
-    return refid
-    
-  def _ref_node_on_wos(self, ref):
-    wosid = ref.wos.wosid
-    if not wosid in self.refs:
-      self.refs[wosid] = ref
-      self.G.add_node(wosid, type='article', title=ref.title, wosid=wosid)
-    return wosid
-    
-  def _ref_node_on_pmid(self, ref):
-    pmid = ref.pmid
-    if not pmid in self.refs:
-      self.refs[pmid] = ref
-      self.G.add_node(pmid, type='article', title=ref.title, pmid=pmid)
-    return pmid
+  def _add_ref_data(self, ref, ref_index):
+    ref_v = self.g.vs[ref_index]
+    for attr in ('wosid', 'pmid', 'title', 'pubdate', 'pubtypes', 'meshterms'):
+      if attr in ref:
+        ref_v[attr] = ref[attr]
+    ref_v['label'] = ref['title']
 
-  def ref_node(self, ref):
-    if hasattr(ref, 'wos'):
-      return self._ref_node_on_wos(ref)
-    elif hasattr(ref, 'pmid'):
-      return self._ref_node_on_pmid(ref)
-    else:
-      return self._ref_node_on_new_id(ref)
+  def _update_ref_vertex_dicts(self, ref, ref_index):
+    if 'wosid' in ref:
+      wosid = ref['wosid']
+      if not wosid in self.wosid_to_v:
+        self.wosid_to_v[wosid] = ref_index
+    if 'pmid' in ref:
+      pmid = ref['pmid']
+      if not pmid in self.pmid_to_v:
+        self.pmid_to_v[pmid] = ref_index
+    if not 'wosid' in ref and not 'pmid' in ref and 'title' in ref:
+      self.title_to_v[ref['title']] = ref_index
 
-  def author_node(self, name):
-    name = name.title().replace(',', '')
-    if not name in self.G.node:
-      self.G.add_node(name, type='author')
-    return name
+  def _add_authors(self, ref, ref_index):
+    authors = ref.get('authors')
+    if not authors:
+      return
+    for (author, institution_index) in authors:
+      author_index = self.author_to_v.get(author)
+      if not author_index:
+        author_index = self.add_v(type='author', label=author)
+        self.author_to_v[author] = author_index
+      self.g.add_edge(ref_index, author_index)
 
-  def affiliation_node(self, institute):
-    institute = institute.title()
-    if not institute in self.G.node:
-      self.G.add_node(institute, type='institute')
-    return institute
+  def _add_institution(self, institution):
+    institution_index = self.institution_to_v.get(institution)
+    if not institution_index:
+      institution_index = self.add_v(type='institution', label=institution)
+    return institution_index
 
-  def grant_agency_node(self, grantagency):
-    if not grantagency in self.G.node:
-      self.G.add_node(grantagency, type='grantagency')
-    return grantagency
+  def _add_institutions(self, ref, ref_index):
+    institutions = ref.get('institutions')
+    if not institutions:
+      return
+    for (key, (institution_address, parent_orgs)) in institutions.items():
+      institution_index = self._add_institution(institution_address)
+      self.g.add_edge(ref_index, institution_index)
+      if parent_orgs:
+        indices = map(self._add_institution, parent_orgs)
+        self.g.add_edge(institution_index, indices[0])
+        self.g.add_edges(zip(indices, indices[1:]))
 
-  def mesh_term_node(self, term):
-    if not term in self.G.node:
-      self.G.add_node(term, type='meshterm')
-    return term
+  def add_ref(self, ref, parent_index):
+    ref_index = self._get_ref_index(ref)
+    self._update_ref_vertex_dicts(ref, ref_index)
+    self.g.add_edge(parent_index, ref_index)
 
-def add_wos_data(refg, ref_node, ref, include_citations=True):
-  refg.G.node[ref_node]['pubdate'] = ref.pubdate
+    self._add_ref_data(ref, ref_index)
+    self._add_authors(ref, ref_index)
+    self._add_institutions(ref, ref_index)
 
-  affiliations = {}
-  for (affiliation_index, (address, organizations)) in ref.institutions.items():
-    affiliation_node = refg.affiliation_node(address)
-    refg.G.node[affiliation_node]['pubdate'] = min(ref.pubdate, refg.G.node[affiliation_node].get('pubdate', 30000000))
-    affiliations[affiliation_index] = affiliation_node 
+    return ref_index
 
-    for organization in organizations:
-      organization_node = refg.affiliation_node(organization)
-      refg.G.node[organization_node]['pubdate'] = min(ref.pubdate, refg.G.node[organization_node].get('pubdate', 30000000))
-
-    for (src, trg) in izip(chain([address], organizations), organizations):
-      src_node = refg.affiliation_node(src)
-      trg_node = refg.affiliation_node(trg)
-      refg.G.add_edge(src_node, trg_node)
-
-
-  for (author, affiliation_indices) in ref.authors:
-    author_node = refg.author_node(author)
-    refg.G.add_edge(ref_node, author_node)
-
-    refg.G.node[author_node]['pubdate'] = min(ref.pubdate, refg.G.node[author_node].get('pubdate', 30000000))
-
-    for affiliation_index in affiliations:
-      affiliation_node = affiliations[affiliation_index]
-      refg.G.add_edge(ref_node, affiliation_node)
-  
-  if include_citations:
-    pm_client = pubmed.Client()
-    pm_client.add_pmids(ref.citations)
-    pm_client.add_pubmed_data(ref.citations)
-    for cit_ref in ref.citations:
-      if hasattr(cit_ref, 'pubmed'):
-        pm_node = refg.ref_node(cit_ref.pubmed)
-        add_pubmed_data(refg, pm_node, cit_ref.pubmed)
-        refg.G.add_edge(ref_node, pm_node)
-      else:
-        cit_node = refg.ref_node(cit_ref)
-        refg.G.add_edge(ref_node, cit_node)
-
-def add_pubmed_data(refg, ref_node, ref, include_meshterms=False):
-  refg.G.node[ref_node]['citcount'] = ref.citcount
-  refg.G.node[ref_node]['pubdate'] = ref.pubdate
-  refg.G.node[ref_node]['pubtypes'] = ref.pubtypes
-
-  for (author, affiliation) in ref.authors:
-    author_node = refg.author_node(author)
-    refg.G.add_edge(ref_node, author_node)
-    
-    if ref.pubdate:
-      refg.G.node[author_node]['pubdate'] = min(ref.pubdate, refg.G.node[author_node].get('pubdate', 30000000))
-      if affiliation:
-        affiliation_node = refg.affiliation_node(affiliation)
-        refg.G.add_edge(ref_node, affiliation_node)
-        author_pubdate = refg.G.node[author_node].get('pubdate')
-        if author_pubdate:
-          refg.G.node[affiliation_node]['pubdate'] = min(author_pubdate, refg.G.node[affiliation_node].get('pubdate', 30000000))
-
-  for grantagency in ref.grantagencies:
-    grantagency_node = refg.grant_agency_node(grantagency)
-    if grantagency_node in nx.all_neighbors(refg.G, ref_node):
-      count = refg.G.edge[ref_node][grantagency_node]['count']
-      refg.G.edge[ref_node][grantagency_node]['count'] = count + 1
-    else:
-      refg.G.add_edge(ref_node, grantagency_node, count=1)
-
-  if include_meshterms:
-    for terms in ref.meshterms:
-      first = terms[0]
-      first_node = refg.mesh_term_node(first)
-      refg.G.add_edge(ref_node, first_node)
-      for i in range(0, len(terms) - 1):
-        term_node_src = refg.mesh_term_node(terms[i])
-        term_node_trg = refg.mesh_term_node(terms[i + 1])
-        refg.G.add_edge(term_node_src, term_node_trg)
-
-def add_wos_and_pubmed_data(refg, ref_node, wos_ref, pubmed_ref):
-  add_wos_data(refg, ref_node, wos_ref)
-
-  refg.G.node[ref_node]['pmid'] = pubmed_ref.pmid
-  refg.G.node[ref_node]['citcount'] = pubmed_ref.citcount
-  refg.G.node[ref_node]['pubtypes'] = pubmed_ref.pubtypes
-
-  for grantagency in pubmed_ref.grantagencies:
-    grantagency_node = refg.grant_agency_node(grantagency)
-    if grantagency_node in nx.all_neighbors(refg.G, ref_node):
-      count = refg.G.edge[ref_node][grantagency_node]['count']
-      refg.G.edge[ref_node][grantagency_node]['count'] = count + 1
-    else:
-      refg.G.add_edge(ref_node, grantagency_node, count=1)
-
-_counts = {'wos_pubmed': 0, 'wos': 0, 'pubmed': 0, 'unknown': 0}
-
-def add_refs_to_graph(root_name, refs, refg):
-  refg.G.add_node(root_name)
-  for ref in refs:
-    ref_node = refg.ref_node(ref)
-    refg.G.add_edge(ref_node, root_name)
-
-    if hasattr(ref, 'wos') and hasattr(ref, 'pubmed'):
-      add_wos_and_pubmed_data(refg, ref_node, ref.wos, ref.pubmed)
-      _counts['wos_pubmed'] += 1
-    elif hasattr(ref, 'wos'):
-      add_wos_data(refg, ref_node, ref.wos)
-      _counts['wos'] += 1
-    elif hasattr(ref, 'pubmed'):
-      add_pubmed_data(refg, ref_node, ref.pubmed)
-      _counts['pubmed'] += 1
-    else:
-      _counts['unknown'] += 1
-
-def print_stats():
-  for k, v in _counts.items():
-    print k.ljust(10), ':', '%3d' % v
-  print

@@ -7,12 +7,16 @@ import types
 def _serialize_attrs(elem):
   xattrs = list()
   for k, v in elem.attributes().items():
+    if k == 'label':
+      k = 'name'
     if v == None:
       continue
     elif isinstance(v, basestring):
       xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
     elif type(v) == types.IntType:
       xattr = E.att({'name': k, 'value': str(v), 'type': 'integer'})
+    elif type(v) == types.FloatType:
+      xattr = E.att({'name': k, 'value': str(v), 'type': 'real'})
     elif type(v) == types.ListType:
       xattr = E.att({'name': k, 'type': 'list'})
       for val in v:

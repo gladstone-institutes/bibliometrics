@@ -80,7 +80,11 @@ class Client:
   def add_pubmed_data(self, refs, overwrite_keys = None):
     self._add_pmids(refs)
 
-    pmids_str = ','.join((ref['pmid'] for ref in refs if 'pmid' in ref))
+    refs_with_pmids = [ref['pmid'] for ref in refs if 'pmid' in ref]
+    if not refs_with_pmids:
+      return
+
+    pmids_str = ','.join(refs_with_pmids)
     req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
         params={'db': 'pubmed', 'id': pmids_str, 'rettype': 'xml'})
 
