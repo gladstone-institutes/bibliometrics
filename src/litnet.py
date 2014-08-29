@@ -16,7 +16,7 @@ class LitNet:
   def save(self, name, path):
     xgmml.write(self.g, name, path)
 
-  def layout(self, alg='fr', scale=8.0):
+  def layout(self, alg='fr', scale=4.0):
     l = self.g.layout(alg)
     for v_index in range(self.g.vcount()):
       x, y = l[v_index]
@@ -56,21 +56,26 @@ class LitNet:
     if not 'wosid' in ref and not 'pmid' in ref and 'title' in ref:
       self.title_to_v[ref['title']] = ref_index
 
+  def _author_key(self, author):
+    return author.replace(',', '').lower()
+
   def _add_authors(self, ref, ref_index):
     authors = ref.get('authors')
     if not authors:
       return
     for (author, institution_index) in authors:
-      author_index = self.author_to_v.get(author)
+      author_key = self._author_key(author)
+      author_index = self.author_to_v.get(author_key)
       if not author_index:
         author_index = self.add_v(type='author', label=author)
-        self.author_to_v[author] = author_index
+        self.author_to_v[author_key] = author_index
       self.g.add_edge(ref_index, author_index)
 
   def _add_institution(self, institution):
     institution_index = self.institution_to_v.get(institution)
     if not institution_index:
       institution_index = self.add_v(type='institution', label=institution)
+      self.institution_to_v[institution] = institution_index
     return institution_index
 
   def _add_institutions(self, ref, ref_index):

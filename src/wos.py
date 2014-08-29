@@ -159,7 +159,9 @@ class Client:
     title_fixed = title.replace('(', ' ').replace(')', ' ')
     userQuery = 'TI=(%s) AND AU=(%s)' % (title_fixed, author)
     if journal:
-      userQuery += ' AND SO=(%s) AND PY=(%s)' % (journal, year)
+      userQuery += ' AND SO=(%s)' % journal
+    if year:
+      userQuery += ' AND PY=(%s)' % year
 
     results = self._search(userQuery)
     return results
