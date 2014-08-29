@@ -19,6 +19,17 @@ class TopDown:
     else:
       return authors[0][0]
 
+  def _add_layer_1_ref_data(self, refs, parent_index):
+    self.pm_client.add_pubmed_data(refs)
+
+    for ref in refs:
+      wos_refs = self.wos_client.search(self._first_author(ref), ref.get('title'), ref.get('journal'), ref.get('year'))
+      if len(wos_refs) == 1:
+        ref.update(wos_refs[0])
+
+    for ref in refs:
+      self.net.add_ref(ref, parent_index)
+
   def run(self, input_file_path):
     input_file = open(input_file_path, 'r')
     input_lines = input_file.readlines()
@@ -34,27 +45,11 @@ class TopDown:
 
       refs = trial['biblio']
       if refs:
-        self.pm_client.add_pubmed_data(refs)
-
-        for ref in refs:
-          wos_refs = self.wos_client.search(self._first_author(ref), ref.get('title'), ref.get('journal'), ref.get('year'))
-          if len(wos_refs) == 1:
-            ref.update(wos_refs[0])
-
-        for ref in refs:
-          self.net.add_ref(ref, trial_index)
+        self._add_layer_1_ref_data(refs, trial_index)
 
     fda_index = self.net.add_v(type='clinicaltrial', label='FDA')
     fda_refs = refparse.parse_cse_refs(input_lines[1:])
-
-    self.pm_client.add_pubmed_data(fda_refs)
-    for ref in refs:
-      wos_refs = self.wos_client.search(self._first_author(ref), ref.get('title'), ref.get('journal'), ref.get('year'))
-      if len(wos_refs) == 1:
-        ref.update(wos_refs[0])
-
-    for ref in fda_refs:
-      self.net.add_ref(ref, fda_index)
+    self._add_layer_1_ref_data(fda_refs, fda_index)
 
     self.wos_client.close()
 
