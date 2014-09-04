@@ -22,7 +22,8 @@ def _parse_clinical_trial(doc):
   t['biblio'] = refs
 
   completion_date_str = xpath_str(doc, '/clinical_study/completion_date/text()')
-  completion_date = dateutil.parser.parse(completion_date_str) if completion_date_str else None
+  #completion_date = dateutil.parser.parse(completion_date_str) if completion_date_str else None
+  completion_date = completion_date_str
   t['completion_date'] = completion_date 
   
   return t

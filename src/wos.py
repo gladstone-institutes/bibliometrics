@@ -5,9 +5,11 @@ import lxml.etree
 import os.path
 import pickle
 import datetime
+import string
 from util import xpath_str, xpath_strs
 
 _date_re = re.compile(r'(?P<yr>\d{4})-(?P<mon>\d{2})-(?P<day>\d{2})')
+_non_alphanum_re = re.compile(r'\W+')
 def _convert_wos_record(record, ns):
   """
   Takes an XML tree of a single WoS record and returns a dictionary
@@ -54,6 +56,7 @@ def _convert_wos_record(record, ns):
   for i in range(1, num_authors + 1):
     author_tag = record.xpath("ns:static_data/ns:summary/ns:names/ns:name[@seq_no='%d']" % i, namespaces=ns)[0]
     author_name = xpath_str(author_tag, "ns:wos_standard/text()", ns)
+    if author_name == None: continue
     affiliation_indices = map(int, author_tag.attrib['addr_no'].split(' ')) if 'addr_no' in author_tag.attrib else None
 
     r['authors'].append((author_name, affiliation_indices))
@@ -139,6 +142,7 @@ class Client:
 
   @_cache
   def _search(self, userQuery):
+    print userQuery
     qp = self.searchclient.factory.create('queryParameters')
     qp.databaseId = 'WOS'
     qp.userQuery = userQuery
@@ -156,7 +160,15 @@ class Client:
     return results
 
   def search(self, author, title, journal=None, year=None):
-    title_fixed = title.replace('(', ' ').replace(')', ' ')
+    title_lower = title.lower()
+    title_alphanum_only = _non_alphanum_re.sub('', title_lower)
+    if title_alphanum_only == 'notavailable':
+      return []
+    if '"' in title:
+      title = title.replace('"', '')
+    if 'near ' in title_lower or ' near' in title_lower or 'same ' in title_lower or ' same' in title_lower or '=' in title or '>' in title or '<' in title or ' not ' in title_lower:
+      title = '"' + title + '"'
+    title_fixed = title.replace('(', ' ').replace(')', ' ').replace('?', ' ').replace('[', ' ').replace(']', ' ')
     userQuery = 'TI=(%s) AND AU=(%s)' % (title_fixed, author)
     if journal:
       userQuery += ' AND SO=(%s)' % journal
@@ -172,6 +184,7 @@ class Client:
     pages = self._paged_query(query_func)
     results = []
     for page in pages:
+      if not hasattr(page, 'references'): continue
       for record in page.references:
         results.append(_convert_wos_biblio_record(record))
     return results

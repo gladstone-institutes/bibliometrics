@@ -35,7 +35,7 @@ class LitNet:
         id_val = ref[id_key]
         if id_val in id_dict:
           return id_dict[id_val]
-    return self.add_v()
+    return self.add_v(type='article')
 
   def _add_ref_data(self, ref, ref_index):
     ref_v = self.g.vs[ref_index]

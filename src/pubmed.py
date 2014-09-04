@@ -15,12 +15,27 @@ def _split_range(n, m):
     low = high
 
 def _ref_to_citmatch_str(ref, refkey):
-  return ref['journal']       + '|' + \
-         ref['year']          + '|' + \
-         ref['volume']        + '|' + \
-         ref['firstpage']     + '|' + \
-         ref['authors'][0][0] + '|' + \
-         refkey               + '|' + \
+  journal = ref.get('journal')
+  if journal == None: journal = ''
+
+  year = ref.get('year')
+  if year == None: year = ''
+
+  volume = ref.get('volume')
+  if volume == None: volume = ''
+
+  firstpage = ref.get('firstpage')
+  if firstpage == None: firstpage = ''
+
+  firstauthor = ref.get('authors', [['']])[0][0]
+  if firstauthor == None: firstauthor = ''
+
+  return journal       + '|' + \
+         year          + '|' + \
+         volume        + '|' + \
+         firstpage     + '|' + \
+         firstauthor   + '|' + \
+         refkey        + '|' + \
          '%0D'
 
 _pmid_re = re.compile(r'\d+')
