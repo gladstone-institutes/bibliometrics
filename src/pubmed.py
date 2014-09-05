@@ -51,6 +51,7 @@ def _ref_to_esearch_term(ref):
 class Client:
   def __init__(self):
     self.session = requests_cache.CachedSession('.req-cache')
+    self.session.mount('http://eutils.ncbi.nlm.nih.gov', requests.adapters.HTTPAdapter(max_retries=10))
     self.xml_parser = lxml.etree.XMLParser(recover=True, encoding='utf-8')
     self.html_parser = lxml.html.HTMLParser(recover=True, encoding='utf-8')
 
@@ -85,6 +86,7 @@ class Client:
       ref['pmid'] = idtag[0].text.encode('utf-8')
 
   def _add_pmids(self, refs):
+    print 'add pmids for %d refs' % len(refs)
     for (lo, hi) in _split_range(50, len(refs)):
       self._add_pmids_by_citmatch(refs[lo:hi])
 
@@ -100,6 +102,7 @@ class Client:
       return
 
     pmids_str = ','.join(refs_with_pmids)
+    print 'add pubmed data: %d/%d' % (len(refs_with_pmids), len(refs))
     req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
         params={'db': 'pubmed', 'id': pmids_str, 'rettype': 'xml'})
 

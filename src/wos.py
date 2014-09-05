@@ -82,15 +82,11 @@ def _convert_wos_biblio_record(record):
   return r
 
 _cache_path = '.wos-cache.pkl'
+_wos_title_bad_chars_re = re.compile(r'[\"\'\(\)\[\]\?\*\!\<\>\=\$\-\.]')
 
 class Client:
   def __init__(self):
-    self.authclient = suds.client.Client('http://search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate?wsdl')
-    session = self.authclient.service.authenticate()
-    header = {'Cookie': ('SID="%s"' % session)}
-    self.searchclient = suds.client.Client('http://search.webofknowledge.com/esti/wokmws/ws/WokSearch?wsdl')
-    self.searchclient.set_options(headers=header)
-    
+    self._sign_in()
     self.cache = {}
     if os.path.isfile(_cache_path):
       with open(_cache_path, 'rb') as cache_file:
@@ -99,16 +95,35 @@ class Client:
         except Exception as e:
           print 'Failed to load cache:', str(e)
 
+  def _sign_in(self):
+    self.authclient = suds.client.Client('http://search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate?wsdl')
+    session = self.authclient.service.authenticate()
+    header = {'Cookie': ('SID="%s"' % session)}
+    self.searchclient = suds.client.Client('http://search.webofknowledge.com/esti/wokmws/ws/WokSearch?wsdl')
+    self.searchclient.set_options(headers=header)
+
+    self.last_query_time = datetime.datetime.now()
+
+  def _sign_out(self):
+    try:
+      self.authclient.service.closeSession()
+    except suds.WebFault:
+      pass
+
   def close(self):
     self._flush_cache()
-    self.authclient.service.closeSession()
+    self._sign_out()
     
   def _flush_cache(self):
     with open(_cache_path, 'wb') as cache_file:
       pickle.dump(self.cache, cache_file)
 
   def _throttled_query(self, query_func):
-    time.sleep(1)
+    time_now = datetime.datetime.now()
+    delta_sec = (time_now - self.last_query_time).total_seconds()
+    if delta_sec < 1.0:
+      time.sleep(1.0 - delta_sec)
+    self.last_query_time = datetime.datetime.now()
     return query_func()
 
   def _paged_query(self, query_func, max_pages = None, records_per_page = 100):
@@ -136,7 +151,6 @@ class Client:
         return self.cache[cache_key]
       result = func(self, arg)
       self.cache[cache_key] = result
-      self._flush_cache()
       return result
     return inner
 
@@ -159,7 +173,7 @@ class Client:
       results.append(_convert_wos_record(record, ns))
     return results
 
-  def search(self, author, title, journal=None, year=None):
+  def _fix_title_pir(self, title):
     title_lower = title.lower()
     title_alphanum_only = _non_alphanum_re.sub('', title_lower)
     if title_alphanum_only == 'notavailable':
@@ -169,6 +183,13 @@ class Client:
     if 'near ' in title_lower or ' near' in title_lower or 'same ' in title_lower or ' same' in title_lower or '=' in title or '>' in title or '<' in title or ' not ' in title_lower:
       title = '"' + title + '"'
     title_fixed = title.replace('(', ' ').replace(')', ' ').replace('?', ' ').replace('[', ' ').replace(']', ' ')
+    return title_fixed
+  
+  def _fix_title(self, title):
+    return '"' + _wos_title_bad_chars_re.sub(' ', title) + '"'
+
+  def search(self, author, title, journal=None, year=None):
+    title_fixed = self._fix_title(title)
     userQuery = 'TI=(%s) AND AU=(%s)' % (title_fixed, author)
     if journal:
       userQuery += ' AND SO=(%s)' % journal

@@ -8,7 +8,9 @@ def _run_interpreter(sig, frame):
   d.update(frame.f_locals)
 
   msg = 'Traceback:\n' + ''.join(traceback.format_stack(frame))
+  run_console(d, msg)
 
+def run_console(d, msg):
   c = code.InteractiveConsole(d)
   c.interact(msg)
   print 'Resuming.'

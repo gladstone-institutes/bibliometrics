@@ -20,6 +20,9 @@ class TopDown:
     self.count_printer.shouldBeRunning = True
     self.count_printer.daemon = True
 
+  def close(self):
+    self.wos_client.close()
+
   def _first_author(self, ref):
     authors = ref.get('authors')
     if not authors:
@@ -40,8 +43,10 @@ class TopDown:
 
   def _print_counts(self):
     while self.count_printer.shouldBeRunning:
-      time.sleep(5)
+      time.sleep(10)
+      print 'Total: %d' % self.counts['all']
       for k, v in self.counts.items():
+        if k == 'all': continue
         print '%4s: %5d, %6.2f%%' % (k, v, (100. * float(v) / self.counts['all']))
       print
 
@@ -59,11 +64,13 @@ class TopDown:
     for ref in refs:
       self._update_ref_counts(ref)
       ref_index = self.net.add_ref(ref, parent_index)
-      self._add_layer_n_to_ref(ref, ref_index, 2, 3)
+      self._add_layer_n_to_ref(ref, ref_index, 2, 2)
 
   def _add_layer_n_to_ref(self, parent_ref, parent_ref_index, layer, max_layers):
     if not 'wosid' in parent_ref:
       return
+
+    print 'PARENT: ', parent_ref['wosid']
 
     refs = self.wos_client.biblio(parent_ref)
     self.pm_client.add_pubmed_data(refs)
@@ -86,6 +93,7 @@ class TopDown:
     drug_index = self.net.add_v(type='drug', label=drug_name)
 
     trials = self.ct_client.search(drug_name)
+
     for trial in trials:
       trial_index = self.net.add_v(type='clinicaltrial', title=trial['title'], label=trial['nctid'])
       self.net.g.add_edge(drug_index, trial_index)
@@ -98,13 +106,20 @@ class TopDown:
     fda_refs = refparse.parse_cse_refs(input_lines[1:])
     self._add_layer_1_ref_data(fda_refs, fda_index)
 
-    self.wos_client.close()
     self.count_printer.shouldBeRunning = False
 
-    output_file_path = drug_name + '.xml'
+    #output_file_path = drug_name + '.xml'
     #self.net.layout()
     #self.net.save(drug_name, output_file_path)
 
+    output_file_path = drug_name + '.pkl.gz'
+    output_file = open(output_file_path, 'wb')
+    self.net.g.write(output_file, format='picklez')
+    output_file.close()
+
 debug.setup_interrupt()
 td = TopDown()
-td.run(sys.argv[1])
+try:
+  td.run(sys.argv[1])
+finally:
+  td.close()
