@@ -52,6 +52,7 @@ class Client:
   def __init__(self):
     self.session = requests_cache.CachedSession('.req-cache')
     self.session.mount('http://eutils.ncbi.nlm.nih.gov', requests.adapters.HTTPAdapter(max_retries=10))
+    self.session.mount('http://www.ncbi.nlm.nih.gov', requests.adapters.HTTPAdapter(max_retries=10))
     self.xml_parser = lxml.etree.XMLParser(recover=True, encoding='utf-8')
     self.html_parser = lxml.html.HTMLParser(recover=True, encoding='utf-8')
 
@@ -79,7 +80,7 @@ class Client:
 
   def _add_pmid_by_author_title_scrape(self, ref):
     esearch_term = _ref_to_esearch_term(ref)
-    req = self.session.get('http://www.ncbi.nlm.nih.gov/pubmed/', params={'term': esearch_term})
+    req = self.session.get(/pubmed/', params={'term': esearch_term})
     doc = lxml.html.document_fromstring(req.content, parser=self.html_parser)
     idtag = doc.cssselect('.abstract .aux .rprtid .highlight')
     if not idtag == []:
