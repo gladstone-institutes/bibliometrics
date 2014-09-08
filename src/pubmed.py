@@ -169,7 +169,7 @@ def _article_to_pubmed_ref(article):
 
   allterms = []
   for meshheading in article.xpath('MedlineCitation/MeshHeadingList/MeshHeading'):
-    terms = xpath_str(meshheading, 'DescriptorName/text() | QualifierName/text()')
+    terms = xpath_strs(meshheading, 'DescriptorName/text() | QualifierName/text()')
     allterms.append(terms)
   r['meshterms'] = allterms
   return r

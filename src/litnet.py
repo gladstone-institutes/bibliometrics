@@ -4,7 +4,7 @@ from itertools import chain
 
 class LitNet:
   def __init__(self):
-    self.g = igraph.Graph()
+    self.g = igraph.Graph(directed=True)
 
     self.pmid_to_v = {}
     self.wosid_to_v = {}
