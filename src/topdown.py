@@ -1,5 +1,4 @@
 import sys 
-import threading
 import time
 import litnet
 import refparse
@@ -16,9 +15,6 @@ class TopDown:
     self.wos_client = wos.Client()
 
     self.counts = {'wos': 0, 'pm': 0, 'w+p': 0, 'all': 0, '?': 0}
-    self.count_printer = threading.Thread(target=self._print_counts)
-    self.count_printer.shouldBeRunning = True
-    self.count_printer.daemon = True
 
   def close(self):
     self.wos_client.close()
@@ -42,13 +38,11 @@ class TopDown:
       self.counts['?'] += 1
 
   def _print_counts(self):
-    while self.count_printer.shouldBeRunning:
-      time.sleep(10)
-      print 'Total: %d' % self.counts['all']
-      for k, v in self.counts.items():
-        if k == 'all': continue
-        print '%4s: %5d, %6.2f%%' % (k, v, (100. * float(v) / self.counts['all']))
-      print
+    print 'Total: %d' % self.counts['all']
+    for k, v in self.counts.items():
+      if k == 'all': continue
+      print '%4s: %5d, %6.2f%%' % (k, v, (100. * float(v) / self.counts['all']))
+    print
 
   def _add_wos_data(self, ref):
     wos_refs = self.wos_client.search(self._first_author(ref), ref.get('title'), ref.get('journal'), ref.get('year'))
@@ -70,6 +64,7 @@ class TopDown:
     if not 'wosid' in parent_ref:
       return
 
+    self._print_counts()
     print 'PARENT: ', parent_ref['wosid']
 
     refs = self.wos_client.biblio(parent_ref)
@@ -77,8 +72,8 @@ class TopDown:
 
     for ref in refs:
       self._add_wos_data(ref)
-      self._update_ref_counts(ref)
       ref_index = self.net.add_ref(ref, parent_ref_index)
+      self._update_ref_counts(ref)
       if layer < max_layers:
         self._add_layer_n_to_ref(ref, ref_index, layer + 1, max_layers)
 
@@ -87,12 +82,10 @@ class TopDown:
     input_lines = input_file.readlines()
     input_file.close()
 
-    self.count_printer.start()
+    self.drug_name = input_lines[0].strip()
+    drug_index = self.net.add_v(type='drug', label=self.drug_name)
 
-    drug_name = input_lines[0].strip()
-    drug_index = self.net.add_v(type='drug', label=drug_name)
-
-    trials = self.ct_client.search(drug_name)
+    trials = self.ct_client.search(self.drug_name)
 
     for trial in trials:
       trial_index = self.net.add_v(type='clinicaltrial', title=trial['title'], label=trial['nctid'])
@@ -106,20 +99,15 @@ class TopDown:
     fda_refs = refparse.parse_cse_refs(input_lines[1:])
     self._add_layer_1_ref_data(fda_refs, fda_index)
 
-    self.count_printer.shouldBeRunning = False
+  def save_graph(self):
+    output_file_path = self.drug_name + '.pkl.gz'
+    self.net.save(output_file_path)
 
-    #output_file_path = drug_name + '.xml'
-    #self.net.layout()
-    #self.net.save(drug_name, output_file_path)
-
-    output_file_path = drug_name + '.pkl.gz'
-    output_file = open(output_file_path, 'wb')
-    self.net.g.write(output_file, format='picklez')
-    output_file.close()
 
 debug.setup_interrupt()
 td = TopDown()
 try:
   td.run(sys.argv[1])
 finally:
+  td.save_graph()
   td.close()

@@ -13,8 +13,12 @@ class LitNet:
     self.author_to_v = {}
     self.institution_to_v = {}
 
-  def save(self, name, path):
+  def export_to_xgmml(self, name, path):
     xgmml.write(self.g, name, path)
+
+  def save(self, path):
+    with open(path, 'wb') as output_file:
+      self.g.write(output_file, format='picklez')
 
   def layout(self, alg='fr', scale=4.0):
     l = self.g.layout(alg)

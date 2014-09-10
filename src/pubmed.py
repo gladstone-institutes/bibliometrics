@@ -10,7 +10,7 @@ from util import has_keys, xpath_str, xpath_strs
 def _split_range(n, m):
   low = 0
   for i in range(m / n + 1):
-    high = min(low + m, n)
+    high = min(low + n, m)
     yield (low, high)
     low = high
 
@@ -80,7 +80,7 @@ class Client:
 
   def _add_pmid_by_author_title_scrape(self, ref):
     esearch_term = _ref_to_esearch_term(ref)
-    req = self.session.get(/pubmed/', params={'term': esearch_term})
+    req = self.session.get('http://www.ncbi.nlm.nih.gov/pubmed/', params={'term': esearch_term})
     doc = lxml.html.document_fromstring(req.content, parser=self.html_parser)
     idtag = doc.cssselect('.abstract .aux .rprtid .highlight')
     if not idtag == []:
@@ -89,32 +89,32 @@ class Client:
   def _add_pmids(self, refs):
     print 'add pmids for %d refs' % len(refs)
     for (lo, hi) in _split_range(50, len(refs)):
+      print 'add pmids: %d to %d of %d' % (lo, hi, len(refs))
       self._add_pmids_by_citmatch(refs[lo:hi])
 
     for ref in refs:
       if not 'pmid' in ref:
         self._add_pmid_by_author_title_scrape(ref)
 
-  def add_pubmed_data(self, refs, overwrite_keys = None):
+  def add_pubmed_data(self, refs):
     self._add_pmids(refs)
 
     refs_with_pmids = [ref['pmid'] for ref in refs if 'pmid' in ref]
     if not refs_with_pmids:
       return
+    print '%d pmids found of %d refs' % (len(refs_with_pmids), len(refs))
 
-    pmids_str = ','.join(refs_with_pmids)
-    print 'add pubmed data: %d/%d' % (len(refs_with_pmids), len(refs))
-    req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
-        params={'db': 'pubmed', 'id': pmids_str, 'rettype': 'xml'})
+    for (lo, hi) in _split_range(100, len(refs_with_pmids)):
+      print 'pubmed data: %d to %d of %d' % (lo, hi, len(refs_with_pmids))
+      pmids_str = ','.join(refs_with_pmids[lo:hi])
+      req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
+          params={'db': 'pubmed', 'id': pmids_str, 'rettype': 'xml'})
 
-    doc = lxml.etree.parse(BytesIO(req.content), self.xml_parser)
-    articles = doc.xpath('/PubmedArticleSet/PubmedArticle')
-    for article in articles:
-      pubmed_ref = _article_to_pubmed_ref(article)
-      ref = _dict_with_value(refs, 'pmid', pubmed_ref['pmid'])
-      if overwrite_keys:
-        ref.update({k: pubmed_ref.get(k, None) for k in overwrite_keys})
-      else:
+      doc = lxml.etree.parse(BytesIO(req.content), self.xml_parser)
+      articles = doc.xpath('/PubmedArticleSet/PubmedArticle')
+      for article in articles:
+        pubmed_ref = _article_to_pubmed_ref(article)
+        ref = _dict_with_value(refs, 'pmid', pubmed_ref['pmid'])
         ref.update(pubmed_ref)
 
 def _dict_with_value(ds, k, v):

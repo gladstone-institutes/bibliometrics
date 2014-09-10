@@ -9,7 +9,7 @@ import string
 from util import xpath_str, xpath_strs
 
 _date_re = re.compile(r'(?P<yr>\d{4})-(?P<mon>\d{2})-(?P<day>\d{2})')
-_non_alphanum_re = re.compile(r'\W+')
+_non_alphanum_re = re.compile(r'[^\w\s]+')
 def _convert_wos_record(record, ns):
   """
   Takes an XML tree of a single WoS record and returns a dictionary
@@ -188,9 +188,20 @@ class Client:
   def _fix_title(self, title):
     return '"' + _wos_title_bad_chars_re.sub(' ', title) + '"'
 
+  def _fix_author(self, author):
+    if not author:
+      return author
+    author_lower = author.lower()
+    author_alphanum_only = _non_alphanum_re.sub('', author_lower)
+    if ' or' in author_alphanum_only or 'or ' in author_alphanum_only:
+      return '"' + author_alphanum_only + '"'
+    else:
+      return author
+
   def search(self, author, title, journal=None, year=None):
     title_fixed = self._fix_title(title)
-    userQuery = 'TI=(%s) AND AU=(%s)' % (title_fixed, author)
+    author_fixed = self._fix_author(author)
+    userQuery = 'TI=(%s) AND AU=(%s)' % (title_fixed, author_fixed)
     if journal:
       userQuery += ' AND SO=(%s)' % journal
     if year:
