@@ -57,7 +57,7 @@ class TopDown:
     for ref in refs:
       self._update_ref_counts(ref)
       ref_index = self.net.add_ref(ref, parent_index)
-      self._add_layer_n_to_ref(ref, ref_index, 2, 2)
+      self._add_layer_n_to_ref(ref, ref_index, 2, 3)
 
   def _add_layer_n_to_ref(self, parent_ref, parent_ref_index, layer, max_layers):
     if not 'wosid' in parent_ref:
