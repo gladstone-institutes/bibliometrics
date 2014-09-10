@@ -1,8 +1,10 @@
+import sys
+import codecs
+import types
+import igraph
 from xml.etree.ElementTree import ElementTree
 import lxml.etree
 from lxml.builder import E
-import codecs
-import types
 
 def _serialize_attrs(elem):
   xattrs = list()
@@ -25,15 +27,15 @@ def _serialize_attrs(elem):
         elif type(val) == types.IntType:
           xval = E.att({'name': k, 'value': str(val), 'type': 'integer'})
         else:
-          raise Exception('Cannot serialize attribute of type %s of %s' % (type(val), elem))
+          raise Exception('Cannot serialize attribute "%s" of type %s for %s' % (k, type(val), elem))
         xattr.append(xval)
     else:
-      raise Exception('Cannot serialize attribute of type %s of %s' % (type(v), elem))
+      raise Exception('Cannot serialize attribute "%s" of type %s for %s' % (k, type(v), elem))
     xattrs.append(xattr)
   return xattrs
 
-def _graph_to_xml_tree(g, name):
-  xg = E.graph({'label': name, 'directed': '1'}, namespace='http://www.cs.rpi.edu/XGMML')
+def _graph_to_xml_tree(g):
+  xg = E.graph({'label': g['name'], 'directed': '1'}, namespace='http://www.cs.rpi.edu/XGMML')
   for v in g.vs:
     xv = E.node({'id': str(v.index)})
     xattrs = _serialize_attrs(v)
@@ -49,7 +51,16 @@ def _graph_to_xml_tree(g, name):
 
   return xg
 
-def write(g, name, path):
-  xg = _graph_to_xml_tree(g, name)
+def write(g, path):
+  xg = _graph_to_xml_tree(g)
   t = ElementTree(xg)
   t.write(path, xml_declaration=True, encoding='UTF-8')
+
+def main(input_file_path):
+  with open(input_file_path, 'rb') as input_file:
+    g = igraph.Graph.Read(input_file, format='picklez')
+    output_file_path = g['name'] + '.xgmml'
+    write(g, output_file_path)
+
+if __name__ == '__main__':
+  main(sys.argv[1])

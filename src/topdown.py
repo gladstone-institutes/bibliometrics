@@ -9,7 +9,6 @@ import debug
 
 class TopDown:
   def __init__(self):
-    self.net = litnet.LitNet()
     self.pm_client = pubmed.Client()
     self.ct_client = clinicaltrials.Client()
     self.wos_client = wos.Client()
@@ -58,7 +57,7 @@ class TopDown:
     for ref in refs:
       self._update_ref_counts(ref)
       ref_index = self.net.add_ref(ref, parent_index)
-      self._add_layer_n_to_ref(ref, ref_index, 2, 3)
+      self._add_layer_n_to_ref(ref, ref_index, 2, 2)
 
   def _add_layer_n_to_ref(self, parent_ref, parent_ref_index, layer, max_layers):
     if not 'wosid' in parent_ref:
@@ -82,10 +81,11 @@ class TopDown:
     input_lines = input_file.readlines()
     input_file.close()
 
-    self.drug_name = input_lines[0].strip()
-    drug_index = self.net.add_v(type='drug', label=self.drug_name)
+    drug_name = input_lines[0].strip()
+    self.net = litnet.LitNet(drug_name)
+    drug_index = self.net.add_v(type='drug', label=drug_name)
 
-    trials = self.ct_client.search(self.drug_name)
+    trials = self.ct_client.search(drug_name)
 
     for trial in trials:
       trial_index = self.net.add_v(type='clinicaltrial', title=trial['title'], label=trial['nctid'])
@@ -100,7 +100,7 @@ class TopDown:
     self._add_layer_1_ref_data(fda_refs, fda_index)
 
   def save_graph(self):
-    output_file_path = self.drug_name + '.pkl.gz'
+    output_file_path = self.net.g['name'] + '.pkl.gz'
     self.net.save(output_file_path)
 
 
@@ -108,6 +108,6 @@ debug.setup_interrupt()
 td = TopDown()
 try:
   td.run(sys.argv[1])
-finally:
   td.save_graph()
+finally:
   td.close()

@@ -1,10 +1,10 @@
 import igraph
-import xgmml
-from itertools import chain
+from itertools import repeat
 
 class LitNet:
-  def __init__(self):
+  def __init__(self, name):
     self.g = igraph.Graph(directed=True)
+    self.g['name'] = name
 
     self.pmid_to_v = {}
     self.wosid_to_v = {}
@@ -12,9 +12,6 @@ class LitNet:
 
     self.author_to_v = {}
     self.institution_to_v = {}
-
-  def export_to_xgmml(self, name, path):
-    xgmml.write(self.g, name, path)
 
   def save(self, path):
     with open(path, 'wb') as output_file:
@@ -41,11 +38,25 @@ class LitNet:
           return id_dict[id_val]
     return self.add_v(type='article')
 
+  def _mesh_terms_as_semistructured(self, mesh_terms):
+    l = []
+    for term in mesh_terms:
+      if len(term) > 1:
+        header = term[0]
+        subheaders = term[1:]
+        for subheader in subheaders:
+          l.append(header + '/' + subheader)
+      else:
+        l.append(term[0])
+    return l
+
   def _add_ref_data(self, ref, ref_index):
     ref_v = self.g.vs[ref_index]
-    for attr in ('wosid', 'pmid', 'title', 'pubdate', 'pubtypes', 'meshterms'):
+    for attr in ('wosid', 'pmid', 'title', 'pubdate', 'pubtypes'):
       if attr in ref:
         ref_v[attr] = ref[attr]
+    if 'meshterms' in ref:
+      ref_v['meshterms'] = self._mesh_terms_as_semistructured(ref['meshterms'])
     ref_v['label'] = ref['title']
 
   def _update_ref_vertex_dicts(self, ref, ref_index):
@@ -87,12 +98,9 @@ class LitNet:
     if not institutions:
       return
     for (key, (institution_address, parent_orgs)) in institutions.items():
-      institution_index = self._add_institution(institution_address)
-      self.g.add_edge(ref_index, institution_index)
-      if parent_orgs:
-        indices = map(self._add_institution, parent_orgs)
-        self.g.add_edge(institution_index, indices[0])
-        self.g.add_edges(zip(indices, indices[1:]))
+      institution_list = ([institution_address] + parent_orgs) if parent_orgs else [institution_address]
+      institution_indices = map(self._add_institution, institution_list)
+      self.g.add_edges(zip(repeat(ref_index), institution_indices))
 
   def add_ref(self, ref, parent_index):
     ref_index = self._get_ref_index(ref)

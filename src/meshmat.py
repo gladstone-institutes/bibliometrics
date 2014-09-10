@@ -44,9 +44,12 @@ def gen_mat(g, term_func):
 
   return mat
 
-def main(input_path, output_path):
+def main(input_path):
   g = read_graph(input_path)
   mat = gen_mat(g, mesh_terms_semistructured)
+
+  output_path = g['name'] + '-Mesh.csv'
   mat.to_csv(output_path, mode='w')
 
-main(sys.argv[1], 'meshmat.csv')
+if __name__ == '__main__':
+  main(sys.argv[1])
