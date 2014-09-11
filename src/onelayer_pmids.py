@@ -4,7 +4,7 @@ import pubmed
 import wos
 import litnet
 
-class BottomUp:
+class OneLayer:
   def __init__(self):
     self.pmclient = pubmed.Client()
     self.wosclient = wos.Client()
@@ -47,10 +47,10 @@ class BottomUp:
     self.wosclient.close()
 
 
-bu = BottomUp()
+ol = OneLayer()
 try:
-  bu.run(sys.argv[1])
+  ol.run(sys.argv[1])
 finally:
   print bu.counts
-  bu.save_graph()
-  bu.close()
+  ol.save_graph()
+  ol.close()
