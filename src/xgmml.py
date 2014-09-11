@@ -1,5 +1,4 @@
 import sys
-import codecs
 import types
 import igraph
 from xml.etree.ElementTree import ElementTree
