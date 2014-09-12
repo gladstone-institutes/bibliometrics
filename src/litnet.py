@@ -1,5 +1,6 @@
 import igraph
-from itertools import repeat
+from itertools import repeat 
+from collections import Counter
 
 class LitNet:
   def __init__(self, name):
@@ -102,12 +103,11 @@ class LitNet:
     for (key, (institution_address, parent_orgs)) in institutions.items():
       institution_list = ([institution_address] + parent_orgs) if parent_orgs else [institution_address]
       institution_indices = map(self._add_institution, institution_list)
-      for institution_index in institution_indices:
+      institution_indices.sort()
+      for (institution_index, count) in Counter(institution_indices).items():
         edge_index = self.g.get_eid(ref_index, institution_index, error = False)
         if edge_index < 0:
-          self.g.add_edge(ref_index, institution_index, count = 1)
-        else:
-          self.g.es[edge_index]['count'] += 1
+          self.g.add_edge(ref_index, institution_index, count = count)
 
   def _add_grant_agency(self, grant_agency):
     grant_agency_index = self.grant_agency_to_v.get(grant_agency)
@@ -121,12 +121,10 @@ class LitNet:
     if not grant_agencies:
       return
     grant_agency_indices = map(self._add_grant_agency, grant_agencies)
-    for grant_agency_index in grant_agency_indices:
+    for (grant_agency_index, count) in Counter(grant_agency_indices).items():
       edge_index = self.g.get_eid(ref_index, grant_agency_index, error = False)
       if edge_index < 0:
-        self.g.add_edge(ref_index, grant_agency_index, count = 1)
-      else:
-        self.g.es[edge_index]['count'] += 1
+        self.g.add_edge(ref_index, grant_agency_index, count = count)
 
   def add_ref(self, ref, parent_index):
     ref_index = self._get_ref_index(ref)
