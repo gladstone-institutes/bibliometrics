@@ -29,7 +29,9 @@ class OneLayer:
     self.pmclient.add_pubmed_data(refs)
 
     for ref in refs:
-      wosrefs = self.wosclient.search(ref['authors'][0][0], ref['title'], ref['journal'], ref['year'])
+      authors = ref.get('authors')
+      firstauthor = authors[0][0] if authors else None
+      wosrefs = self.wosclient.search(ref['authors'][0][0], ref['title'], ref['journal'], ref['year']) if (firstauthor and ref.get('title')) else []
       if len(wosrefs) == 1:
         ref.update(wosrefs[0])
         self.counts['wos'] += 1
@@ -51,6 +53,6 @@ ol = OneLayer()
 try:
   ol.run(sys.argv[1])
 finally:
-  print bu.counts
+  print ol.counts
   ol.save_graph()
   ol.close()

@@ -57,7 +57,8 @@ class LitNet:
         ref_v[attr] = ref[attr]
     if 'meshterms' in ref:
       ref_v['meshterms'] = self._mesh_terms_as_semistructured(ref['meshterms'])
-    ref_v['label'] = ref['title']
+    if 'title' in ref:
+      ref_v['label'] = ref['title']
 
   def _update_ref_vertex_dicts(self, ref, ref_index):
     if 'wosid' in ref:
