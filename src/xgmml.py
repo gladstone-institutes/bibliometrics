@@ -55,11 +55,10 @@ def write(g, path):
   t = ElementTree(xg)
   t.write(path, xml_declaration=True, encoding='UTF-8')
 
-def main(input_file_path):
+def main(input_file_path, output_file_path):
   with open(input_file_path, 'rb') as input_file:
     g = igraph.Graph.Read(input_file, format='picklez')
-    output_file_path = g['name'] + '.xgmml'
-    write(g, output_file_path)
+    write(g, output_file_path + '.xgmml')
 
 if __name__ == '__main__':
-  main(sys.argv[1])
+  main(sys.argv[1], sys.argv[2])

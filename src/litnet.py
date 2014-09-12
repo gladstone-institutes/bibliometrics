@@ -32,6 +32,9 @@ class LitNet:
     self.g.add_vertex(**attrs)
     return index
 
+  def _edge_exists(self, src, trg):
+    return self.g.get_eid(src, trg, error = False) >= 0
+
   def _get_ref_index(self, ref):
     for (id_key, id_dict) in [('pmid', self.pmid_to_v), ('wosid', self.wosid_to_v), ('title', self.title_to_v)]:
       if id_key in ref:
@@ -103,10 +106,8 @@ class LitNet:
     for (key, (institution_address, parent_orgs)) in institutions.items():
       institution_list = ([institution_address] + parent_orgs) if parent_orgs else [institution_address]
       institution_indices = map(self._add_institution, institution_list)
-      institution_indices.sort()
       for (institution_index, count) in Counter(institution_indices).items():
-        edge_index = self.g.get_eid(ref_index, institution_index, error = False)
-        if edge_index < 0:
+        if self._edge_exists(ref_index, institution_index):
           self.g.add_edge(ref_index, institution_index, count = count)
 
   def _add_grant_agency(self, grant_agency):
@@ -122,8 +123,7 @@ class LitNet:
       return
     grant_agency_indices = map(self._add_grant_agency, grant_agencies)
     for (grant_agency_index, count) in Counter(grant_agency_indices).items():
-      edge_index = self.g.get_eid(ref_index, grant_agency_index, error = False)
-      if edge_index < 0:
+      if self._edge_exists(ref_index, grant_agency_index):
         self.g.add_edge(ref_index, grant_agency_index, count = count)
 
   def add_ref(self, ref, parent_index):

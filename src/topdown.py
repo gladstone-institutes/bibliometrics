@@ -1,5 +1,6 @@
 import sys 
 import time
+import argparse
 import litnet
 import refparse
 import clinicaltrials
@@ -48,66 +49,75 @@ class TopDown:
     if len(wos_refs) == 1:
       ref.update(wos_refs[0])
 
-  def _add_layer_1_ref_data(self, refs, parent_index):
+  def _add_layer_of_refs(self, refs, parent_index, max_levels, level = 1):
+    # add pubmed data
     self.pm_client.add_pubmed_data(refs)
 
+    # add wos data
     for ref in refs:
       self._add_wos_data(ref)
 
+    # update our counts about refs
     for ref in refs:
       self._update_ref_counts(ref)
-      ref_index = self.net.add_ref(ref, parent_index)
-      self._add_layer_n_to_ref(ref, ref_index, 2, 2)
-
-  def _add_layer_n_to_ref(self, parent_ref, parent_ref_index, layer, max_layers):
-    if not 'wosid' in parent_ref:
-      return
-
     self._print_counts()
-    print 'PARENT: ', parent_ref['wosid']
 
-    refs = self.wos_client.biblio(parent_ref)
-    self.pm_client.add_pubmed_data(refs)
-
+    # add each ref to the graph
     for ref in refs:
-      self._add_wos_data(ref)
-      ref_index = self.net.add_ref(ref, parent_ref_index)
-      self._update_ref_counts(ref)
-      if layer < max_layers:
-        self._add_layer_n_to_ref(ref, ref_index, layer + 1, max_layers)
+      ref_index = self.net.add_ref(ref, parent_index)
 
-  def run(self, input_file_path):
+      # add the next level if needed and if we have a WoS ID for ref
+      if 'wosid' in ref and level < max_levels:
+        child_refs = self.wos_client.biblio(ref)
+        self._add_layer_of_refs(child_refs, ref_index, max_levels, level + 1)
+
+  def run(self, input_file_path, input_format, levels, search_trials, output_file_path):
     input_file = open(input_file_path, 'r')
     input_lines = input_file.readlines()
     input_file.close()
 
     drug_name = input_lines[0].strip()
     self.net = litnet.LitNet(drug_name)
+    self.net.g['method'] = 'topdown'
+    self.net.g['levels'] = levels
+
     drug_index = self.net.add_v(type='drug', label=drug_name)
 
-    trials = self.ct_client.search(drug_name)
+    if search_trials:
+      trials = self.ct_client.search(drug_name)
 
-    for trial in trials:
-      trial_index = self.net.add_v(type='clinicaltrial', title=trial['title'], label=trial['nctid'])
-      self.net.g.add_edge(drug_index, trial_index)
+      for trial in trials:
+        trial_index = self.net.add_v(type='clinicaltrial', title=trial['title'], label=trial['nctid'])
+        self.net.g.add_edge(drug_index, trial_index)
 
-      refs = trial['biblio']
-      if refs:
-        self._add_layer_1_ref_data(refs, trial_index)
+        refs = trial['biblio']
+        if refs:
+          self._add_layer_of_refs(refs, trial_index, levels)
 
-    fda_index = self.net.add_v(type='clinicaltrial', label='FDA')
-    fda_refs = refparse.parse_cse_refs(input_lines[1:])
-    self._add_layer_1_ref_data(fda_refs, fda_index)
+    if input_format == 'cse':
+      fda_index = self.net.add_v(type='clinicaltrial', label='FDA')
+      fda_refs = refparse.parse_cse_refs(input_lines[1:])
+      self._add_layer_of_refs(fda_refs, fda_index, levels)
+    elif input_format == 'pmid':
+      refs = [{'pmid': pmid.strip()} for pmid in input_lines[1:]]
+      self._add_layer_of_refs(refs, drug_index, levels)
 
-  def save_graph(self):
-    output_file_path = self.net.g['name'] + '.pkl.gz'
-    self.net.save(output_file_path)
+    self.net.save(output_file_path + '.pkl.gz')
 
+def _parse_args(args):
+  p = argparse.ArgumentParser()
+  p.add_argument('--format', required=False, choices=['cse', 'pmid'], default='cse')
+  p.add_argument('--levels', type=int, required=False, default=2)
+  p.add_argument('--dont-search-trials', dest='search_trials', required=False, action='store_false')
+  p.set_defaults(search_trials=True)
+  p.add_argument('input')
+  p.add_argument('output')
+  return p.parse_args(args)
 
-debug.setup_interrupt()
-td = TopDown()
-try:
-  td.run(sys.argv[1])
-  td.save_graph()
-finally:
-  td.close()
+if __name__ == '__main__':
+  args = _parse_args(sys.argv[1:])
+  td = TopDown()
+  try:
+    td.run(args.input, args.format, args.levels, args.search_trials, args.output)
+  finally:
+    td.close()
