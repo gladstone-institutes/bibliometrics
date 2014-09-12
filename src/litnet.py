@@ -12,6 +12,7 @@ class LitNet:
 
     self.author_to_v = {}
     self.institution_to_v = {}
+    self.grant_agency_to_v = {}
 
   def save(self, path):
     with open(path, 'wb') as output_file:
@@ -89,7 +90,7 @@ class LitNet:
 
   def _add_institution(self, institution):
     institution_index = self.institution_to_v.get(institution)
-    if not institution_index:
+    if institution_index == None:
       institution_index = self.add_v(type='institution', label=institution)
       self.institution_to_v[institution] = institution_index
     return institution_index
@@ -101,7 +102,31 @@ class LitNet:
     for (key, (institution_address, parent_orgs)) in institutions.items():
       institution_list = ([institution_address] + parent_orgs) if parent_orgs else [institution_address]
       institution_indices = map(self._add_institution, institution_list)
-      self.g.add_edges(zip(repeat(ref_index), institution_indices))
+      for institution_index in institution_indices:
+        edge_index = self.g.get_eid(ref_index, institution_index, error = False)
+        if edge_index < 0:
+          self.g.add_edge(ref_index, institution_index, count = 1)
+        else:
+          self.g.es[edge_index]['count'] += 1
+
+  def _add_grant_agency(self, grant_agency):
+    grant_agency_index = self.grant_agency_to_v.get(grant_agency)
+    if grant_agency_index == None:
+      grant_agency_index = self.add_v(type='grantagency', label=grant_agency)
+      self.grant_agency_to_v[grant_agency] = grant_agency_index
+    return grant_agency_index
+
+  def _add_grant_agencies(self, ref, ref_index):
+    grant_agencies = ref.get('grantagencies')
+    if not grant_agencies:
+      return
+    grant_agency_indices = map(self._add_grant_agency, grant_agencies)
+    for grant_agency_index in grant_agency_indices:
+      edge_index = self.g.get_eid(ref_index, grant_agency_index, error = False)
+      if edge_index < 0:
+        self.g.add_edge(ref_index, grant_agency_index, count = 1)
+      else:
+        self.g.es[edge_index]['count'] += 1
 
   def add_ref(self, ref, parent_index):
     ref_index = self._get_ref_index(ref)
@@ -111,6 +136,7 @@ class LitNet:
     self._add_ref_data(ref, ref_index)
     self._add_authors(ref, ref_index)
     self._add_institutions(ref, ref_index)
+    self._add_grant_agencies(ref, ref_index)
 
     return ref_index
 
