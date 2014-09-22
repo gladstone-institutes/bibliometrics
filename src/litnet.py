@@ -154,3 +154,13 @@ class LitNet:
     self._add_grant_agencies(ref, ref_index)
 
     return ref_index
+
+  def propagate_pubdates(self):
+    for refv in self.g.vs(type='article'):
+      ref_pubdate = refv['pubdate']
+      if ref_pubdate == None: continue
+      for adj in refv.neighbors(mode = igraph.OUT):
+        if adj['type'] in ['author', 'institution', 'grantagency']:
+          adj_pubdate = adj['pubdate']
+          if adj_pubdate == None or ref_pubdate < adj_pubdate:
+            adj['pubdate'] = ref_pubdate

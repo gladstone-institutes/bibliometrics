@@ -109,6 +109,7 @@ class TopDown:
       self._add_layer_of_refs(refs, drug_index, levels)
 
     print self.net.ref_counts
+    self.net.propagate_pubdates()
     self.net.save(output_file_path + '.pkl.gz')
 
 def _parse_args(args):
