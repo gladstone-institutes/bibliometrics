@@ -77,7 +77,7 @@ class TopDown:
         child_refs = self.wos_client.biblio(ref)
         self._add_layer_of_refs(child_refs, ref_index, max_levels, level + 1)
 
-  def run(self, input_file_path, input_format, levels, search_trials, output_file_path):
+  def run(self, input_file_path, input_format, levels, search_trials, perform_layout, output_file_path):
     input_file = open(input_file_path, 'r')
     input_lines = input_file.readlines()
     input_file.close()
@@ -110,6 +110,11 @@ class TopDown:
 
     print self.net.ref_counts
     self.net.propagate_pubdates()
+    if perform_layout:
+      print 'Performing layout...',
+      sys.stdout.flush()
+      self.net.layout()
+      print 'done.'
     self.net.save(output_file_path + '.pkl.gz')
 
 def _parse_args(args):
@@ -118,6 +123,8 @@ def _parse_args(args):
   p.add_argument('--levels', type=int, required=False, default=2)
   p.add_argument('--dont-search-trials', dest='search_trials', required=False, action='store_false')
   p.set_defaults(search_trials=True)
+  p.add_argument('--layout', dest='perform_layout', required=False, action='store_true')
+  p.set_defaults(perform_layout=False)
   p.add_argument('input')
   p.add_argument('output')
   return p.parse_args(args)
@@ -127,6 +134,6 @@ if __name__ == '__main__':
   args = _parse_args(args_raw)
   td = TopDown()
   try:
-    td.run(args.input, args.format, args.levels, args.search_trials, args.output)
+    td.run(args.input, args.format, args.levels, args.search_trials, args.perform_layout, args.output)
   finally:
     td.close()
