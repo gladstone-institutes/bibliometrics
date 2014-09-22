@@ -50,11 +50,17 @@ class TopDown:
       ref.update(wos_refs[0])
 
   def _add_layer_of_refs(self, refs, parent_index, max_levels, level = 1):
+    # add level attribute
+    for ref in refs:
+      ref['level'] = level
+
     # add pubmed data
     self.pm_client.add_pubmed_data(refs)
 
     # add wos data
     for ref in refs:
+      if not ref.get('title'):
+        continue
       self._add_wos_data(ref)
 
     # update our counts about refs
@@ -102,6 +108,7 @@ class TopDown:
       refs = [{'pmid': pmid.strip()} for pmid in input_lines[1:]]
       self._add_layer_of_refs(refs, drug_index, levels)
 
+    print self.net.ref_counts
     self.net.save(output_file_path + '.pkl.gz')
 
 def _parse_args(args):
@@ -115,7 +122,8 @@ def _parse_args(args):
   return p.parse_args(args)
 
 if __name__ == '__main__':
-  args = _parse_args(sys.argv[1:])
+  args_raw = [arg for arg in sys.argv[1:] if len(arg) > 0]
+  args = _parse_args(args_raw)
   td = TopDown()
   try:
     td.run(args.input, args.format, args.levels, args.search_trials, args.output)

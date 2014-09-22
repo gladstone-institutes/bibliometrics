@@ -1,11 +1,14 @@
 import igraph
 from itertools import repeat 
 from collections import Counter
+import unicodedata
 
 class LitNet:
   def __init__(self, name):
     self.g = igraph.Graph(directed=True)
     self.g['name'] = name
+
+    self.ref_counts = {'all': 0, 'new': 0, 'pmid': 0, 'wosid': 0, 'title': 0}
 
     self.pmid_to_v = {}
     self.wosid_to_v = {}
@@ -32,15 +35,24 @@ class LitNet:
     self.g.add_vertex(**attrs)
     return index
 
-  def _edge_exists(self, src, trg):
-    return self.g.get_eid(src, trg, error = False) >= 0
+  def _add_unique_edge(self, src, trg, **attrs):
+    eid = self.g.get_eid(src, trg, error = False)
+    if eid < 0:
+      self.g.add_edge(src, trg, **attrs)
+    else:
+      e = self.g.es[eid]
+      for k, v in attrs.items():
+        e[k] = v
 
   def _get_ref_index(self, ref):
+    self.ref_counts['all'] += 1
     for (id_key, id_dict) in [('pmid', self.pmid_to_v), ('wosid', self.wosid_to_v), ('title', self.title_to_v)]:
       if id_key in ref:
         id_val = ref[id_key]
         if id_val in id_dict:
+          self.ref_counts[id_key] += 1
           return id_dict[id_val]
+    self.ref_counts['new'] += 1
     return self.add_v(type='article')
 
   def _mesh_terms_as_semistructured(self, mesh_terms):
@@ -57,7 +69,7 @@ class LitNet:
 
   def _add_ref_data(self, ref, ref_index):
     ref_v = self.g.vs[ref_index]
-    for attr in ('wosid', 'pmid', 'title', 'pubdate', 'pubtypes'):
+    for attr in ('wosid', 'pmid', 'title', 'pubdate', 'pubtypes', 'level'):
       if attr in ref:
         ref_v[attr] = ref[attr]
     if 'meshterms' in ref:
@@ -77,20 +89,27 @@ class LitNet:
     if not 'wosid' in ref and not 'pmid' in ref and 'title' in ref:
       self.title_to_v[ref['title']] = ref_index
 
-  def _author_key(self, author):
-    return author.replace(',', '').lower()
+  def _normalize_author(self, author):
+    lower = author.lower()
+    no_accent_letters = unicodedata.normalize('NFKD', lower).encode('ascii', 'ignore').decode()
+    no_punctuation = no_accent_letters.replace(',', '').replace('.', '')
+    return no_punctuation 
+
+  def _add_author(self, author):
+    author_fixed = self._normalize_author(author)
+    author_index = self.author_to_v.get(author_fixed)
+    if not author_index:
+      author_index = self.add_v(type='author', label=author_fixed)
+      self.author_to_v[author_fixed] = author_index
+    return author_index
 
   def _add_authors(self, ref, ref_index):
     authors = ref.get('authors')
     if not authors:
       return
     for (author, institution_index) in authors:
-      author_key = self._author_key(author)
-      author_index = self.author_to_v.get(author_key)
-      if not author_index:
-        author_index = self.add_v(type='author', label=author)
-        self.author_to_v[author_key] = author_index
-      self.g.add_edge(ref_index, author_index)
+      author_index = self._add_author(author)
+      self._add_unique_edge(ref_index, author_index)
 
   def _add_institution(self, institution):
     institution_index = self.institution_to_v.get(institution)
@@ -107,8 +126,7 @@ class LitNet:
       institution_list = ([institution_address] + parent_orgs) if parent_orgs else [institution_address]
       institution_indices = map(self._add_institution, institution_list)
       for (institution_index, count) in Counter(institution_indices).items():
-        if self._edge_exists(ref_index, institution_index):
-          self.g.add_edge(ref_index, institution_index, count = count)
+        self._add_unique_edge(ref_index, institution_index, count = count)
 
   def _add_grant_agency(self, grant_agency):
     grant_agency_index = self.grant_agency_to_v.get(grant_agency)
@@ -123,13 +141,12 @@ class LitNet:
       return
     grant_agency_indices = map(self._add_grant_agency, grant_agencies)
     for (grant_agency_index, count) in Counter(grant_agency_indices).items():
-      if self._edge_exists(ref_index, grant_agency_index):
-        self.g.add_edge(ref_index, grant_agency_index, count = count)
+      self._add_unique_edge(ref_index, grant_agency_index, count = count)
 
   def add_ref(self, ref, parent_index):
     ref_index = self._get_ref_index(ref)
     self._update_ref_vertex_dicts(ref, ref_index)
-    self.g.add_edge(parent_index, ref_index)
+    self._add_unique_edge(parent_index, ref_index)
 
     self._add_ref_data(ref, ref_index)
     self._add_authors(ref, ref_index)
@@ -137,4 +154,3 @@ class LitNet:
     self._add_grant_agencies(ref, ref_index)
 
     return ref_index
-
