@@ -28,7 +28,7 @@ class LitNet:
       x, y = l[v_index]
       x *= scale
       y *= scale
-      (self.g.vs[v_index]['x'], self.g.vs[v_index]['y']) = (x,y)
+      self.g.vs[v_index]['graphics'] = {'x': str(x), 'y': str(y)}
 
   def add_v(self, **attrs):
     index = self.g.vcount()

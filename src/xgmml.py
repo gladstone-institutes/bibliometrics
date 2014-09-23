@@ -14,20 +14,22 @@ def _serialize_attrs(elem):
       continue
     elif isinstance(v, basestring):
       xattr = E.att({'name': k, 'value': unicode(v), 'type': 'string'})
-    elif type(v) == types.IntType:
+    elif isinstance(v, types.IntType):
       xattr = E.att({'name': k, 'value': str(v), 'type': 'integer'})
-    elif type(v) == types.FloatType:
+    elif isinstance(v, types.FloatType):
       xattr = E.att({'name': k, 'value': str(v), 'type': 'real'})
-    elif type(v) == types.ListType:
+    elif isinstance(v, types.ListType):
       xattr = E.att({'name': k, 'type': 'list'})
       for val in v:
         if isinstance(val, basestring):
           xval = E.att({'name': k, 'value': unicode(val), 'type': 'string'})
-        elif type(val) == types.IntType:
+        elif isinstance(val, types.IntType):
           xval = E.att({'name': k, 'value': str(val), 'type': 'integer'})
         else:
           raise Exception('Cannot serialize attribute "%s" of type %s for %s' % (k, type(val), elem))
         xattr.append(xval)
+    elif isinstance(v, types.DictType):
+      xattr = E(k, v)
     else:
       raise Exception('Cannot serialize attribute "%s" of type %s for %s' % (k, type(v), elem))
     xattrs.append(xattr)
