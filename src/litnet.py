@@ -164,3 +164,32 @@ class LitNet:
           adj_pubdate = adj['pubdate']
           if adj_pubdate == None or ref_pubdate < adj_pubdate:
             adj['pubdate'] = ref_pubdate
+
+  def _replace_node_with(self, replacee, replacer):
+    replacee_idx = replacee.index
+    replacer_idx = replacer.index
+    for src_idx in self.g.neighbors(replacee_idx, mode = igraph.IN):
+      self.g.add_edge(src_idx, replacer_idx)
+      self.g.delete_edges(self.g.get_eid(src_idx, replacee_idx))
+    for trg_idx in self.g.neighbors(replacee_idx, mode = igraph.OUT):
+      self.g.add_edge(replacer_idx, trg_idx)
+      self.g.delete_edges(self.g.get_eid(replacee_idx, trg_idx))
+
+  def remove_dup_authors(self):
+    for authv in self.g.vs(type='author'):
+      name_raw = authv['label']
+      name_pieces = name_raw.split(' ')
+      if len(name_pieces) != 2:
+        continue
+      last_name, first_initials = (name_pieces[0], name_pieces[1])
+      n_initials = len(first_initials)
+      if n_initials <= 1:
+        continue
+      first_initials_alts = map(lambda l: first_initials[:l], range(1, n_initials))
+      for first_initial_alt in first_initials_alts:
+        name_alt = ' '.join([last_name, first_initial_alt])
+        dupvs = self.g.vs(type='author', label=name_alt)
+        if len(dupvs) == 0:
+          continue
+        for dupv in dupvs:
+          self._replace_node_with(dupv, authv)

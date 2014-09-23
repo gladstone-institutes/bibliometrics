@@ -109,6 +109,7 @@ class TopDown:
       self._add_layer_of_refs(refs, drug_index, levels)
 
     print self.net.ref_counts
+    self.net.remove_dup_authors()
     self.net.propagate_pubdates()
     if perform_layout:
       print 'Performing layout...',

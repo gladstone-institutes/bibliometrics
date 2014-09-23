@@ -87,9 +87,9 @@ class Client:
       ref['pmid'] = idtag[0].text.encode('utf-8')
 
   def _add_pmids(self, refs):
-    print 'add pmids for %d refs' % len(refs)
+    #print 'add pmids for %d refs' % len(refs)
     for (lo, hi) in _split_range(50, len(refs)):
-      print 'add pmids: %d to %d of %d' % (lo, hi, len(refs))
+      #print 'add pmids: %d to %d of %d' % (lo, hi, len(refs))
       self._add_pmids_by_citmatch(refs[lo:hi])
 
     for ref in refs:
@@ -102,10 +102,10 @@ class Client:
     refs_with_pmids = [ref['pmid'] for ref in refs if 'pmid' in ref]
     if not refs_with_pmids:
       return
-    print '%d pmids found of %d refs' % (len(refs_with_pmids), len(refs))
+    #print '%d pmids found of %d refs' % (len(refs_with_pmids), len(refs))
 
     for (lo, hi) in _split_range(100, len(refs_with_pmids)):
-      print 'pubmed data: %d to %d of %d' % (lo, hi, len(refs_with_pmids))
+      #print 'pubmed data: %d to %d of %d' % (lo, hi, len(refs_with_pmids))
       pmids_str = ','.join(refs_with_pmids[lo:hi])
       req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
           params={'db': 'pubmed', 'id': pmids_str, 'rettype': 'xml'})
