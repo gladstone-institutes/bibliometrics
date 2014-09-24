@@ -102,6 +102,7 @@ class TopDown:
 
     if input_format == 'cse':
       fda_index = self.net.add_v(type='clinicaltrial', label='FDA')
+      self.net.g.add_edge(drug_index, fda_index)
       fda_refs = refparse.parse_cse_refs(input_lines[1:])
       self._add_layer_of_refs(fda_refs, fda_index, levels)
     elif input_format == 'pmid':
