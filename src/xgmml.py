@@ -60,7 +60,7 @@ def write(g, path):
 def main(input_file_path, output_file_path):
   with open(input_file_path, 'rb') as input_file:
     g = igraph.Graph.Read(input_file, format='picklez')
-    write(g, output_file_path + '.xgmml')
+    write(g, output_file_path)
 
 if __name__ == '__main__':
   main(sys.argv[1], sys.argv[2])

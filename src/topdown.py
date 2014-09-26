@@ -117,7 +117,7 @@ class TopDown:
       sys.stdout.flush()
       self.net.layout()
       print 'done.'
-    self.net.save(output_file_path + '.pkl.gz')
+    self.net.save(output_file_path)
 
 def _parse_args(args):
   p = argparse.ArgumentParser()
