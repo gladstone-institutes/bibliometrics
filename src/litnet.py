@@ -69,7 +69,7 @@ class LitNet:
 
   def _add_ref_data(self, ref, ref_index):
     ref_v = self.g.vs[ref_index]
-    for attr in ('wosid', 'pmid', 'title', 'pubdate', 'pubtypes', 'level'):
+    for attr in ('wosid', 'pmid', 'title', 'pubdate', 'pubtypes', 'level', 'citcount'):
       if attr in ref:
         ref_v[attr] = ref[attr]
     if 'meshterms' in ref:
