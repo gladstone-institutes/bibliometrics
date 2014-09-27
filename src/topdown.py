@@ -9,7 +9,9 @@ import wos
 import debug
 
 class TopDown:
-  def __init__(self):
+  def __init__(self, verbose):
+    self.verbose = verbose
+
     self.pm_client = pubmed.Client()
     self.ct_client = clinicaltrials.Client()
     self.wos_client = wos.Client()
@@ -66,7 +68,9 @@ class TopDown:
     # update our counts about refs
     for ref in refs:
       self._update_ref_counts(ref)
-    self._print_counts()
+
+    if self.verbose:
+      print self.counts['all'], 'articles'
 
     # add each ref to the graph
     for ref in refs:
@@ -109,15 +113,32 @@ class TopDown:
       refs = [{'pmid': pmid.strip()} for pmid in input_lines[1:]]
       self._add_layer_of_refs(refs, drug_index, levels)
 
-    print self.net.ref_counts
+    if self.verbose:
+      self._print_counts()
+      print self.net.ref_counts
+
+    if self.verbose:
+      print 'Postprocessing...',
+      sys.stdout.flush()
     self.net.remove_dup_authors()
     self.net.propagate_pubdates()
-    if perform_layout:
-      print 'Performing layout...',
-      sys.stdout.flush()
-      self.net.layout()
+    if self.verbose:
       print 'done.'
+
+    if perform_layout:
+      if self.verbose:
+        print 'Performing layout...',
+        sys.stdout.flush()
+      self.net.layout()
+      if self.verbose:
+        print 'done.'
+
+    if self.verbose:
+      print 'Saving...',
+      sys.stdout.flush()
     self.net.save(output_file_path)
+    if self.verbose:
+      print 'done.'
 
 def _parse_args(args):
   p = argparse.ArgumentParser()
@@ -125,6 +146,8 @@ def _parse_args(args):
   p.add_argument('--levels', type=int, required=False, default=2)
   p.add_argument('--dont-search-trials', dest='search_trials', required=False, action='store_false')
   p.set_defaults(search_trials=True)
+  p.add_argument('-v', required=False, dest='verbose', action='store_true')
+  p.set_defaults(verbose=False)
   p.add_argument('--layout', dest='perform_layout', required=False, action='store_true')
   p.set_defaults(perform_layout=False)
   p.add_argument('input')
@@ -134,7 +157,7 @@ def _parse_args(args):
 if __name__ == '__main__':
   args_raw = [arg for arg in sys.argv[1:] if len(arg) > 0]
   args = _parse_args(args_raw)
-  td = TopDown()
+  td = TopDown(args.verbose)
   try:
     td.run(args.input, args.format, args.levels, args.search_trials, args.perform_layout, args.output)
   finally:

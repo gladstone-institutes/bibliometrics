@@ -20,16 +20,18 @@ def main(input_file_path, output_file_path):
   articles = g.vs.select(type='article', pmid_ne=None, pubdate_ne=None, score_ne=None)
   pmids = [v['pmid'] for v in articles]
 
-  mat = pandas.DataFrame(index=pmids, columns=['pubdate', 'pubdays', 'score'])
+  mat = pandas.DataFrame(index=pmids, columns=['pubdate', 'pubdays', 'score', 'citcount'])
   for v in articles:
     pmid = v['pmid']
     pubdate = v['pubdate']
     pubdays = _pubdate_to_days(pubdate)
     score = v['score']
+    citcount = v['citcount']
 
     mat['pubdate'][pmid] = pubdate
     mat['pubdays'][pmid] = pubdays
     mat['score'][pmid] = score
+    mat['citcount'][pmid] = citcount
 
   mat.to_csv(output_file_path, mode='w')
 
