@@ -36,6 +36,16 @@ def _score_neighbors_by_article_indegree(g):
     for neighborv in g.vs(type=neighbor_type):
       neighborv['score'] = len(filter(lambda v: v['type'] == 'article', neighborv.neighbors(mode = igraph.IN)))
 
+def _add_ct_counts(g):
+  for authorv in g.vs(type='author'):
+    ct_count = 0
+    for articlev in filter(lambda v: (v['type'] == 'article') and (v['pubtypes'] != None), authorv.neighbors(mode = igraph.IN)):
+      for pubtype in articlev['pubtypes']:
+        if 'Clinical' in pubtype:
+          ct_count += 1
+          break
+    authorv['ct_count'] = ct_count
+
 def _main(input_file_path, output_file_path, method, neighbor_scoring):
   g = _read_graph(input_file_path)
 
@@ -44,6 +54,8 @@ def _main(input_file_path, output_file_path, method, neighbor_scoring):
 
   neighbor_scoring_func = _score_neighbors_by_summing_article_scores if neighbor_scoring == 'article_sum_score' else _score_neighbors_by_article_indegree
   neighbor_scoring_func(g)
+
+  _add_ct_counts(g)
 
   _write_graph(g, output_file_path)
 
