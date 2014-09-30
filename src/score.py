@@ -46,24 +46,27 @@ def _add_ct_counts(g):
           break
     authorv['ct_count'] = ct_count
 
-def _main(input_file_path, output_file_path, method, neighbor_scoring):
+_article_score_methods = {
+    'propagate': _score_articles_by_propagation,
+    'individual': _score_articles_individually
+}
+
+_neighbor_score_methods = {
+    'sum': _score_neighbors_by_summing_article_scores,
+    'indegree': _score_neighbors_by_article_indegree
+}
+
+def _main(input_file_path, output_file_path, article_scoring, neighbor_scoring):
   g = _read_graph(input_file_path)
-
-  method_func = _score_articles_by_propagation if method == 'propagate' else _score_articles_individually
-  method_func(g)
-
-  neighbor_scoring_func = _score_neighbors_by_summing_article_scores if neighbor_scoring == 'article_sum_score' else _score_neighbors_by_article_indegree
-  neighbor_scoring_func(g)
-
+  _article_score_methods[article_scoring](g)
+  _neighbor_score_methods[neighbor_scoring](g)
   _add_ct_counts(g)
-
   _write_graph(g, output_file_path)
-
 
 def _parse_args(args):
   p = argparse.ArgumentParser()
-  p.add_argument('--method', required=True, choices=['individual', 'propagate'])
-  p.add_argument('--neighbor-scoring', required=True, choices=['article_score_sum', 'article_in_degree'])
+  p.add_argument('--article-scoring', required=True, choices=_article_score_methods.keys())
+  p.add_argument('--neighbor-scoring', required=True, choices=_neighbor_score_methods.keys())
   p.add_argument('input')
   p.add_argument('output')
   return p.parse_args(args)
@@ -71,4 +74,4 @@ def _parse_args(args):
 if __name__ == '__main__':
   args_raw = sys.argv[1:]
   args = _parse_args(args_raw)
-  _main(args.input, args.output, args.method, args.neighbor_scoring)
+  _main(args.input, args.output, args.article_scoring, args.neighbor_scoring)
