@@ -6,7 +6,7 @@ Clin Gastroenterol Hepatol 2012;9(6):509-516
 Treatment of Hepatitis C: An Update. HEPATOLOGY 2009;49:1335-1374.
 3. Ghany MG. An Update on Treatment of Genotype 1 Chronic Hepatitis
 C Virus Infection: 2011 Practice Guideline by the American Association for the
-Study of Liver Diseases. Hepatology 2011;54(4):1433–1444. 
+Study of Liver Diseases. Hepatology 2011;54(4):1433-1444. 
 4. Kim WR. The Burden of Hepatitis C in the United States. Hepatology 2012.
 36(Suppl):S30-S34.
 5. Ly KN, Xing J, Klevens RM, Jiles RB, Ward JW, Holmberg SD. The increasing burden
@@ -25,7 +25,7 @@ Hepatocellular Carcinoma Development and Improved Survival. Ann Intern Med 2005
 ;142(2):105-14.
 8. Singal AG, M Volk, D Jensen. A sustained viral response is associated with
 reduced liver related morbidity and mortality in patients with hepatitis C virus. Clin
-Gastroenterol Hepatol 2010; 8:280–288.
+Gastroenterol Hepatol 2010; 8:280-288.
 9. van der Meer AJ, Veldt BJ, Feld JJ, Wedemeyer H, Dufour JF, Lammert F, Duarte-Rojo
 A, Heathcote EJ, Manns MP, Kuske L, Zeuzem S, Hofmann WP, de Knegt RJ, Hansen
 BE, Janssen HL. Association between sustained virological response and allcause mortality among patients with chronic hepatitis C and advanced hepatic fibrosis.
