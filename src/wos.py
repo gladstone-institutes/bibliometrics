@@ -156,7 +156,6 @@ class Client:
 
   @_cache
   def _search(self, userQuery):
-    print userQuery
     qp = self.searchclient.factory.create('queryParameters')
     qp.databaseId = 'WOS'
     qp.userQuery = userQuery

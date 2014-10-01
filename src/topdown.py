@@ -1,6 +1,7 @@
 import sys 
 import time
 import argparse
+import codecs
 import litnet
 import refparse
 import clinicaltrials
@@ -82,7 +83,7 @@ class TopDown:
         self._add_layer_of_refs(child_refs, ref_index, max_levels, level + 1)
 
   def run(self, input_file_path, input_format, levels, search_trials, perform_layout, output_file_path):
-    input_file = open(input_file_path, 'r')
+    input_file = codecs.open(input_file_path, 'r')
     input_lines = input_file.readlines()
     input_file.close()
 
