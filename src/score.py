@@ -37,14 +37,15 @@ def _score_neighbors_by_article_indegree(g):
       neighborv['score'] = len(filter(lambda v: v['type'] == 'article', neighborv.neighbors(mode = igraph.IN)))
 
 def _add_ct_counts(g):
-  for authorv in g.vs(type='author'):
-    ct_count = 0
-    for articlev in filter(lambda v: (v['type'] == 'article') and (v['pubtypes'] != None), authorv.neighbors(mode = igraph.IN)):
-      for pubtype in articlev['pubtypes']:
-        if 'Clinical' in pubtype:
-          ct_count += 1
-          break
-    authorv['ct_count'] = ct_count
+  for neighbor_type in ['author', 'institution', 'grantagency']:
+    for neighborv in g.vs(type=neighbor_type):
+      ct_count = 0
+      for articlev in filter(lambda v: (v['type'] == 'article') and (v['pubtypes'] != None), neighborv.neighbors(mode = igraph.IN)):
+        for pubtype in articlev['pubtypes']:
+          if 'Clinical' in pubtype:
+            ct_count += 1
+            break
+      neighborv['ct_count'] = ct_count
 
 _article_score_methods = {
     'propagate': _score_articles_by_propagation,
