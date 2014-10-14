@@ -18,7 +18,7 @@ range_lo <- quantile(agg_df$year, 0.05, na.rm = TRUE)
 range_hi <- max(agg_df$year, na.rm = TRUE)
 
 ggplot(agg_df, aes(x = year, colour = type)) +
-  geom_density() +
+  geom_density(aes(x = year, y = ..count..)) +
   geom_vline(data = means_df, aes(xintercept = val, colour = type), linetype = 'dashed', size = 1) +
   scale_x_continuous(limits = c(range_lo, range_hi + 5), breaks = round(seq(range_lo, range_hi  + 5, by = 5),1))
 ggsave('article-years.pdf', width=18, height=8)
