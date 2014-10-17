@@ -55,7 +55,8 @@ class TopDown:
   def _add_layer_of_refs(self, refs, parent_index, max_levels, level = 1):
     # add level attribute
     for ref in refs:
-      ref['level'] = level
+      if ref.get('level') == None:
+        ref['level'] = level
 
     # add pubmed data
     self.pm_client.add_pubmed_data(refs)

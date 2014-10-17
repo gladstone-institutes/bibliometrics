@@ -98,7 +98,7 @@ class LitNet:
   def _add_author(self, author):
     author_fixed = self._normalize_author(author)
     author_index = self.author_to_v.get(author_fixed)
-    if not author_index:
+    if author_index == None:
       author_index = self.add_v(type='author', label=author_fixed)
       self.author_to_v[author_fixed] = author_index
     return author_index

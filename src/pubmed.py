@@ -117,6 +117,15 @@ class Client:
         ref = _dict_with_value(refs, 'pmid', pubmed_ref['pmid'])
         ref.update(pubmed_ref)
 
+  def search_for_papers_by_author(self, author_name):
+    term = '"%s"[Author]' % author_name
+    req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
+        params={'db': 'pubmed', 'term': term, 'retmax': 100000})
+    doc = lxml.etree.parse(BytesIO(req.content), self.xml_parser)
+    pmids = doc.xpath('/eSearchResult/IdList/Id/text()')
+    refs = [{'pmid': unicode(pmid)} for pmid in pmids]
+    return refs
+
 def _dict_with_value(ds, k, v):
   for d in ds:
     if k in d and d[k] == v:
