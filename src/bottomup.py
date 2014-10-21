@@ -42,12 +42,14 @@ class BottomUp:
     print
 
   def _add_wos_data(self, ref):
+    if not 'title' in ref or not 'authors' in ref:
+      return
     wos_refs = self.wos_client.search(self._first_author(ref), ref.get('title'), ref.get('journal'), ref.get('year'))
     if len(wos_refs) == 1:
       ref.update(wos_refs[0])
 
   def _ref_has_institution(self, ref, institution_name):
-    institutions = ref.get('institutions', [])
+    institutions = ref.get('institutions', {})
     for (address, organizations) in institutions.values():
       if institution_name in address.lower():
         return True

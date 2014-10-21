@@ -135,7 +135,7 @@ class Client:
     first_page = self._throttled_query(lambda: query_func(rp))
     results.append(first_page)
 
-    num_possible_pages = (first_page.recordsFound / records_per_page) + 1
+    num_possible_pages = (first_page.recordsFound / (records_per_page + 1)) + 1
     effective_num_pages = min(num_possible_pages, max_pages) if max_pages else num_possible_pages
     for i in range(effective_num_pages - 1):
       rp.firstRecord += records_per_page
