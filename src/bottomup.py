@@ -1,5 +1,6 @@
 import sys
 import argparse
+import datetime
 import litnet
 import wos
 import pubmed
@@ -41,6 +42,9 @@ class BottomUp:
       print '%4s: %5d, %6.2f%%' % (k, v, (100. * float(v) / self.counts['all']))
     print
 
+  def _time_str(self):
+    return datetime.datetime.now().strftime('[%H:%M:%S]')
+
   def _add_wos_data(self, ref):
     if not 'title' in ref or not 'authors' in ref:
       return
@@ -79,7 +83,7 @@ class BottomUp:
     for ref in refs:
       self._update_ref_counts(ref)
     if self.verbose:
-      print self.counts['all'], 'articles'
+      print self._time_str(), self.counts['all'], 'articles'
 
     # add each ref to the graph
     for ref in refs:
@@ -91,12 +95,22 @@ class BottomUp:
         self._add_layer_of_refs(child_refs, ref_index, max_levels, level + 1)
 
   def run(self, author_name, institution_name, output_file_name, max_levels):
+    start_time = datetime.datetime.now()
+
     self.net = litnet.LitNet(author_name)
     root_index = self.net._add_author(author_name)
 
     refs = self.pm_client.search_for_papers_by_author(author_name)
     institution_name = institution_name.lower()
     self._add_layer_of_refs(refs, root_index, max_levels, 1, lambda ref: self._ref_has_institution(ref, institution_name))
+
+    end_time = datetime.datetime.now()
+
+    if self.verbose:
+      time_delta = (end_time - start_time)
+      print 'Completed in', time_delta
+      num_articles = len(self.net.g.vs(type='article'))
+      print '%.1f seconds per article' % (float(time_delta.total_seconds()) / num_articles)
 
     if self.verbose:
       self._print_counts()
