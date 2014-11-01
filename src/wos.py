@@ -1,4 +1,5 @@
 import re
+import exceptions
 import time
 import suds
 import lxml.etree
@@ -86,6 +87,7 @@ _wos_title_bad_chars_re = re.compile(r'[\"\'\(\)\[\]\?\*\!\<\>\=\$\-\.]')
 
 class Client:
   def __init__(self):
+    self.retry_count = 0
     self._sign_in()
     self.cache = {}
     if os.path.isfile(_cache_path):
@@ -118,13 +120,31 @@ class Client:
     with open(_cache_path, 'wb') as cache_file:
       pickle.dump(self.cache, cache_file)
 
+  def _call_query_and_retry(self, query_func):
+    try:
+      result = query_func()
+      self.retry_count = 0
+      return result
+    except exceptions.BaseException as e:
+      if self.retry_count < 3:
+        self.retry_count += 1
+        print 'Query failed. Attempt', self.retry_count
+        time.sleep(10.0)
+        self._sign_out()
+        time.sleep(300.0)
+        self._sign_in()
+        time.sleep(10.0)
+        return self._call_query_and_retry(query_func)
+      else:
+        raise e
+
   def _throttled_query(self, query_func):
     time_now = datetime.datetime.now()
     delta_sec = (time_now - self.last_query_time).total_seconds()
     if delta_sec < 1.0:
       time.sleep(1.0 - delta_sec)
     self.last_query_time = datetime.datetime.now()
-    return query_func()
+    return self._call_query_and_retry(query_func)
 
   def _paged_query(self, query_func, max_pages = None, records_per_page = 100):
     rp = self.searchclient.factory.create('retrieveParameters')
