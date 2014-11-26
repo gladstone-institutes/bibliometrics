@@ -45,12 +45,12 @@ def _convert_wos_record(record, ns):
 
   r['institutions'] = {}
   num_institutions = int(record.xpath("ns:static_data/ns:fullrecord_metadata/ns:addresses", namespaces=ns)[0].attrib['count'])
-  for i in range(1, num_institutions + 1):
-    institution_tag = record.xpath("ns:static_data/ns:fullrecord_metadata/ns:addresses/ns:address_name/ns:address_spec[@addr_no='%d']" % i, namespaces=ns)[0]
+  for institution_tag in record.xpath("ns:static_data/ns:fullrecord_metadata/ns:addresses/ns:address_name/ns:address_spec", namespaces=ns):
+    index = int(institution_tag.attrib['addr_no'])
     address = xpath_str(institution_tag, "ns:full_address/text()", ns)
     organizations = xpath_strs(institution_tag, "ns:organizations/ns:organization/text()", ns)
 
-    r['institutions'][i] = (address, organizations)
+    r['institutions'][index] = (address, organizations)
 
   r['authors'] = []
   num_authors = int(record.xpath("ns:static_data/ns:summary/ns:names", namespaces=ns)[0].attrib['count'])

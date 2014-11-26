@@ -125,6 +125,14 @@ class Client:
     pmids = doc.xpath('/eSearchResult/IdList/Id/text()')
     refs = [{'pmid': unicode(pmid)} for pmid in pmids]
     return refs
+  
+  def num_papers_by_author(self, author_name):
+    term = '"%s"[Author]' % author_name
+    req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
+        params={'db': 'pubmed', 'term': term, 'retmax': 100000})
+    doc = lxml.etree.parse(BytesIO(req.content), self.xml_parser)
+    count = doc.xpath('/eSearchResult/Count/text()')
+    return int(count[0])
 
 def _dict_with_value(ds, k, v):
   for d in ds:

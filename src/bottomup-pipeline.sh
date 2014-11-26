@@ -6,7 +6,11 @@ do
   read line
   output_path="$line"
 
-  echo $name
-  python src/bottomup.py --levels 2 "$name" "$institution" $output_path
+  if [ -e "$output_path" ]; then
+    echo "Skipping $name"
+  else
+    echo $name
+    python src/bottomup.py --levels 2 "$name" "$institution" $output_path
+  fi
 
 done < $1
