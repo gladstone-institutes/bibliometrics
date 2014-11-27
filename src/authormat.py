@@ -33,15 +33,14 @@ def tg_score(articles):
       for pubtype in map(lambda t: t.lower(), citing_article['pubtypes']):
         if not ('trial' in pubtype or 'guideline' in pubtype): continue
         tg_count += 1
-        print citing_article['title']
         break
-  print tg_count, total_count
   return tg_count / float(total_count)
 
-
-def main(graph_file_path, output_file_path = None):
+def calc_metrics(graph_file_path, mat):
   g = igraph.Graph.Read(graph_file_path, format='picklez')
   author_name = g['name'].lower()
+
+  print author_name
 
   author = g.vs.find(label = author_name, type='author')
 
@@ -51,35 +50,43 @@ def main(graph_file_path, output_file_path = None):
   grantagency_counts = outgoing_counts_of_type(level_1_articles, 'grantagency')
   article_years = [article['pubdate'] / 10000 for article in level_1_articles if article['pubdate'] != None]
   citcounts = outgoing_counts_of_type(level_1_articles, 'article')
-  
-  mat = pandas.DataFrame(index = [author_name],
-      columns = [
+
+  mat.loc[author_name] = float('nan')
+
+  if coauthor_counts:
+    mat['mean-co-authors'][author_name] = numpy.mean(coauthor_counts)
+    mat['median-co-authors'][author_name] = numpy.median(coauthor_counts)
+    mat['sd-co-authors'][author_name] = numpy.std(coauthor_counts)
+
+  if institution_counts:
+    mat['mean-institutions'][author_name] = numpy.mean(institution_counts)
+    mat['median-institutions'][author_name] = numpy.median(institution_counts)
+    mat['sd-institutions'][author_name] = numpy.std(institution_counts)
+
+  if grantagency_counts:
+    mat['mean-grant-agencies'][author_name] = numpy.mean(grantagency_counts)
+    mat['median-grant-agencies'][author_name] = numpy.median(grantagency_counts)
+    mat['sd-grant-agencies'][author_name] = numpy.std(grantagency_counts)
+
+  if article_years:
+    mat['years-delta'][author_name] = max(article_years) - min(article_years)
+
+  if citcounts:
+    mat['h-index'][author_name] = h_index(citcounts)
+    mat['max-citations'][author_name] = max(citcounts)
+
+  if level_1_articles:
+    mat['tg-score'][author_name] = tg_score(level_1_articles)
+
+def main(graph_file_paths, output_file_path):
+  mat = pandas.DataFrame(columns = [
     'mean-co-authors', 'median-co-authors', 'sd-co-authors',
     'mean-institutions', 'median-institutions', 'sd-institutions',
     'mean-grant-agencies', 'median-grant-agencies', 'sd-grant-agencies',
-    'years-delta',
-    'h-index',
-    'max-citations',
-    'tg-score'])
-
-  mat['mean-co-authors'][author_name] = numpy.mean(coauthor_counts)
-  mat['median-co-authors'][author_name] = numpy.median(coauthor_counts)
-  mat['sd-co-authors'][author_name] = numpy.std(coauthor_counts)
-
-  mat['mean-institutions'][author_name] = numpy.mean(institution_counts)
-  mat['median-institutions'][author_name] = numpy.median(institution_counts)
-  mat['sd-institutions'][author_name] = numpy.std(institution_counts)
-
-  mat['mean-grant-agencies'][author_name] = numpy.mean(grantagency_counts)
-  mat['median-grant-agencies'][author_name] = numpy.median(grantagency_counts)
-  mat['sd-grant-agencies'][author_name] = numpy.std(grantagency_counts)
-
-  mat['years-delta'][author_name] = max(article_years) - min(article_years)
-  mat['h-index'][author_name] = h_index(citcounts)
-  mat['max-citations'][author_name] = max(citcounts)
-  mat['tg-score'][author_name] = tg_score(level_1_articles)
-
+    'years-delta', 'h-index', 'max-citations', 'tg-score'])
+  for graph_file_path in graph_file_paths:
+    calc_metrics(graph_file_path, mat)
   mat.to_csv(output_file_path, mode='w')
 
 if __name__ == '__main__':
-  main(sys.argv[1], sys.argv[2])
+  main(sys.argv[2:], sys.argv[1])
