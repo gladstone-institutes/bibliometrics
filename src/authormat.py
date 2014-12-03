@@ -2,6 +2,8 @@ import sys
 import pandas
 import igraph
 import numpy
+import scipy.stats
+import argparse
 
 def outgoing_counts_of_type(articles, node_type):
   return [len([neighbor for neighbor in article.neighbors(mode = igraph.OUT) if neighbor['type'] == node_type]) for article in articles]
@@ -39,9 +41,6 @@ def tg_score(articles):
 def calc_metrics(graph_file_path, mat):
   g = igraph.Graph.Read(graph_file_path, format='picklez')
   author_name = g['name'].lower()
-
-  print author_name
-
   author = g.vs.find(label = author_name, type='author')
 
   level_1_articles = author.neighbors(mode = igraph.OUT)
@@ -57,6 +56,8 @@ def calc_metrics(graph_file_path, mat):
     mat['mean-co-authors'][author_name] = numpy.mean(coauthor_counts)
     mat['median-co-authors'][author_name] = numpy.median(coauthor_counts)
     mat['sd-co-authors'][author_name] = numpy.std(coauthor_counts)
+    mat['skew-co-authors'][author_name] = scipy.stats.skew(coauthor_counts)
+    mat['kurt-co-authors'][author_name] = scipy.stats.kurtosis(coauthor_counts)
 
   if institution_counts:
     mat['mean-institutions'][author_name] = numpy.mean(institution_counts)
@@ -78,7 +79,7 @@ def calc_metrics(graph_file_path, mat):
   if level_1_articles:
     mat['tg-score'][author_name] = tg_score(level_1_articles)
 
-def main(graph_file_paths, output_file_path):
+def write_matrix(graph_file_paths, output_file_path):
   mat = pandas.DataFrame(columns = [
     'mean-co-authors', 'median-co-authors', 'sd-co-authors',
     'mean-institutions', 'median-institutions', 'sd-institutions',
@@ -88,5 +89,34 @@ def main(graph_file_paths, output_file_path):
     calc_metrics(graph_file_path, mat)
   mat.to_csv(output_file_path, mode='w')
 
+def calc_coauthor_counts(graph_file_path, output_file):
+  g = igraph.Graph.Read(graph_file_path, format='picklez')
+  author_name = g['name'].lower()
+  author = g.vs.find(label = author_name, type='author')
+
+  level_1_articles = author.neighbors(mode = igraph.OUT)
+  coauthor_counts = outgoing_counts_of_type(level_1_articles, 'author')
+
+  output_file.write(author_name)
+  output_file.write('\n')
+  output_file.write(' '.join(map(str, coauthor_counts)))
+  output_file.write('\n')
+
+def write_coauthor_counts(graph_file_paths, output_file_path):
+  with open(output_file_path, 'w') as output_file:
+    for graph_file_path in graph_file_paths:
+      calc_coauthor_counts(graph_file_path, output_file)
+
+def _parse_args(raw_args):
+  parser = argparse.ArgumentParser()
+  parser.add_argument('--type', choices=['matrix', 'coauthor_counts'], default='matrix')
+  parser.add_argument('output')
+  parser.add_argument('inputs', nargs='+')
+  return parser.parse_args(raw_args)
+
 if __name__ == '__main__':
-  main(sys.argv[2:], sys.argv[1])
+  args = _parse_args(sys.argv[1:])
+  if args.type == 'matrix':
+    write_matrix(args.inputs, args.output)
+  elif args.type == 'coauthor_counts':
+    write_coauthor_counts(args.inputs, args.output)
