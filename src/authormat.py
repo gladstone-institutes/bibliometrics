@@ -58,6 +58,7 @@ def calc_metrics(graph_file_path, mat):
     mat['sd-co-authors'][author_name] = numpy.std(coauthor_counts)
     mat['skew-co-authors'][author_name] = scipy.stats.skew(coauthor_counts)
     mat['kurt-co-authors'][author_name] = scipy.stats.kurtosis(coauthor_counts)
+    mat['num-articles-over-20-coauthors'][author_name] = len([count for count in coauthor_counts if count >= 20])
 
   if institution_counts:
     mat['mean-institutions'][author_name] = numpy.mean(institution_counts)
@@ -81,7 +82,8 @@ def calc_metrics(graph_file_path, mat):
 
 def write_matrix(graph_file_paths, output_file_path):
   mat = pandas.DataFrame(columns = [
-    'mean-co-authors', 'median-co-authors', 'sd-co-authors',
+    'mean-co-authors', 'median-co-authors', 'sd-co-authors', 'skew-co-authors', 'kurt-co-authors',
+    'num-articles-over-20-coauthors',
     'mean-institutions', 'median-institutions', 'sd-institutions',
     'mean-grant-agencies', 'median-grant-agencies', 'sd-grant-agencies',
     'years-delta', 'h-index', 'max-citations', 'tg-score'])
