@@ -4,7 +4,8 @@ import time
 import suds
 import lxml.etree
 import os.path
-import pickle
+import sqlite3
+import cPickle as pickle
 import datetime
 import string
 from util import xpath_str, xpath_strs
@@ -82,20 +83,16 @@ def _convert_wos_biblio_record(record):
     r['journal'] = unicode(record['citedWork'])
   return r
 
-_cache_path = '.wos-cache.pkl'
+_cache_path = '.wos-cache.sqlite'
 _wos_title_bad_chars_re = re.compile(r'[\"\'\(\)\[\]\?\*\!\<\>\=\$\-\.]')
 
 class Client:
   def __init__(self):
     self.retry_count = 0
     self._sign_in()
-    self.cache = {}
-    if os.path.isfile(_cache_path):
-      with open(_cache_path, 'rb') as cache_file:
-        try:
-          self.cache = pickle.load(cache_file)
-        except Exception as e:
-          print 'Failed to load cache:', str(e)
+    self.cachedb = sqlite3.connect(_cache_path)
+    self.cachecur = self.cachedb.cursor()
+    self.cachecur.execute('create table if not exists cache(ckey text, cval blob)')
 
   def _sign_in(self):
     self.authclient = suds.client.Client('http://search.webofknowledge.com/esti/wokmws/ws/WOKMWSAuthenticate?wsdl')
@@ -117,8 +114,9 @@ class Client:
     self._sign_out()
     
   def _flush_cache(self):
-    with open(_cache_path, 'wb') as cache_file:
-      pickle.dump(self.cache, cache_file)
+    self.cachecur.close()
+    self.cachedb.commit()
+    self.cachedb.close()
 
   def _call_query_and_retry(self, query_func):
     try:
@@ -164,13 +162,28 @@ class Client:
 
     return results
 
+  def _cache_key_exists(self, cache_key):
+    result, = self.cachecur.execute('select exists(select 1 from cache where ckey = ? limit 1)', [cache_key]).fetchone()
+    return result != 0
+
+  def _cache_get_value(self, cache_key):
+    result = self.cachecur.execute('select cval from cache where ckey = ?', [cache_key]).fetchone()
+    if not result:
+      return None
+    return pickle.loads(str(result[0]))
+
+  def _cache_add_value(self, cache_key, cache_value):
+    cache_value_bin = sqlite3.Binary(pickle.dumps(cache_value, pickle.HIGHEST_PROTOCOL))
+    self.cachecur.execute('insert into cache values(?, ?)', [unicode(cache_key), cache_value_bin])
+
   def _cache(func):
     def inner(self, arg):
       cache_key = func.__name__ + ':' + arg
-      if cache_key in self.cache:
-        return self.cache[cache_key]
+      if self._cache_key_exists(cache_key):
+        return self._cache_get_value(cache_key)
+      print cache_key
       result = func(self, arg)
-      self.cache[cache_key] = result
+      self._cache_add_value(cache_key, result)
       return result
     return inner
 

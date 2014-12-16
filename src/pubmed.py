@@ -105,7 +105,7 @@ class Client:
     #print '%d pmids found of %d refs' % (len(refs_with_pmids), len(refs))
 
     for (lo, hi) in _split_range(100, len(refs_with_pmids)):
-      #print 'pubmed data: %d to %d of %d' % (lo, hi, len(refs_with_pmids))
+      print 'pubmed data: %d to %d of %d' % (lo, hi, len(refs_with_pmids))
       pmids_str = ','.join(refs_with_pmids[lo:hi])
       req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi',
           params={'db': 'pubmed', 'id': pmids_str, 'rettype': 'xml'})
@@ -133,6 +133,14 @@ class Client:
     doc = lxml.etree.parse(BytesIO(req.content), self.xml_parser)
     count = doc.xpath('/eSearchResult/Count/text()')
     return int(count[0])
+
+  def search_for_papers(self, term):
+    req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
+        params={'db': 'pubmed', 'term': term, 'retmax': 100000})
+    doc = lxml.etree.parse(BytesIO(req.content), self.xml_parser)
+    pmids = doc.xpath('/eSearchResult/IdList/Id/text()')
+    refs = [{'pmid': unicode(pmid)} for pmid in pmids]
+    return refs
 
 def _dict_with_value(ds, k, v):
   for d in ds:
