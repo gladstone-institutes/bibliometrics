@@ -1,3 +1,6 @@
+#!/home/samad/metrics/venv/bin/python
+# coding=utf-8
+
 import re
 import exceptions
 import time
@@ -84,7 +87,7 @@ def _convert_wos_biblio_record(record):
   return r
 
 _cache_path = '.wos-cache.sqlite'
-_wos_title_bad_chars_re = re.compile(r'[\"\'\(\)\[\]\?\*\!\<\>\=\$\-\.]')
+_wos_title_bad_chars_re = re.compile(ur'[“”\"\'\(\)\[\]\?\*\!\<\>\=\$\-\.]')
 
 class Client:
   def __init__(self):
