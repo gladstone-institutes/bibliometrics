@@ -35,6 +35,7 @@ def _convert_wos_record(record, ns):
       pubdate:      int
       institutions: {int: (unicode, [unicode])}
       authors:      [(unicode, [int])]
+      citcount:     int
   """
 
   r = dict()
@@ -65,6 +66,10 @@ def _convert_wos_record(record, ns):
     affiliation_indices = map(int, author_tag.attrib['addr_no'].split(' ')) if 'addr_no' in author_tag.attrib else None
 
     r['authors'].append((author_name, affiliation_indices))
+
+  cittag = record.xpath("ns:dynamic_data/ns:citation_related/ns:tc_list/ns:silo_tc[@coll_id='WOS']/@local_count", namespaces=ns)
+  if cittag:
+    r['citcount'] = int(cittag[0])
 
   return r
 
@@ -184,7 +189,7 @@ class Client:
       cache_key = func.__name__ + ':' + arg
       if self._cache_key_exists(cache_key):
         return self._cache_get_value(cache_key)
-      print cache_key
+      #print cache_key
       result = func(self, arg)
       self._cache_add_value(cache_key, result)
       return result

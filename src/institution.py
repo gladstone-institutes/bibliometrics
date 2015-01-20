@@ -21,8 +21,9 @@ def main(net_path, author_name):
       institutions.append(neighbor['label'])
 
   c = collections.Counter(institutions)
-  for name, count in c.most_common(5):
-    print '(%d) %s' % (count, name)
+  print c.most_common(1)[0][0]
+  #for name, count in c.most_common(5):
+  #  print '(%d) %s' % (count, name)
 
 
 

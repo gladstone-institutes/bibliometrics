@@ -10,8 +10,10 @@ do
     echo "Skipping $name"
   else
     echo $name
-    mkdir -p `dirname $output_path`
-    python src/bottomup.py --levels 1 "$name" "$institution" $output_path
+    output_dir=`dirname "${output_path}"`
+    mkdir -p "${output_dir}"
+    python src/bottomup.py -v --levels 1 "$name" "$institution" "$output_path"
+    sleep 60
   fi
 
 done < $1

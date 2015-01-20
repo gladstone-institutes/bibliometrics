@@ -36,7 +36,10 @@ def tg_score(articles):
         if not ('trial' in pubtype or 'guideline' in pubtype): continue
         tg_count += 1
         break
-  return tg_count / float(total_count)
+  if total_count == 0:
+    return 0
+  else:
+    return tg_count / float(total_count)
 
 def calc_metrics(graph_file_path, mat):
   g = igraph.Graph.Read(graph_file_path, format='picklez')
@@ -48,7 +51,8 @@ def calc_metrics(graph_file_path, mat):
   institution_counts = outgoing_counts_of_type(level_1_articles, 'institution')
   grantagency_counts = outgoing_counts_of_type(level_1_articles, 'grantagency')
   article_years = [article['pubdate'] / 10000 for article in level_1_articles if article['pubdate'] != None]
-  citcounts = outgoing_counts_of_type(level_1_articles, 'article')
+  #citcounts = outgoing_counts_of_type(level_1_articles, 'article')
+  citcounts = [article['citcount'] for article in level_1_articles if article['citcount'] != None]
 
   mat.loc[author_name] = float('nan')
 

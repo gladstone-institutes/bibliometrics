@@ -46,7 +46,7 @@ class BottomUp:
     return datetime.datetime.now().strftime('[%H:%M:%S]')
 
   def _add_wos_data(self, ref):
-    if not 'title' in ref or not 'authors' in ref:
+    if not 'title' in ref or not ref['title'] or not 'authors' in ref:
       return
     wos_refs = self.wos_client.search(self._first_author(ref), ref.get('title'), ref.get('journal'), ref.get('year'))
     if len(wos_refs) == 1:
@@ -82,8 +82,8 @@ class BottomUp:
     # update ref counts
     for ref in refs:
       self._update_ref_counts(ref)
-    if self.verbose:
-      print self._time_str(), self.counts['all'], 'articles'
+    #if self.verbose:
+    #  print self._time_str(), self.counts['all'], 'articles'
 
     # add each ref to the graph
     for ref in refs:
@@ -108,28 +108,30 @@ class BottomUp:
 
     if self.verbose:
       time_delta = (end_time - start_time)
-      print 'Completed in', time_delta
       num_articles = len(self.net.g.vs(type='article'))
-      print '%.1f seconds per article' % (float(time_delta.total_seconds()) / num_articles)
+      if num_articles > 0:
+        print '%d articles in %s, %.1f s/article' % (num_articles, str(time_delta), float(time_delta.total_seconds() / num_articles))
+      else:
+        print 'No articles found.'
 
-    if self.verbose:
-      self._print_counts()
-      print self.net.ref_counts
+    #if self.verbose:
+    #  self._print_counts()
+    #  print self.net.ref_counts
 
-    if self.verbose:
-      print 'Postprocessing...',
-      sys.stdout.flush()
+    #if self.verbose:
+    #  print 'Postprocessing...',
+    #  sys.stdout.flush()
     self.net.remove_dup_authors()
     self.net.propagate_pubdates()
-    if self.verbose:
-      print 'done.'
+    #if self.verbose:
+    #  print 'done.'
 
-    if self.verbose:
-      print 'Saving...',
-      sys.stdout.flush()
+    #if self.verbose:
+    #  print 'Saving...',
+    #  sys.stdout.flush()
     self.net.save(output_file_name)
-    if self.verbose:
-      print 'done.'
+    #if self.verbose:
+    #  print 'done.'
 
 def _parse_args(args):
   p = argparse.ArgumentParser()
@@ -145,7 +147,7 @@ if __name__ == '__main__':
   args = _parse_args(sys.argv[1:])
   bu = BottomUp(args.verbose)
   try:
-    bu.run(unicode(args.author_name), unicode(args.institution_name), args.output, args.levels)
+    bu.run(unicode(args.author_name), unicode(args.institution_name), unicode(args.output), args.levels)
   finally:
     bu.close()
 
