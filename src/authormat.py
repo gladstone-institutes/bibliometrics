@@ -41,12 +41,22 @@ def tg_score(articles):
   else:
     return tg_count / float(total_count)
 
+def co_authors(articles):
+  co_authors_lists = [[author['label'] for author in article.neighbors(mode = igraph.OUT) if author['type'] == 'author'] for article in articles]
+  co_authors = [co_author for co_author_list in co_authors_lists for co_author in co_author_list]
+  return co_authors
+
 def calc_metrics(graph_file_path, mat):
   g = igraph.Graph.Read(graph_file_path, format='picklez')
   author_name = g['name'].lower()
   author = g.vs.find(label = author_name, type='author')
 
   level_1_articles = author.neighbors(mode = igraph.OUT)
+  if len(level_1_articles) == 0:
+    return
+
+  print author_name, co_authors(level_1_articles)
+
   coauthor_counts = outgoing_counts_of_type(level_1_articles, 'author')
   institution_counts = outgoing_counts_of_type(level_1_articles, 'institution')
   grantagency_counts = outgoing_counts_of_type(level_1_articles, 'grantagency')
@@ -75,7 +85,12 @@ def calc_metrics(graph_file_path, mat):
     mat['sd-grant-agencies'][author_name] = numpy.std(grantagency_counts)
 
   if article_years:
-    mat['years-delta'][author_name] = max(article_years) - min(article_years)
+    mat['delta-pub-years'][author_name] = max(article_years) - min(article_years)
+    mat['mean-pub-years'][author_name] = numpy.mean(article_years)
+    mat['median-pub-years'][author_name] = numpy.median(article_years)
+    mat['sd-pub-years'][author_name] = numpy.std(article_years)
+    mat['skew-pub-years'][author_name] = scipy.stats.skew(article_years)
+    mat['kurt-pub-years'][author_name] = scipy.stats.kurtosis(article_years)
 
   if citcounts:
     mat['h-index'][author_name] = h_index(citcounts)
@@ -90,7 +105,8 @@ def write_matrix(graph_file_paths, output_file_path):
     'num-articles-over-20-coauthors',
     'mean-institutions', 'median-institutions', 'sd-institutions',
     'mean-grant-agencies', 'median-grant-agencies', 'sd-grant-agencies',
-    'years-delta', 'h-index', 'max-citations', 'tg-score'])
+    'delta-pub-years', 'mean-pub-years', 'median-pub-years', 'sd-pub-years', 'skew-pub-years', 'kurt-pub-years',
+    'h-index', 'max-citations', 'tg-score'])
   for graph_file_path in graph_file_paths:
     calc_metrics(graph_file_path, mat)
   mat.to_csv(output_file_path, mode='w')
