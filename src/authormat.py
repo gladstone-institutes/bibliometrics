@@ -1,4 +1,5 @@
 import sys
+import collections
 import pandas
 import igraph
 import numpy
@@ -41,10 +42,26 @@ def tg_score(articles):
   else:
     return tg_count / float(total_count)
 
-def co_authors(articles):
-  co_authors_lists = [[author['label'] for author in article.neighbors(mode = igraph.OUT) if author['type'] == 'author'] for article in articles]
-  co_authors = [co_author for co_author_list in co_authors_lists for co_author in co_author_list]
-  return co_authors
+def lists_of_co_authors(articles, author_name):
+  return [[author['label'] for author in article.neighbors(mode = igraph.OUT) if (author['type'] == 'author' and not author['label'].lower().startswith(author_name))] for article in articles]
+
+def flatten(list_of_lists):
+  return [elem for a_list in list_of_lists for elem in a_list]
+
+def calc_co_author_freqs_and_uniqueness(articles, author_name):
+  co_authors_lists = lists_of_co_authors(articles, author_name)
+  if len(co_authors_lists) == 0:
+    return (None, None)
+
+  all_co_authors = flatten(co_authors_lists)
+  co_authors_counts = collections.Counter(all_co_authors)
+  num_articles = float(len(co_authors_lists))
+  freqs = [count / num_articles for count in co_authors_counts.values()]
+
+  num_unique_authors = len(co_authors_counts)
+  uniqueness = num_unique_authors / float(len(all_co_authors))
+
+  return (freqs, uniqueness)
 
 def calc_metrics(graph_file_path, mat):
   g = igraph.Graph.Read(graph_file_path, format='picklez')
@@ -55,9 +72,8 @@ def calc_metrics(graph_file_path, mat):
   if len(level_1_articles) == 0:
     return
 
-  print author_name, co_authors(level_1_articles)
-
   coauthor_counts = outgoing_counts_of_type(level_1_articles, 'author')
+  coauthor_freqs, coauthor_uniqueness = calc_co_author_freqs_and_uniqueness(level_1_articles, author_name)
   institution_counts = outgoing_counts_of_type(level_1_articles, 'institution')
   grantagency_counts = outgoing_counts_of_type(level_1_articles, 'grantagency')
   article_years = [article['pubdate'] / 10000 for article in level_1_articles if article['pubdate'] != None]
@@ -92,6 +108,12 @@ def calc_metrics(graph_file_path, mat):
     mat['skew-pub-years'][author_name] = scipy.stats.skew(article_years)
     mat['kurt-pub-years'][author_name] = scipy.stats.kurtosis(article_years)
 
+  if coauthor_freqs:
+    mat['mean-collab-freq'][author_name] = numpy.mean(coauthor_freqs)
+    mat['median-collab-freq'][author_name] = numpy.median(coauthor_freqs)
+    mat['sd-collab-freq'][author_name] = numpy.std(coauthor_freqs)
+    mat['collab-uniqueness'][author_name] = coauthor_uniqueness
+
   if citcounts:
     mat['h-index'][author_name] = h_index(citcounts)
     mat['max-citations'][author_name] = max(citcounts)
@@ -106,6 +128,7 @@ def write_matrix(graph_file_paths, output_file_path):
     'mean-institutions', 'median-institutions', 'sd-institutions',
     'mean-grant-agencies', 'median-grant-agencies', 'sd-grant-agencies',
     'delta-pub-years', 'mean-pub-years', 'median-pub-years', 'sd-pub-years', 'skew-pub-years', 'kurt-pub-years',
+    'mean-collab-freq', 'median-collab-freq', 'sd-collab-freq', 'collab-uniqueness',
     'h-index', 'max-citations', 'tg-score'])
   for graph_file_path in graph_file_paths:
     calc_metrics(graph_file_path, mat)
