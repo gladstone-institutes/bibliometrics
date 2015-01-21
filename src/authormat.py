@@ -50,10 +50,9 @@ def flatten(list_of_lists):
 
 def calc_co_author_freqs_and_uniqueness(articles, author_name):
   co_authors_lists = lists_of_co_authors(articles, author_name)
-  if len(co_authors_lists) == 0:
-    return (None, None)
-
   all_co_authors = flatten(co_authors_lists)
+  if len(all_co_authors) == 0:
+    return (None, None)
   co_authors_counts = collections.Counter(all_co_authors)
   num_articles = float(len(co_authors_lists))
   freqs = [count / num_articles for count in co_authors_counts.values()]
