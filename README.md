@@ -118,9 +118,17 @@ The output file can then be converted into the bottom-up pipeline input file (de
 
 # Summaries of command scripts
 
+* **authorssample.py**
+
+    Creates a random sample of last authors who published under given MeSH terms. Outputs a file listing each sampled author and top 5 institutions affiliated with the articles published by the given author.
+
 * **bottomup.py**
 
     Takes an author and his or her institution affiliation and creates a bottom-up network. The network is stored in the `pklz` format.
+
+* **pickno1.py**
+
+    Processes the output of `authorssample.py` and converts it into an input file suitable for `bottomup-pipeline.sh`.
 
 * **topdown.py**
 
