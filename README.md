@@ -99,6 +99,10 @@ Note: The pipeline script creates one-level networks for each author. If you wan
 
 # Summaries of command scripts
 
+* **bottomup.py**
+
+    Takes an author and her or her institution affiliation and creates a bottom-up network. The network is stored in the `pklz` format.
+
 * **topdown.py**
 
     Takes a list of CSE references or PMIDs and creates a top-down network. The network is stored in the `pklz` format.
