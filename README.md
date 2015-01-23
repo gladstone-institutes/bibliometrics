@@ -48,8 +48,20 @@ To generate the network, run the top-down script:
 The network file will be stored in `output.pklz`. If you want to open this network in Cytoscape, first convert it to XGMML:
 
     python src/xgmml.py output.pklz output.xgmml
-    
-# What each script does
+
+## Top-down from a list of PMIDs
+
+Instead of creating a top-down network from an FDA NDA, you can create one from a list of PMIDs. This is useful for getting a network of peripheral articles.
+
+### Create the input file
+
+Create a text file listing each PMID on a separate line.
+
+### Run top-down 
+
+    python src/topdown.py --format pmid --dont-search-trials --levels 2 input.txt output.pklz
+
+# A summary of each script
 
 * **topdown.py**
 
