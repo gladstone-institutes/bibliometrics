@@ -6,14 +6,14 @@ All output data files can be found at: `//gdsl.gladstone.internal/gdsl/GICD/Comm
 
 __Note__: You will need Python 2.7 to run the scripts.
 
-The scripts depend on a number of Python libraries. All of them can be installed using `pip`, an easy-to-use tool for installing third-party Python libraries.
+The scripts depend on a number of Python libraries. All of them can be installed using `pip`, an easy-to-use tool for installing third-party Python libraries. (Make sure pip is installed first: `easy_install pip`.)
 
-1. Make sure pip is installed first: `easy_install pip`
-1. Install the needed libraries: `pip install ipython lxml numpy pandas python-dateutil python-igraph requests requests-cache scipy suds`
+    pip install ipython lxml numpy pandas python-dateutil python-igraph requests requests-cache scipy suds
 
 (We recommend using the [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) tool so that these libraries are installed locally.)
 
 # The top-down network generation workflow
+
 A *top-down network* has these layers:
 
 1. The drug itself.
@@ -45,7 +45,7 @@ To generate the network, run the top-down script:
 
     python src/topdown.py --format cse --levels 2 input.txt output.pklz
 
-The network file will be stored in `output.pklz`. If you want to open this network in Cytoscape, first convert it to XGMML:
+The network file will be stored in `output.pklz`. If you want to open this network in Cytoscape, convert it to XGMML:
 
     python src/xgmml.py output.pklz output.xgmml
 
@@ -61,7 +61,41 @@ Create a text file listing each PMID on a separate line.
 
     python src/topdown.py --format pmid --dont-search-trials --levels 2 input.txt output.pklz
 
-# A summary of each script
+# Bottom-up network generation workflow
+
+A *bottom-up network* has these layers:
+
+1. An author
+2. All articles written by the author above. Included are co-authors, institutions, and grant agencies connected to each article in this layer.
+2. (Only two-level.) Another layer of articles that cite the articles above. Included are authors, institutions, and grant agencies connected to each article.
+
+## Running bottom-up on a single author
+
+The bottom-up script needs an author name and an institution. Here's an example of how to run the bottom-up script on a single author:
+
+    python src/bottomup.py --levels 2 "Pico AR" "gladstone" output.pklz
+
+The network file will be stored in `output.pklz`. If you want to open this network in Cytoscape, convert it to XGMML:
+
+    python src/xgmml.py output.pklz output.xgmml
+
+## Running bottom-up on many authors
+
+Create an input file that follows this format:
+
+    Author-A
+    Institution-A
+    Output/Path/A.pklz
+    Author-B
+    Institution-B
+    Output/Path/B.pklz
+    ...
+
+Run the pipeline script:
+
+    sh src/bottomup-pipeline.sh input-scripted.txt
+
+# Summaries of command scripts
 
 * **topdown.py**
 
