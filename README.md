@@ -61,6 +61,24 @@ Create a text file listing each PMID on a separate line.
 
     python src/topdown.py --format pmid --dont-search-trials --levels 2 input.txt output.pklz
 
+## Score top-down networks
+
+The `score.py` script takes a top-down network file and outputs the same network but with each node containing a score.
+
+Article nodes can be scored by:
+
+* **individual**: the article's score is its citation count
+* **propagate**: the article's score is its citation count plus the score of any lower-level article that connects to it
+
+Author, institution, and grant agency ("neighbor") nodes can be scored by:
+
+* **sum**: sum the score of all articles that connect to a neighbor node
+* **indegree**: the neighbor's score is the number of articles that connect to it
+
+Example of calling `score.py`:
+
+    python src/score.py --article-scoring propagate --neighbor-scoring indegree input.pklz output.pklz
+
 # Bottom-up network generation workflow
 
 A *bottom-up network* has these layers:
@@ -160,7 +178,11 @@ This will output all author names that appear in both matrices. You can then del
 
 * **pickno1.py**
 
-    Processes the output of `authorssample.py` and converts it into an input file suitable for `bottomup-pipeline.sh`.
+    Processes the text output of `authorssample.py` and converts it into an input file suitable for `bottomup-pipeline.sh`.
+
+* **score.py**
+
+    Takes a top-down network file in the `pklz` format. adds a score attribute to all article, author, institution, and grant agency nodes. Outputs a network file in the `pklz` format.
 
 * **topdown.py**
 
