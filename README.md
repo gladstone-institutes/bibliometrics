@@ -95,6 +95,8 @@ Run the pipeline script:
 
     sh src/bottomup-pipeline.sh input-scripted.txt
 
+Note: The pipeline script creates one-level networks for each author. If you want to change this, open this file and look at line 15, which invokes `bottomup.py`. You can change the number of levels there.
+
 # Summaries of command scripts
 
 * **topdown.py**
