@@ -97,11 +97,30 @@ Run the pipeline script:
 
 Note: The pipeline script creates one-level networks for each author. If you want to change this, open this file and look at line 15, which invokes `bottomup.py`. You can change the number of levels there.
 
+## Create a random sample list of authors from MeSH terms
+
+The `authorssample.py` script will:
+
+1. Collect all articles published under the given MeSH terms.
+1. Create a list of last authors from each article.
+1. Randomly sample from this list based on the given sample size.
+1. Output the author's name and the five most common institutions affiliated with the author's articles under the given MeSH term.
+
+Here's an example of how to run it:
+
+    python src/authorssample.py --output random-authors-and-institutions.txt --num-samples 200 --mesh-terms anticoagulant thrombosis
+
+Adding more than one MeSH term will do an *and* operation across all the terms.
+
+The output file can then be converted into the bottom-up pipeline input file (described above) using the `pickno1.py` script:
+
+    cat random-authors-and-institutions.txt | python src/pickno1.py > random-authors-scripted.txt
+
 # Summaries of command scripts
 
 * **bottomup.py**
 
-    Takes an author and her or her institution affiliation and creates a bottom-up network. The network is stored in the `pklz` format.
+    Takes an author and his or her institution affiliation and creates a bottom-up network. The network is stored in the `pklz` format.
 
 * **topdown.py**
 
