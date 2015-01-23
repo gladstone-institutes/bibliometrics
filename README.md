@@ -126,11 +126,19 @@ Here's how to run it:
 
 Note that each file path is contained in every third line of the bottom-up pipeline input file. You can get each third line using bash like so:
 
-    while read l; do read l; read l; if [ -f "$l" ]; then echo "\"$l\" "; fi; done < input-scripted.txt
+    while read l; do read l; read l; if [ -f "$l" ]; then echo -ne "\"$l\" "; fi; done < input-scripted.txt
 
 (The above snippet also makes sure that the network file exists.)
 
 Copy the output of the above snippet and paste it after entering `python src/authormat.py output.csv`.
+
+### Remove duplicate authors
+
+Let's say you have two matrices, one containing core author networks and another of peripheral author networks. You want to remove all authors in the peripheral matrix who are core authors. You can do this with the `dupauthors.py` script:
+
+    python dupauthors.py core-matrix.csv peripheral-matrix.csv
+
+This will output all author names that appear in both matrices. You can then delete these duplicated authors from the peripheral matrix.
 
 # Summaries of command scripts
 
@@ -145,6 +153,10 @@ Copy the output of the above snippet and paste it after entering `python src/aut
 * **bottomup.py**
 
     Takes an author and his or her institution affiliation and creates a bottom-up network. The network is stored in the `pklz` format.
+
+* **dupauthors.py**
+
+    Lists all duplicated authors across two author matrix files.
 
 * **pickno1.py**
 
