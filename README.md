@@ -116,7 +116,27 @@ The output file can then be converted into the bottom-up pipeline input file (de
 
     cat random-authors-and-institutions.txt | python src/pickno1.py > random-authors-scripted.txt
 
+## Output summary statistics about each bottom-up network
+
+The `authormat.py` script takes a list of bottom-up network files and outputs a matrix, with each row containing summary statistics for each given file.
+
+Here's how to run it:
+
+    python src/authormat.py output.csv network-1.pklz network-2.pklz ...
+
+Note that each file path is contained in every third line of the bottom-up pipeline input file. You can get each third line using bash like so:
+
+    while read l; do read l; read l; if [ -f "$l" ]; then echo "\"$l\" "; fi; done < input-scripted.txt
+
+(The above snippet also makes sure that the network file exists.)
+
+Copy the output of the above snippet and paste it after entering `python src/authormat.py output.csv`.
+
 # Summaries of command scripts
+
+* **authormat.py**
+
+    Creates a summary matrix for each given bottom-up network file. Outputs a CSV file that can be imported into R.
 
 * **authorssample.py**
 
