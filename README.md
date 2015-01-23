@@ -63,7 +63,7 @@ Create a text file listing each PMID on a separate line.
 
 ## Score top-down networks
 
-The `score.py` script takes a top-down network file and outputs the same network but with each node containing a score.
+The `score.py` script takes a top-down network file and outputs the same network but with each node containing a score attribute.
 
 Article nodes can be scored by:
 
