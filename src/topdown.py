@@ -7,7 +7,6 @@ import refparse
 import clinicaltrials
 import pubmed
 import wos
-import debug
 
 class TopDown:
   def __init__(self, verbose):
