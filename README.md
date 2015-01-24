@@ -227,3 +227,19 @@ The command scripts above rely on infrastructure code. Here's an explanation of 
 * **clinicaltrials.py**
 
     Provides the `Client` class for the clinicaltrials.gov web service.
+
+* **litnet.py**
+
+    Provides the `LitNet` class that makes it easy to generate networks that represent relationships between articles, authors, institutions, and grant agencies.
+
+* **pubmed.py**
+
+    Provides the `Client` class for the PubMed web service.
+
+* **wos.py**
+
+    Provides the `Client` class for the Thomson Reuters Web of Science web service.
+
+* **util.py**
+
+    Utility functions for working with XML files.
