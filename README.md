@@ -196,6 +196,10 @@ This will output all author names that appear in both matrices. You can then del
 
     Lists all duplicated authors across two author matrix files.
 
+* **meshmat.py**
+
+    Takes a network file as input and outputs a CSV file of MeSH term frequency across all article nodes.
+
 * **pickno1.py**
 
     Processes the text output of `authorssample.py` and converts it into an input file suitable for `bottomup-pipeline.sh`.
