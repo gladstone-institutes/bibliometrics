@@ -211,3 +211,11 @@ This will output all author names that appear in both matrices. You can then del
 * **xgmml.py**
 
     Takes a `pklz` file and converts it into an `xgmml` file.
+
+# Infrastructure code
+
+The command scripts above rely on infrastructure code. Here's an explanation of each file:
+
+* **clinicaltrials.py**
+
+    Provides the `Client` class for the clinicaltrials.gov web service.
