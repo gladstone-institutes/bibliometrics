@@ -7,16 +7,19 @@ import igraph
 _first_day = datetime.date(1900, 1, 1)
 
 def _parse_pubdate(pubdate):
+  '''Takes an integer (e.g. 19850726) and returns a proper date object (1985/07/26).'''
   year = pubdate/10000
   month = pubdate / 100 - year * 100
   day = pubdate - (year * 10000) - (month * 100)
   return datetime.date(year, month, day)
 
 def _pubdate_to_days(pubdate):
+  '''Takes a date object and returns the number of days since 1/1/1900.'''
   delta = _parse_pubdate(pubdate) - _first_day
   return delta.days
 
 def _pubdate_to_year(pubdate):
+  '''Takes an integer (e.g. 19850726) and returns the year (1985) as an integer.'''
   return pubdate / 10000
 
 _computed_columns = {
@@ -25,6 +28,9 @@ _computed_columns = {
 }
 
 def _get_column_value(articlev, column):
+  '''Returns the value of a given article attribute. Passes the article
+  attribute value to a function specified by _computed_columns if
+  the column is a key in _computed_columns.'''
   if column in _computed_columns:
     (key, func) = _computed_columns[column]
     value = articlev[key]
@@ -33,6 +39,7 @@ def _get_column_value(articlev, column):
     return articlev[column]
 
 def _article_is_clinical(articlev):
+  '''Returns true if "Clinical" is in the article's pubtype'''
   pubtypes = articlev['pubtypes']
   if pubtypes == None:
     return False
@@ -42,6 +49,7 @@ def _article_is_clinical(articlev):
   return False
 
 def _article_is_non_clinical(articlev):
+  '''Returns true if "Clinical" is not in the article's pubtype'''
   pubtypes = articlev['pubtypes']
   if pubtypes == None:
     return False

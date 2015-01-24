@@ -7,6 +7,10 @@ import scipy.stats
 import argparse
 
 def outgoing_counts_of_type(articles, node_type):
+  '''Given a list of article nodes, returns a list of the number of neighbors each article
+  has that match the given type. E.g., if node_type == "author", this will return a list
+  of the number of authors connected to each article node.'''
+
   return [len([neighbor for neighbor in article.neighbors(mode = igraph.OUT) if neighbor['type'] == node_type]) for article in articles]
 
 def h_index(counts):
@@ -43,12 +47,21 @@ def tg_score(articles):
     return tg_count / float(total_count)
 
 def lists_of_co_authors(articles, author_name):
+  '''Returns a nested list, where each sublist is a list of co-authors for each article.
+  This will filter out all authors who match the given author_name.'''
+
+  # Unfortunately a one-liner for speed reasons
   return [[author['label'] for author in article.neighbors(mode = igraph.OUT) if (author['type'] == 'author' and not author['label'].lower().startswith(author_name))] for article in articles]
 
 def flatten(list_of_lists):
+  '''Takes a nested list and returns a single-level list.'''
   return [elem for a_list in list_of_lists for elem in a_list]
 
 def calc_co_author_freqs_and_uniqueness(articles, author_name):
+  '''Returns the tuple (dict, float). The first value is a dictionary of co-author frequencies
+  across all given articles. The second is the co-author uniqueness. This is the ratio of
+  the number of unique co-authors to the total number of co-authors.'''
+
   co_authors_lists = lists_of_co_authors(articles, author_name)
   all_co_authors = flatten(co_authors_lists)
   if len(all_co_authors) == 0:
@@ -63,6 +76,8 @@ def calc_co_author_freqs_and_uniqueness(articles, author_name):
   return (freqs, uniqueness)
 
 def calc_metrics(graph_file_path, mat):
+  '''Calculates the values for each column for the given
+  graph_file_path and stores in the in the matrix.'''
   g = igraph.Graph.Read(graph_file_path, format='picklez')
   author_name = g['name'].lower()
   author = g.vs.find(label = author_name, type='author')

@@ -46,6 +46,7 @@ class BottomUp:
     return datetime.datetime.now().strftime('[%H:%M:%S]')
 
   def _add_wos_data(self, ref):
+    '''Takes an article dictionary and adds WoS data about the given article.'''
     if not 'title' in ref or not ref['title'] or not 'authors' in ref:
       return
     wos_refs = self.wos_client.search(self._first_author(ref), ref.get('title'), ref.get('journal'), ref.get('year'))
@@ -53,6 +54,8 @@ class BottomUp:
       ref.update(wos_refs[0])
 
   def _ref_has_institution(self, ref, institution_name):
+    '''Returns true if the given institution is in the given article dictionary's
+    list of institutions.'''
     institutions = ref.get('institutions', {})
     for (address, organizations) in institutions.values():
       if institution_name in address.lower():
@@ -64,6 +67,7 @@ class BottomUp:
     return False
 
   def _add_layer_of_refs(self, refs, parent_index, max_levels, level, filter_func = None):
+    '''Adds a layer of references to the literature network.'''
     # add level attribute
     for ref in refs:
       if ref.get('level') == None:

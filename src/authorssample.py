@@ -8,12 +8,19 @@ import pubmed
 import wos
 
 def _create_mesh_terms_query(mesh_terms):
+  '''Creates a query string from a list of strings representing MeSH terms.
+  Example: _create_mesh_terms_query(["thrombosis", "anticoagulant"]) => "thrombosis[MeSH Terms] AND anticoagument[MeSH Terms]'''
   return ' AND '.join(['%s[MeSH Terms]' % term for term in mesh_terms])
 
 def _create_mesh_terms_by_author(mesh_terms, author):
+  '''Creates a query string from a list of strings representing MeSH terms and an author name.
+  Example: _create_mesh_terms_by_author(["cystic fibrosis"], "Boucher RC") => "cystic fibrosis[MeSH Terms] AND Boucher RC[au]'''
   return ' AND '.join(['%s[MeSH Terms]' % term for term in mesh_terms]) + ' AND (%s[au])' % author
 
 def _most_common_institute(refs):
+  '''For the given list of article dictionaries, return a list of the 5 most common institutions
+  across the given article nodes. The list consists of tuples containing
+  the institution name and its frequency.'''
   counter = collections.Counter()
   for ref in refs:
     for address, organizations in ref['institutions'].values():
@@ -36,6 +43,7 @@ class AuthorsSample:
       return authors[0][0]
 
   def _add_wos_data(self, ref):
+    '''Takes an article dictionary and adds article data from WoS.'''
     if not 'title' in ref or not ref['title'] or not 'authors' in ref or not self._first_author(ref):
       return
     wosrefs = self.wosclient.search(self._first_author(ref), ref.get('title'), ref.get('journal'), ref.get('year'))

@@ -33,6 +33,14 @@ class Client:
     pass
   
   def search(self, query):
+    '''Takes a drug name and returns a list of dictionaries. Each dictionary
+    contains information about the clinical trial:
+    {
+      "nctid": web service ID for this clinical trial
+      "title": Name of the clinical trial
+      "biblio": List of strings containing PMIDs
+      "completion_date": A string representing when the clinical trial finished (if at all)
+    }'''
     (_, tmppath) = tempfile.mkstemp(prefix=('%s-clinical-trials' % query), suffix='.zip', text='False')
     with open(tmppath, 'wb') as tmpfile:
       tmpfile.write(urllib.urlopen('http://clinicaltrials.gov/search?term=%s&studyxml=true' % query).read())
