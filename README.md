@@ -204,6 +204,10 @@ This will output all author names that appear in both matrices. You can then del
 
     Takes a top-down network file in the `pklz` format. adds a score attribute to all article, author, institution, and grant agency nodes. Outputs a network file in the `pklz` format.
 
+* **testparse.py**
+
+    Takes an input file of CSE styled references and tries to parse them. Useful for debugging an input file for the top-down CSE workflow.
+
 * **topdown.py**
 
     Takes a list of CSE references or PMIDs and creates a top-down network. The network is stored in the `pklz` format.
