@@ -63,7 +63,7 @@ Create a text file listing each PMID on a separate line.
 
 ## Score top-down networks
 
-The `score.py` script takes a top-down network file and outputs the same network but with each node containing a score.
+The `score.py` script takes a top-down network file and outputs the same network but with each node containing a score attribute.
 
 Article nodes can be scored by:
 
@@ -78,6 +78,22 @@ Author, institution, and grant agency ("neighbor") nodes can be scored by:
 Example of calling `score.py`:
 
     python src/score.py --article-scoring propagate --neighbor-scoring indegree input.pklz output.pklz
+
+## Publication plots
+
+You can create a histogram plot of the publication dates from articles in a network file using the `articlestats.py` script.
+
+Create three separate CSV files: one containing all article publication dates, another only for articles marked as clinical trial, and another for articles not marked as clinical trial.
+
+    python src/articlestats.py output.pklz article_years.csv pmid pubdays
+    python src/articlestats.py --filter clinical-only output.pklz clinical_article_years.csv pmid pubdays
+    python src/articlestats.py --filter non-clinical-only output.pklz non_clinical_article_years.csv pmid pubdays
+
+Use the `article_years_plot.R` command:
+
+    R CMD src/article_years_plot.R
+
+The R script expects the `article_years.csv`, `clinical_article_years.csv`, and `non_clinical_article_years.csv` files to be in the current directory. It will create the file `article-years.pdf` in the current directory when it finishes.
 
 # Bottom-up network generation workflow
 
@@ -159,6 +175,10 @@ Let's say you have two matrices, one containing core author networks and another
 This will output all author names that appear in both matrices. You can then delete these duplicated authors from the peripheral matrix.
 
 # Summaries of command scripts
+
+* **articlestats.py**
+
+    Takes a top-down network file as input and creates a CSV file containing information about each article node.
 
 * **authormat.py**
 
