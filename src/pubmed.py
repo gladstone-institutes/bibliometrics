@@ -8,6 +8,9 @@ import lxml.html
 from util import has_keys, xpath_str, xpath_strs
 
 def _split_range(n, m):
+  '''Given a range [0,m], return
+  an iterator of ranges ([0,n], [n,2n], [2n, 3n], ..., [in, m]).
+  Example: _split_range(15, 40) => ([0,15], [15, 30], [30, 40])'''
   low = 0
   for i in range(m / n + 1):
     high = min(low + n, m)
@@ -15,6 +18,8 @@ def _split_range(n, m):
     low = high
 
 def _ref_to_citmatch_str(ref, refkey):
+  '''Takes a ref (article data in a dictionary) and builds a citmatch string
+  (a PubMed query format). refkey is an arbitrary identifier for the given ref.'''
   journal = ref.get('journal')
   if journal == None: journal = ''
 
@@ -41,6 +46,8 @@ def _ref_to_citmatch_str(ref, refkey):
 _pmid_re = re.compile(r'\d+')
 
 def _ref_to_esearch_term(ref):
+  '''Takes a ref (article data in a dictionary) and builds an esearch term
+  (a PubMed query format).'''
   title = ref['title']
   if not 'authors' in ref or not ref['authors']:
     return u'({title}[Title])'.format(title=title)
@@ -57,6 +64,8 @@ class Client:
     self.html_parser = lxml.html.HTMLParser(recover=True, encoding='utf-8')
 
   def _add_pmids_by_citmatch(self, refs):
+    '''Try to match the list of refs (dictionaries of article data) using the citmatch service.
+    If the ref is successfully matched, it will acquire a PMID attribute.'''
     searchable_refs = [ref for ref in refs if not 'pmid' in ref and has_keys(ref, 'journal', 'year', 'volume', 'firstpage', 'authors')]
     if not searchable_refs:
       return
@@ -79,6 +88,8 @@ class Client:
         searchable_refs[index]['pmid'] = pmid
 
   def _add_pmid_by_author_title_scrape(self, ref):
+    '''Try to match the given ref (a dictionary of article data) by doing a standard
+    PubMed article search. If the match succeeds, the ref will acquire a PMID attribute.'''
     esearch_term = _ref_to_esearch_term(ref)
     req = self.session.get('http://www.ncbi.nlm.nih.gov/pubmed/', params={'term': esearch_term})
     doc = lxml.html.document_fromstring(req.content, parser=self.html_parser)
@@ -87,6 +98,9 @@ class Client:
       ref['pmid'] = idtag[0].text.encode('utf-8')
 
   def _add_pmids(self, refs):
+    '''Takes a list of refs (dictionaries containing article data) and tries to
+    match their PMIDs. First it will use the citmatch method. If that fails, it will
+    try using the scraping method.'''
     #print 'add pmids for %d refs' % len(refs)
     for (lo, hi) in _split_range(50, len(refs)):
       #print 'add pmids: %d to %d of %d' % (lo, hi, len(refs))
@@ -97,12 +111,12 @@ class Client:
         self._add_pmid_by_author_title_scrape(ref)
 
   def add_pubmed_data(self, refs):
+    '''Takes a list of refs (dictionaries containing article data) and tries to add
+    as much information about them stored in PubMed.'''
     self._add_pmids(refs)
 
     refs_with_pmids = [ref['pmid'] for ref in refs if 'pmid' in ref]
-    if not refs_with_pmids:
-      return
-    #print '%d pmids found of %d refs' % (len(refs_with_pmids), len(refs))
+    if not refs_with_pmids: return #print '%d pmids found of %d refs' % (len(refs_with_pmids), len(refs))
 
     for (lo, hi) in _split_range(100, len(refs_with_pmids)):
       #print 'pubmed data: %d to %d of %d' % (lo, hi, len(refs_with_pmids))
@@ -118,6 +132,7 @@ class Client:
         ref.update(pubmed_ref)
 
   def search_for_papers_by_author(self, author_name):
+    '''Return a list of refs (article data in dictionaries) written by the given author.'''
     term = '"%s"[Author]' % author_name
     req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
         params={'db': 'pubmed', 'term': term, 'retmax': 100000})
@@ -127,6 +142,7 @@ class Client:
     return refs
   
   def num_papers_by_author(self, author_name):
+    '''Return the number of papers written by the given author.'''
     term = '"%s"[Author]' % author_name
     req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
         params={'db': 'pubmed', 'term': term, 'retmax': 100000})
@@ -135,6 +151,8 @@ class Client:
     return int(count[0])
 
   def search_for_papers(self, term):
+    '''Return a list of refs (article data in dictionaries) that match the given
+    PubMed query term.'''
     req = self.session.get('http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
         params={'db': 'pubmed', 'term': term, 'retmax': 100000})
     doc = lxml.etree.parse(BytesIO(req.content), self.xml_parser)
@@ -143,12 +161,15 @@ class Client:
     return refs
 
 def _dict_with_value(ds, k, v):
+  '''Given a list of dictionaries (ds),
+  return the dictionary d such that d[k] == v.'''
   for d in ds:
     if k in d and d[k] == v:
       return d
   return None
 
 def _article_to_pubmed_ref(article):
+  '''Convert PubMed XML data about an article into a ref (dictionary containing the article data).'''
   r = {}
   r['pmid'] = xpath_str(article, 'PubmedData/ArticleIdList/ArticleId[@IdType=\'pubmed\']/text()')
 
