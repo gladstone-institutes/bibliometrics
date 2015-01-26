@@ -4,7 +4,18 @@ All output data files can be found at: `//gdsl.gladstone.internal/gdsl/GICD/Comm
 
 # Setting up your environment
 
-__Note__: You will need Python 2.7 to run the scripts.
+__Note__: You will need Python 2.7 as your default Python version.
+
+## Preliminary steps
+
+Before installing the needed libraries, make sure your system is ready. The commands below are geared for Ubuntu.
+
+ * Install compiler tools on your system if necessary: `sudo apt-get install build-essential`.
+ * Make sure your system has `easy_install`. If it doesn't, you will need *setuptools*: `sudo apt-get install python-setuptools`.
+ * Install `pip` if you don't have it: `sudo easy_install pip`.
+ * Install the Python shared libraries and headers: `sudo apt-get install python-dev`.
+
+## Install libraries
 
 The scripts depend on a number of Python libraries. All of them can be installed using `pip`, an easy-to-use tool for installing third-party Python libraries. (Make sure pip is installed first: `easy_install pip`.)
 
