@@ -169,7 +169,20 @@ def _dict_with_value(ds, k, v):
   return None
 
 def _article_to_pubmed_ref(article):
-  '''Convert PubMed XML data about an article into a ref (dictionary containing the article data).'''
+  '''Convert PubMed XML data about an article into a ref (dictionary containing the article data).
+  The returned dictionary will contain this:
+  {
+    "pmid": a string containing the article's PMID
+    "authors": a list of tuples (string, integer), where the first element is the author's name and the second is the author's affiliation if known (otherwise it's None)
+    "institutions": a dictionary, where the key is an integer and value is a list of strings contanining the institutional hierarchy
+    "title": the article's title
+    "pubdate": an integer of the form 19850726 (i.e., 1985/07/26)
+    "year": the publication year as integer
+    "journal": a string
+    "grantagencies": a list of strings
+    "pubtypes": a list of strings specifying the publication types as per PubMed
+    "meshterms": a nested list of strings specifying the MeSH terms as per PubMed
+  }'''
   r = {}
   r['pmid'] = xpath_str(article, 'PubmedData/ArticleIdList/ArticleId[@IdType=\'pubmed\']/text()')
 

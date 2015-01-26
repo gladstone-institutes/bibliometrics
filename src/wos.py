@@ -74,6 +74,15 @@ def _convert_wos_record(record, ns):
   return r
 
 def _convert_wos_biblio_record(record):
+  '''Takes a WoS bibliography record and returns a ref dictionary:
+  {
+    "authors": [(string, None)]
+    "citcount": int
+    "year": string
+    "firstpage" string
+    "volume": string
+    "journal": string
+  }'''
   r = {}
   if 'citedAuthor' in record:
     r['authors'] = [(unicode(record['citedAuthor']), None)]
@@ -127,6 +136,9 @@ class Client:
     self.cachedb.close()
 
   def _call_query_and_retry(self, query_func):
+    '''Calls the given query function. If an exception is thrown,
+    this will try to sign in and out of WoS then retry the query
+    up to 3 times.'''
     try:
       result = query_func()
       self.retry_count = 0
@@ -145,6 +157,8 @@ class Client:
         raise e
 
   def _throttled_query(self, query_func):
+    '''Guarantees that query functions are only
+    called once a second.'''
     time_now = datetime.datetime.now()
     delta_sec = (time_now - self.last_query_time).total_seconds()
     if delta_sec < 1.0:
@@ -153,6 +167,10 @@ class Client:
     return self._call_query_and_retry(query_func)
 
   def _paged_query(self, query_func, max_pages = None, records_per_page = 100):
+    '''Because WoS queries are paginated, this will return all the results of
+    a given query function. This will create a "retrieveParameters" WoS object
+    and fill it in, then call the given query function with the "retrieveParameters".
+    '''
     rp = self.searchclient.factory.create('retrieveParameters')
     rp.firstRecord = 1
     rp.count = records_per_page
@@ -185,6 +203,7 @@ class Client:
     self.cachecur.execute('insert into cache values(?, ?)', [unicode(cache_key), cache_value_bin])
 
   def _cache(func):
+    '''Takes a single-parameter function and caches its result.'''
     def inner(self, arg):
       cache_key = func.__name__ + ':' + arg
       if self._cache_key_exists(cache_key):
@@ -226,9 +245,13 @@ class Client:
     return title_fixed
   
   def _fix_title(self, title):
+    '''Removes problematic characters in article titles before
+    using them in a query for WoS.'''
     return '"' + _wos_title_bad_chars_re.sub(' ', title) + '"'
 
   def _fix_author(self, author):
+    '''Removes problematic characters in authors before
+    using them in a query for WoS.'''
     if not author:
       return author
     author_lower = author.lower()
@@ -239,6 +262,7 @@ class Client:
       return author
 
   def search(self, author, title, journal=None, year=None):
+    '''Searches for an article in WoS with the given author and title.'''
     title_fixed = self._fix_title(title)
     author_fixed = self._fix_author(author)
     userQuery = 'TI=(%s) AND AU=(%s)' % (title_fixed, author_fixed)
@@ -262,6 +286,8 @@ class Client:
     return results
 
   def biblio(self, wosref):
+    '''Gets article information in the bibliography of a given article. The provided wosref
+    must be a ref dictionary contanining the "wosid" key.'''
     results = self._biblio(wosref['wosid'])
     records = [record for record in results if 'authors' in record and 'title' in record]
     return records
@@ -288,5 +314,7 @@ class Client:
     return citations
 
   def citations(self, wosref):
+    '''Returns articles that cite a given article specified by wosref,
+    a ref dictionary with the key "wosid".'''
     results = self._citations(wosref['wosid'])
     return results

@@ -66,7 +66,7 @@ class LitNet:
   def _mesh_terms_as_semistructured(self, mesh_terms):
     '''Given a list of MeSH terms as strings, returns a list of strings
     representing the MeSH terms as semistructured.
-    Example: _mesh_terms_as_semistructured(["A/B", "C"]) => ["A", "B", "C"]'''
+    Example: _mesh_terms_as_semistructured([["A", "B", "C"], ["X"], ["Y"]]) => ["A/B", "A/C", "X", "Y"]'''
     l = []
     for term in mesh_terms:
       if len(term) > 1:

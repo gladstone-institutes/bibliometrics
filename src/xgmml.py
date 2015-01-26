@@ -53,6 +53,20 @@ def _graph_to_xml_tree(g):
   return xg
 
 def write(g, path):
+  '''Builds an XGMML file from the given graph object.
+  The topology of the network will be built as per the given graph.
+
+  Node and edge attributes can be of the following types:
+    string, int, float, list of strings, list of ints, dictionary of strings.
+
+  Dictionary values are treated specially. The attribute name will become
+  its own XML tag, and the dictionary's keys and values will become
+  attributes for the XML tag. This is used in litnet.py for building
+  the "graphics" tag, which sets visual properties for nodes and edges.
+
+  The "label" attribute is renamed to "name".
+  '''
+
   xg = _graph_to_xml_tree(g)
   t = ElementTree(xg)
   t.write(path, xml_declaration=True, encoding='UTF-8')
