@@ -24,11 +24,11 @@ Before installing the needed libraries, make sure your system is ready. The comm
 
  * Install the Python shared libraries and headers:
 
-        sudo apt-get install python-dev libz-dev libigraph0-dev
+        sudo apt-get install python-dev
 
  * Install necessary C libraries:
 
-        sudo apt-get install python-dev libz-dev libigraph0-dev libblas-dev liblapack-dev
+        sudo apt-get install libz-dev libigraph0-dev libblas-dev liblapack-dev
 
 ## Install Python libraries
 
