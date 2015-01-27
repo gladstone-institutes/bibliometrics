@@ -179,7 +179,9 @@ Here's an example of how to run it:
 
     python src/authorssample.py --output random-authors-and-institutions.txt --num-samples 1 --sample-size 200 --mesh-terms anticoagulant thrombosis
 
-Adding more than one MeSH term will do an *and* operation across all the terms.
+Adding more than one MeSH term will do an *and* operation across all the terms. If a single MeSH term consists of multiple words, enclose them in quotation marks (e.g. `"cystic fibrosis"`).
+
+The sampling script filters authors with low publication numbers. Thus the effective sample size will be approximately half. If you want the effective sample size to be around 100, set the sample size to be 200.
 
 The output file can then be converted into the bottom-up pipeline input file (described above) using the `pickno1.py` script:
 
