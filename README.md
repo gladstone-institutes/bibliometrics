@@ -34,11 +34,18 @@ Before installing the needed libraries, make sure your system is ready. The comm
 
 The scripts depend on a number of Python libraries. All of them can be installed using `pip`.
 
-    pip install ipython lxml numpy pandas python-dateutil python-igraph requests requests-cache scipy suds
+    pip install ipython lxml numpy pandas python-dateutil python-igraph requests requests-cache scipy suds cssselect
 
 (We recommend using the [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) tool so that these libraries are installed locally.)
 
 If you're having trouble installing lxml using pip, you can install it with Ubuntu's package manager: `sudo apt-get install python-lxml`.
+
+## Setup the shell
+
+If you're not running Python in virtualenv, you will need to tell Python where to find the `metrics/src` directory. To do so:
+
+    export PYTHONPATH=/path/to/metrics/src
+
 
 # The top-down network generation workflow
 
