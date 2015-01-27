@@ -8,21 +8,37 @@ __Note__: You will need Python 2.7 as your default Python version.
 
 ## Preliminary steps
 
-Before installing the needed libraries, make sure your system is ready. The commands below are geared for Ubuntu.
+Before installing the needed libraries, make sure your system is ready. The commands below are for Ubuntu.
 
- * Install compiler tools on your system if necessary: `sudo apt-get install build-essential`.
- * Make sure your system has `easy_install`. If it doesn't, you will need *setuptools*: `sudo apt-get install python-setuptools`.
- * Install `pip` if you don't have it: `sudo easy_install pip`.
- * Install the Python shared libraries and headers: `sudo apt-get install python-dev`.
- * Install other needed C libraries: `sudo-apt get install libxml2-dev`.
+ * Install compiler tools on your system:
 
-## Install libraries
+    sudo apt-get install build-essential gfortran
 
-The scripts depend on a number of Python libraries. All of them can be installed using `pip`, an easy-to-use tool for installing third-party Python libraries. (Make sure pip is installed first: `easy_install pip`.)
+ * Make sure your system has `easy_install`. If it doesn't, you will need *setuptools*:
+
+        sudo apt-get install python-setuptools
+
+ * Install `pip`:
+
+        sudo easy_install pip
+
+ * Install the Python shared libraries and headers:
+
+        sudo apt-get install python-dev
+
+ * Install necessary C libraries:
+
+        sudo apt-get install libz-dev libigraph0-dev libblas-dev liblapack-dev
+
+## Install Python libraries
+
+The scripts depend on a number of Python libraries. All of them can be installed using `pip`.
 
     pip install ipython lxml numpy pandas python-dateutil python-igraph requests requests-cache scipy suds
 
 (We recommend using the [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) tool so that these libraries are installed locally.)
+
+If you're having trouble installing lxml using pip, you can install it with Ubuntu's package manager: `sudo apt-get install python-lxml`.
 
 # The top-down network generation workflow
 
