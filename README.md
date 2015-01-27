@@ -14,6 +14,7 @@ Before installing the needed libraries, make sure your system is ready. The comm
  * Make sure your system has `easy_install`. If it doesn't, you will need *setuptools*: `sudo apt-get install python-setuptools`.
  * Install `pip` if you don't have it: `sudo easy_install pip`.
  * Install the Python shared libraries and headers: `sudo apt-get install python-dev`.
+ * Install other needed C libraries: `sudo-apt get install libxml2-dev`.
 
 ## Install libraries
 
