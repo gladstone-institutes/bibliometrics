@@ -177,7 +177,7 @@ The `authorssample.py` script will:
 
 Here's an example of how to run it:
 
-    python src/authorssample.py --output random-authors-and-institutions.txt --num-samples 200 --mesh-terms anticoagulant thrombosis
+    python src/authorssample.py --output random-authors-and-institutions.txt --num-samples 1 --sample-size 200 --mesh-terms anticoagulant thrombosis
 
 Adding more than one MeSH term will do an *and* operation across all the terms.
 
