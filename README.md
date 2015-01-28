@@ -179,13 +179,21 @@ Here's an example of how to run it:
 
     python src/authorssample.py --output random-authors-and-institutions.txt --num-samples 1 --sample-size 200 --mesh-terms anticoagulant thrombosis
 
-Adding more than one MeSH term will do an *and* operation across all the terms. If a single MeSH term consists of multiple words, enclose them in quotation marks (e.g. `"cystic fibrosis"`).
+Adding more than one MeSH term will do an *and* operation across all terms (e.g. `--mesh-terms anticoagulant thrombosis` → `anticoagulant AND thrombosis`). If a single MeSH term consists of multiple words, enclose them in quotation marks (e.g. `"cystic fibrosis"`).
 
 The sampling script filters authors with low publication numbers. Thus the effective sample size will be approximately half. If you want the effective sample size to be around 100, set the sample size to be 200.
 
-The output file can then be converted into the bottom-up pipeline input file (described above) using the `pickno1.py` script:
+All samples will be put into a single output file. Each sample begins with the text `# Sample i`.
 
-    cat random-authors-and-institutions.txt | python src/pickno1.py > random-authors-scripted.txt
+---
+
+The output file can then be converted into the bottom-up pipeline input file (described above) using the `pickno1.py` script.
+
+Before running `pickno1.py`, keep in mind that all samples are put into a single file. You will need to split each sample into its own file before running this script. You will also need to remove the `# Sample i` line from each file, even if you have only a single sample.
+
+Here's how to run `pickno1.py`:
+
+    cat random-authors-and-institutions.txt | python src/pickno1.py /output/prefix/path > random-authors-scripted.txt
 
 ## Output summary statistics about each bottom-up network
 
