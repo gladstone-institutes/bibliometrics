@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import igraph
 from itertools import repeat 
 from collections import Counter
