@@ -172,7 +172,11 @@ Run the pipeline script:
 
     sh src/bottomup-pipeline.sh input-scripted.txt
 
-Note: The pipeline script creates one-level networks for each author. If you want to change this, open this file and look at line 15, which invokes `bottomup.py`. You can change the number of levels there.
+Important: The `bottomup-pipeline.sh` takes into account Web of Science's throttling limitations. It sleeps for 60 seconds after each author to prevent `bottomup.py` from signing into Web of Science too frequently.
+
+Note: Sometimes Web of Science will stop working, causing `bottomup.py` to die. To get around this problem, `bottomup-pipeline.sh` was designed to be run repeatedly. If an output file already exists for an author, it will skip that author.
+
+Note: The pipeline script creates one-level networks for each author. If you want to change this, open `bottomup-pipeline.sh` and look at line 15. You can change the number of levels there.
 
 ## Create a random sample list of authors from MeSH terms
 
