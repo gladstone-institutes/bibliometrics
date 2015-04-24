@@ -1,15 +1,3 @@
-# Output data files
-
-All output data files can be found at: `//gdsl.gladstone.internal/gdsl/GICD/Common Use/Samad Lotia/metrics`
-
-## Using VirtualBox
-
-I've included a [VirtualBox](https://www.virtualbox.org/) disk drive that contains Ubuntu along with all necessary software packages needed to run the metrics scripts. You can find it here:
-
-    //gdsl.gladstone.internal/gdsl/GICD/Common Use/Samad Lotia/Metrics-Ubuntu-VirtualBox-disk.vdi
-
-When you set up your VM, you can set its hard disk drive to `Metrics-Ubuntu-VirtualBox-disk.vdi`. The username is `metrics` and password is `metrics`.
-
 # Setting up your environment
 
 __Note__: You will need Python 2.7 as your default Python version.
@@ -300,3 +288,17 @@ The command scripts above rely on infrastructure code. Here's an explanation of 
 * **util.py**
 
     Utility functions for working with XML files.
+    
+# Additional Gladstone Resources
+## Output data files
+
+All output data files can be found at: `//gdsl.gladstone.internal/gdsl/GICD/Common Use/Samad Lotia/metrics`
+
+### Using VirtualBox
+
+I've included a [VirtualBox](https://www.virtualbox.org/) disk drive that contains Ubuntu along with all necessary software packages needed to run the metrics scripts. You can find it here:
+
+    //gdsl.gladstone.internal/gdsl/GICD/Common Use/Samad Lotia/Metrics-Ubuntu-VirtualBox-disk.vdi
+
+When you set up your VM, you can set its hard disk drive to `Metrics-Ubuntu-VirtualBox-disk.vdi`. The username is `metrics` and password is `metrics`.
+
