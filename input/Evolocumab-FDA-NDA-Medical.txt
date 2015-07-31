@@ -1,11 +1,11 @@
 Evolocumab
-1. Abifadel M, Varret M, Rabes JP, et al. Mutations in PCSK9 Cause Autosomal Dominant Hypercholesterolemia. Nat Genet. 2003;34:154-156
-2. Lambert G, et al. The PCSK9 decade J Lipid Res 2012; 53:2515-2524. 
+1. Abifadel M, Varret M, Rabes JP, et al. Mutations in PCSK9 Cause Autosomal Dominant Hypercholesterolemia. Nat Genet 2003;34:154-156.
+2. Lambert G, et al. The PCSK9 decade. J Lipid Res 2012; 53:2515-2524. 
 3. Dong B, et al. CETP inhibitors downregulate hepatic LDL receptor and PCSK9 expression in vitro and in vivo through a SREBP2 dependent mechanism. Atherosclerosis 2014; 235:449-462.
 4. Goulinet S and Champan MJ. Plasma lipoproteins in the Golden Syrian hamster (Mesocricetus auratus):heterogeneity of apoB- and apoA-I-containing particles. J Lipid Res 1993; 34:943-959. 
 5. Evans GF, et al. Inhibition of cholesteryl ester transfer protein in normocholesterolemic and hypercholesterolemic hamsters: effects on HDL subspecies, quantity, and apolipoprotein distribution. J Lipid Res 1994; 35:1634-1645. 
 6. Weisgraber KH and Mahley RW. Subfraction of human high density lipoproteins by heparin-Sepharose affinity chromatography. J Lipid Res 1980; 21:316-325. 
-7. Camont L, et al. Biological activities of HDL subpopulations and their relevance to cardiovascular disease. Trends Mol Med 2011; 17(10):594-603
+7. Camont L, et al. Biological activities of HDL subpopulations and their relevance to cardiovascular disease. Trends Mol Med 2011; 17(10):594-603.
 8. Grzych JM, et al. Schistosoma mansoni shares a protective carbohydrate epitope with keyhole limpet hemocyanin. J Exp Med 1987; 165(3): 865-878.
 9. Innerarity T L, et al. Receptor binding activity of high density lipoproteins containing apoprotein E from abetalipoproteinemic and normal neonate plasma. Metabolism 1984; 33: 186-195.
 10. Russell DW. The enzymes, regulation, and genetics of bile acid synthesis. Annu Rev Biochem 2003; 72:137–174. 
@@ -15,48 +15,48 @@ Evolocumab
 14. Ramanathan A, et al. Role of alirocumab (proprotein convertase subtilisin/kexin type 9 antibody) on CD81 levels and hepatitis C virus entry into hepatocytes. American Heart Association 2013; Abstract 12052.
 15. Zaid A, et al. Proprotein Convertase Subtilisin/Kexin Type 9 (PCSK9): Hepatocyte-specific Low-Density Lipoprotein Receptor Degradation and Critical Role in Mouse Liver Regeneration. Hepatology 2008; 48:646. 
 16. Noor R, et al. High-density lipoprotein cholesterol regulates endothelial progenitor cells by increasing eNOS and preventing apoptosis. Atherosclerosis 2007; 192:92-99. 
-17. DeLeve L. Liver sinusoidal endothelial cells and liver regeneration. J Clin Invest 2013; 123:1861-1866 
+17. DeLeve L. Liver sinusoidal endothelial cells and liver regeneration. J Clin Invest 2013; 123:1861-1866. 
 18. Norata GD, et al. Emerging role of high density lipoproteins as a player in the immune system. Atherosclerosis 2012; 220:11-21. 
 19. Van de Woestigne AP, et al. Effect of statin therapy on incident type 2 diabetes mellitus in patients with clinically manifest vascular disease. Am J Cardiol 2015; 115(4): 441-446. 
 20. Mbikay M, et al. PCSK9-deficient mice exhibit impaired glucose tolerance and pancreatic islet abnormalities. FEBS Letters 2010; 584:701-706. 
 21. Liu M, et al. PCSK9 is not involved in the degradation of LDL receptors and BACE1 in the adult mouse brain. J Lipid Res 2010; 51:2611-2618.
 22. Cuchel M, Bruckert E, Ginsberg HN, et al. Homozygous familial hypercholesterolaemia: new insights and guidance for clinicians to improve detection and clinical management. Eur Heart J 2014; June 13; 35:2146-57.
-23. Bjorkhem I, Meaney S. Brain Cholesterol: Long Secret Life Behind a Barrier. Arterioscler Thromb Vasc Biol. 2004;24:806-815.
+23. Bjorkhem I, Meaney S. Brain Cholesterol: Long Secret Life Behind a Barrier. Arterioscler Thromb Vasc Biol 2004;24:806-815.
 24. Cohen JC, Boerwinkle E, Mosley TH Jr, Hobbs HH. Sequence variations in PCSK9, low LDL, and protection against coronary heart disease. N Engl J Med 2006; 354(12): 1264-72.
 25. Hooper, AJ , Marais AD, Tanyanyiwa DM, Burnett JR. The C679X mutation in PCSK9 is present and lowers blood cholesterol in a Southern African population. Atherosclerosis 2007;193(2): 445-8.
 26. Zhao Z, Tuakli-Wosornu Y, Lagace TA, et al. Molecular characterization of loss-of-function mutations in PCSK9 and identification of a compound heterozygote. Am J Hum Genet 2006;79:514-23.
-27. Cariou B, Ouguerram K, Zaïr Y, Guerois R, Langhi C, Kourimate S, et al. PCSK9 Dominant Negative Mutant Results in Increased LDL Catabolic Rate and Familial Hypobetalipoproteinemia. Arterioscler Thromb Vasc Biol. 2009;29:2191-2197.
+27. Cariou B, Ouguerram K, Zaïr Y, Guerois R, Langhi C, Kourimate S, et al. PCSK9 Dominant Negative Mutant Results in Increased LDL Catabolic Rate and Familial Hypobetalipoproteinemia. Arterioscler Thromb Vasc Biol 2009;29:2191-2197.
 28. Cholesterol Treatment Trialists’ (CTT) Collaboration. Efficacy and safety of more intensive lowering of LDL cholesterol: a meta-analysis of data from 170000 participants in 26 randomised trials. Lancet 2010;376:1670-1681.
 29. Cannon CP, Braunwald E, McCabe CH, Rader D J, Rouleau JL, Belder R, et al. Intensive versus Moderate Lipid Lowering with Statins after Acute Coronary Syndromes. N Engl J Med 2004; 350(15): 1495-504.
 30. LaRosa JC, Grundy SM, Waters DD, Shear C, Barter P, Fruchart JC et al. Intensive lipid lowering with atorvastatin in patients with stable coronary disease. N Engl J Med 2005; 352:1425–35.
 31. Pedersen TR, Faergeman O, Kastelein JJ, Olsson AG, Tikkanen MJ, Holme I, et al. High-dose atorvastatin vs usual-dose simvastatin for secondary prevention after myocardial infarction. JAMA 2005; 294:2437– 45. 
-32. Cannon CP, Steinberg BA, Murphy SA, Mega JL, Braunwald E. Meta-analysis of cardiovascular outcomes trials comparing intensive versus moderate statin therapy. J Am Coll Cardiol. 2006;48(3):438-45.
+32. Cannon CP, Steinberg BA, Murphy SA, Mega JL, Braunwald E. Meta-analysis of cardiovascular outcomes trials comparing intensive versus moderate statin therapy. J Am Coll Cardiol 2006;48(3):438-45.
 33. Barter PJ, Caulfield M, Eriksson M, Grundy SM, Kastelein JJ, et al. Effects of torcetrapib in patients at high risk for coronary events. N Engl J Med 2007; 357:2109-2122.
 34. The ACCORD Study Group. Effects of combination lipid therapy in type 2 diabetes mellitus. NEJM 2010; 362:1563.
 35. The AIM-HIGH Investigators. Niacin in patients with low HDL cholesterol levels receiving intensive statin therapy. N Engl J Med 2011;365:2255-67.
 36. The HPS2-THRIVE Collaborative Group. Effects of extended-release niacin with laropiprant in highrisk patients. N Engl J Med 2014;371:203-12.
-37. Cannon CP, Giugliano RP, Blazing MA, Harrington RA, Peterson JL, Sisk CM, Strony J, Musliner TA, McCabe CH, Veltri E, Braunwald E, Califf RM. Rationale and design of IMPROVE-IT (IMProved Reduction of Outcomes: Vytorin Efficacy International Trial): comparison of ezetimbe/simvastatin versus simvastatin monotherapy on cardiovascular outcomes in patients with acute coronary syndromes. Am Heart J. 2008; Nov 156(5):826-32.
+37. Cannon CP, Giugliano RP, Blazing MA, Harrington RA, Peterson JL, Sisk CM, Strony J, Musliner TA, McCabe CH, Veltri E, Braunwald E, Califf RM. Rationale and design of IMPROVE-IT (IMProved Reduction of Outcomes: Vytorin Efficacy International Trial): comparison of ezetimbe/simvastatin versus simvastatin monotherapy on cardiovascular outcomes in patients with acute coronary syndromes. Am Heart J 2008; Nov 156(5):826-32.
 38. Hopkins PN, Toth PP, Ballantyne CM, Rader DJ. Familial Hypercholesterolemias: Prevalence, genetics, diagnosis and screening recommendations from the National Lipid Association Expert Panel on Familial Hypercholesterolemia. J Clin Lipid 2011; 5:S9-S17.
-39. Cuchel M, Bruckert E, Ginsberg HN, et al. Homozygous familial hypercholesterolaemia: new insights and guidance for clinicians to improve detection and clinical management. Eur Heart J. 2014; 22 Jul.
-40. Goldstein AL, Brown MS. The cholesterol quartet. Science. 2001;292(5520):1310-2.
-41. Raal FJ, Santos RD. Homozygous familial hypercholesterolemia: Current perspectives on diagnosis and treatment, Atherosclerosis. J Atherosclerosis 2010; doi:10.1016/j.atherosclerosis.2012.02.019
-42. Thompsen J, Thompson PD. A systematic review of LDL apheresis in the treatment of cardiovascular disease. Atherosclerosis. 2006; 189,31–38
-43. Thompson GR. Lipoprotein apheresis. Curr Opin Lipidol. 2010;21: 487–491
-44. Rigotti A. Absorption, transport, and tissue delivery of vitamin E. Molecular Aspects of Medicine 2007; 28:423–436
-45. Perugini C, Bagnati M, Cau C, Bordone R, Paffoni P, Re R, Zoppis E, Albano E, Bellomo G. Distribution of lipid-soluble antioxidants in lipoproteins from healthy subjects, Effects of in vivo supplementation with a-tocopherol. Pharmacol. Res. 2000; 41:65–72
-46. Ford L, Farr J, Morris P, Berg J. The value of measuring serum cholesterol-adjusted vitamin E in routine practice. Ann Clin Biochem. 2006; 43 (Pt 2):130–134
-47. Horwitt MK, Harvey CC, Dahm CH Jr, et al. Relationship between tocopherol and serum lipid levels for determination of nutritional adequacy. Ann NY Acad Sci. 1972;203:223-236
-48. Saito M, Nakatsugawa K, Ohhashi A, Nishimuta M, Kodama N. Comparison of vitamin-E levels in human plasma, red-blood-cells, and platelets following varying intakes of vitamin-E. J Clin Biochem 1997; 43(2): 285-289
-49. Bertolini S, Pisciotta L, Rabacchi C, et al. Spectrum of mutations and phenotypic expression in patients with autosomal dominant hypercholesterolemia identified in Italy. Atherosclerosis 2013;227:342-348
-50. Rashid S, Curtis DE, Garuti R, Anderson N, Bashmakov Y, Ho YK, Hammer RE, Moon Y, Horton JD. Decreased plasma cholesterol and hypersensitivity to statins in mice lacking PCSK9. PNAS 2005; 102(15):5374-5379
-51. Parker RA, Garcia R, Ryan CS, Liu X, Shipkova P, Livanov V, Patel P, Ho SP. Bile acid and sterol metabolism with combined HMG-CoA reductase and PCSK9 suppression. Journal of Lipid Research. 2013; 54:2400-2409
-52. Besseling J, Kastelein JJ, Defesche JC, Hutten BA, Hovingh GK. Association Between Familial Hypercholesterolemia and Prevalence of Type 2 Diabetes Mellitus JAMA 2015;313(10):1029-1036.
-53. Preiss D, Sattar N. Does the LDL Receptor Play a Role in the Risk of Developing Type 2 Diabetes? JAMA 2015;313(10):1016-1017.
-54. Ishikawa M, Iwasaki Y, Yatoh S, Kato T, Kumadaki S, et al. Cholesterol accumulation and diabetes in pancreatic beta-cell-specific SREBP-2 transgenic mice: a new model for lipotoxicity. J. Lipid Res. 2008; 49: 2524–2534.
-55. Brunham LR, Kruit JK, Pape TD, Timmins JM, Reuwer AQ, et al. Beta-cell ABCA1 influences insulin secretion, glucose homeostasis and response to thiazolidinedione treatment. Nat. Med. 2007; 13: 340–347.
-56. Mbikay M, Sirois F, Mayne J, Wang GS, Chen A, Dewpura T, et al. PCSK9-deficient mice exhibit impaired glucose tolerance and pancreatic islet abnormalities. FEBS Lett. 2010;584:701-6.
-57. Raal FJ, Stein EA, Dufour R, et al. PCSK9 inhibition with evolocumab (AMG 145) in heterozygous familial hypercholesterolaemia (RUTHERFORD-2): a randomised, double-blind, placebo-controlled trial. The Lancet 2014; 2 October DOI: 10.1016/S0140-6736(14)61399-4
-58. Cho L, Rocco M, Colquhoun D, et al. Design and Rationale of the GAUSS-2 Study Trial: A Double-Blind, Ezetimibe-Controlled Phase 3 Study of the Efficacy and Tolerability of Evolocumab (AMG 145) in Subjects With Hypercholesterolemia Who Are Intolerant of Statin Therapy. Clin Cardiol. 2014; Jan 29
-59. Robinson JG, Rogers WJ, Nedergaard BS, Fialkow J, Neutel JM, Ramstad D, Somaratne R, Legg JC, Nelson P, Scott R, Wasserman SM, Weiss R. Rationale and design of LAPLACE-2: a phase 3, randomized, double-blind, placebo- and ezetimibe-controlled trial evaluating the efficacy and safety of evolocumab in subjects with hypercholesterolemia on background statin therapy. Clin Cardiol. 2014;37(4):195-203
-60. Koren MJ, Lundqvist P, Bolognese M, et al. Anti-PCSK9 Monotherapy for Hypercholesterolemia The MENDEL-2 Randomized, Controlled Phase III Clinical Trial of Evolocumab. J Am Coll Cardiol 2014;63:2531–40
-61. Blom DJ, Hala T, Bolognese M, et al. A 52-Week Placebo-Controlled Trial of Evolocumab in Hyperlipidemia. N Engl J Med 2014; 370:1809-1819
+39. Cuchel M, Bruckert E, Ginsberg HN, et al. Homozygous familial hypercholesterolaemia: new insights and guidance for clinicians to improve detection and clinical management. Eur Heart J 2014; 22 Jul.
+40. Goldstein AL, Brown MS. The cholesterol quartet. Science 2001;292(5520):1310-2.
+41. Raal FJ, Santos RD. Homozygous familial hypercholesterolemia: Current perspectives on diagnosis and treatment, Atherosclerosis. J Atherosclerosis 2010; 223(2):262-8.
+42. Thompsen J, Thompson PD. A systematic review of LDL apheresis in the treatment of cardiovascular disease. Atherosclerosis 2006; 189,31–38.
+43. Thompson GR. Lipoprotein apheresis. Curr Opin Lipidol 2010;21: 487–491.
+44. Rigotti A. Absorption, transport, and tissue delivery of vitamin E. Molecular Aspects of Medicine 2007; 28:423–436.
+45. Perugini C, Bagnati M, Cau C, Bordone R, Paffoni P, Re R, Zoppis E, Albano E, Bellomo G. Distribution of lipid-soluble antioxidants in lipoproteins from healthy subjects, Effects of in vivo supplementation with a-tocopherol. Pharmacol Res 2000; 41:65–72.
+46. Ford L, Farr J, Morris P, Berg J. The value of measuring serum cholesterol-adjusted vitamin E in routine practice. Ann Clin Biochem 2006; 43 (Pt 2):130–134.
+47. Horwitt MK, Harvey CC, Dahm CH Jr, et al. Relationship between tocopherol and serum lipid levels for determination of nutritional adequacy. Ann NY Acad Sci 1972;203:223-236.
+48. Saito M, Nakatsugawa K, Ohhashi A, Nishimuta M, Kodama N. Comparison of vitamin-E levels in human plasma, red-blood-cells, and platelets following varying intakes of vitamin-E. J Clin Biochem 1997; 43(2): 285-289.
+49. Bertolini S, Pisciotta L, Rabacchi C, et al. Spectrum of mutations and phenotypic expression in patients with autosomal dominant hypercholesterolemia identified in Italy. Atherosclerosis 2013;227:342-348.
+50. Rashid S, Curtis DE, Garuti R, Anderson N, Bashmakov Y, Ho YK, Hammer RE, Moon Y, Horton JD. Decreased plasma cholesterol and hypersensitivity to statins in mice lacking PCSK9. PNAS 2005; 102(15):5374-5379.
+51. Parker RA, Garcia R, Ryan CS, Liu X, Shipkova P, Livanov V, Patel P, Ho SP. Bile acid and sterol metabolism with combined HMG-CoA reductase and PCSK9 suppression. Journal of Lipid Research 2013; 54:2400-2409.
+52. Besseling J, Kastelein JJ, Defesche JC, Hutten BA, Hovingh GK. Association Between Familial Hypercholesterolemia and Prevalence of Type 2 Diabetes Mellitus. JAMA 2015;313(10):1029-1036.
+53. Preiss D, Sattar N. Does the LDL Receptor Play a Role in the Risk of Developing Type 2 Diabetes. JAMA 2015;313(10):1016-1017.
+54. Ishikawa M, Iwasaki Y, Yatoh S, Kato T, Kumadaki S, et al. Cholesterol accumulation and diabetes in pancreatic beta-cell-specific SREBP-2 transgenic mice: a new model for lipotoxicity. J Lipid Res 2008; 49: 2524–2534.
+55. Brunham LR, Kruit JK, Pape TD, Timmins JM, Reuwer AQ, et al. Beta-cell ABCA1 influences insulin secretion, glucose homeostasis and response to thiazolidinedione treatment. Nat Med 2007; 13: 340–347.
+56. Mbikay M, Sirois F, Mayne J, Wang GS, Chen A, Dewpura T, et al. PCSK9-deficient mice exhibit impaired glucose tolerance and pancreatic islet abnormalities. FEBS Lett 2010;584:701-6.
+57. Raal FJ, Stein EA, Dufour R, et al. PCSK9 inhibition with evolocumab (AMG 145) in heterozygous familial hypercholesterolaemia (RUTHERFORD-2): a randomised, double-blind, placebo-controlled trial. The Lancet 2015;385(9965):331-40.
+58. Cho L, Rocco M, Colquhoun D, et al. Design and Rationale of the GAUSS-2 Study Trial: A Double-Blind, Ezetimibe-Controlled Phase 3 Study of the Efficacy and Tolerability of Evolocumab (AMG 145) in Subjects With Hypercholesterolemia Who Are Intolerant of Statin Therapy. Clin Cardiol 2014; Jan 29.
+59. Robinson JG, Rogers WJ, Nedergaard BS, Fialkow J, Neutel JM, Ramstad D, Somaratne R, Legg JC, Nelson P, Scott R, Wasserman SM, Weiss R. Rationale and design of LAPLACE-2: a phase 3, randomized, double-blind, placebo- and ezetimibe-controlled trial evaluating the efficacy and safety of evolocumab in subjects with hypercholesterolemia on background statin therapy. Clin Cardiol 2014;37(4):195-203.
+60. Koren MJ, Lundqvist P, Bolognese M, et al. Anti-PCSK9 Monotherapy for Hypercholesterolemia The MENDEL-2 Randomized, Controlled Phase III Clinical Trial of Evolocumab. J Am Coll Cardiol 2014;63:2531–40.
+61. Blom DJ, Hala T, Bolognese M, et al. A 52-Week Placebo-Controlled Trial of Evolocumab in Hyperlipidemia. N Engl J Med 2014; 370:1809-1819.
