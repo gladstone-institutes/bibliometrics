@@ -26,7 +26,7 @@ Evolocumab
 25. Hooper, AJ , Marais AD, Tanyanyiwa DM, Burnett JR. The C679X mutation in PCSK9 is present and lowers blood cholesterol in a Southern African population. Atherosclerosis 2007;193(2): 445-8.
 26. Zhao Z, Tuakli-Wosornu Y, Lagace TA, et al. Molecular characterization of loss-of-function mutations in PCSK9 and identification of a compound heterozygote. Am J Hum Genet 2006;79:514-23.
 27. Cariou B, Ouguerram K, Zair Y, Guerois R, Langhi C, Kourimate S, et al. PCSK9 Dominant Negative Mutant Results in Increased LDL Catabolic Rate and Familial Hypobetalipoproteinemia. Arterioscler Thromb Vasc Biol 2009;29:2191-2197.
-28. Cholesterol Treatment Trialists’ (CTT) Collaboration. Efficacy and safety of more intensive lowering of LDL cholesterol: a meta-analysis of data from 170000 participants in 26 randomised trials. Lancet 2010;376:1670-1681.
+28. Cholesterol Treatment Trialists (CTT) Collaboration. Efficacy and safety of more intensive lowering of LDL cholesterol: a meta-analysis of data from 170000 participants in 26 randomised trials. Lancet 2010;376:1670-1681.
 29. Cannon CP, Braunwald E, McCabe CH, Rader D J, Rouleau JL, Belder R, et al. Intensive versus Moderate Lipid Lowering with Statins after Acute Coronary Syndromes. N Engl J Med 2004; 350(15): 1495-504.
 30. LaRosa JC, Grundy SM, Waters DD, Shear C, Barter P, Fruchart JC et al. Intensive lipid lowering with atorvastatin in patients with stable coronary disease. N Engl J Med 2005; 352:1425-35.
 31. Pedersen TR, Faergeman O, Kastelein JJ, Olsson AG, Tikkanen MJ, Holme I, et al. High-dose atorvastatin vs usual-dose simvastatin for secondary prevention after myocardial infarction. JAMA 2005; 294:2437- 45. 
