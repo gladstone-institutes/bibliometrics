@@ -27,7 +27,7 @@ Network properties:
 * 37 grantagencies
 
 
-####Evolocumab-Pubmed-Search-PMIDs.txt
+####Evolocumab-Pubmed-Search-PMIDs*.txt
 For the peripheral network, we will try sampling from the following search term:
 * ldl cholesterol reduction (9722 hits spanning 1971-2015) 
  * took 200 pmids from every 6th page starting at 1,7,13,19,... to collect sample of 1600
@@ -49,10 +49,23 @@ python src/score.py --article-scoring propagate --neighbor-scoring sum output/Ev
 ####Evolocumab-peripheral-scored-*.xgmml
 ```
 python src/xgmml.py output/Evolocumab-peripheral-scored-indegree.pklz output/Evolocumab-peripheral-scored-indegree.xgmml
-python src/xgmml.py output/Evolocumab-peripheral-scored-sum.pklz output/Evolocumab-peripheral-scored-sum.xgmml
+python src/xgmml.py output/Evolocumab-peripheral-scored-indegree2.pklz output/Evolocumab-peripheral-scored-indegree2.xgmml
 ```
 Network properties (from peripheral and peripheral2):
 * 1598 articles (1992-2015); 1548 articles (1987-2014)
 * 7656 authors; 7452 authors
 * 4622 institutions; 4165 institutions
 * 23 grantagencies; 37 grantagencies
+
+####Analysis
+* Opened scored xgmml in Cytoscape
+* Selected authors into new subnetwork; selected institutes into new subnetwork
+* Exported default node tables for each subnetwork
+* Opened csv in excel
+* Pasted authors and scores from core-scored-sum author subnetworks into CP-Prop columns in analysis.xlsx template
+* Pasted authors and ct_scores from core-scored-sum author subnetworks into CT-Count columns
+* Pasted authors and score from core-scored-indegree author subnetworks into CP-Indegree columns
+* Pasted authors and score from peripheral-scored-indegree author subnetwork into Denom-Indegree columns
+* Pasted authors and score from peripheral-scored-indegree2 author subnetwork into Denom-Indegree2 columns
+* Template formulas calculation ranks and ratios
+* Note: averaged ratios across two samples of peripheral (see Evolocumab-Pubmed-Search-PMIDs*.txt above) to get a better BRB filter criteria, i.e., it covers more of the pubmed search result space, without compromizing the scope and size contraints of a given peripheral network. Two samples of 1600 each (3200) from a total space of 9722 is sufficient. Future analyses might sample more if covering more space.
