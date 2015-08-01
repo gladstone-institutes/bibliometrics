@@ -7,6 +7,7 @@ As of July 30, 2015, evolocumab (Repatha) has not been approved by FDA, but ther
 ```
 python src/topdown.py --format cse --levels 2 input/Evolocumab-FDA-NDA-Medical.txt output/Evolocumab-core.pklz
 ```
+Ran o/n.
 
 ####Evolocumab-core-scored.pklz
 ```
@@ -35,6 +36,7 @@ Note: only level 1 if providing comparable number of pmids from pubmed search, i
 ```
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Evolocumab-Pubmed-Search-PMIDs.txt output/Evolocumab-peripheral.pklz
 ```
+Ran in 30s.
 
 ####Evolocumab-peripheral-scored.pklz
 ```
