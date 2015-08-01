@@ -8,6 +8,11 @@ As of July 30, 2015, evolocumab (Repatha) has not been approved by FDA, but ther
 python src/topdown.py --format cse --levels 2 input/Evolocumab-FDA-NDA-Medical.txt output/Evolocumab-core.pklz
 ```
 
+####Evolocumab-core-scored.pklz
+```
+python src/score.py --article-scoring propagate --neighbor-scoring indegree input/Evolocumab-core.pklz output/Evolocumab-core-scored.pklz
+```
+
 ####Evolocumab-core.xgmml
 ```
 python src/xgmml.py output/Evolocumab-core.pklz output/Evolocumab-core.xgmml
@@ -26,6 +31,11 @@ For the peripheral network, we will try sampling from the following search term:
 ####Evolocumab-peripheral.pklz
 ```
 python src/topdown.py --format pmid --dont-search-trials --levels 2 input/Evolocumab-Pubmed-Search-PMIDs.txt output/Evolocumab-peripheral.pklz
+```
+
+####Evolocumab-peripheral-scored.pklz
+```
+python src/score.py --article-scoring propagate --neighbor-scoring indegree input/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-scored.pklz
 ```
 
 ####Evolocumab-peripheral.xgmml
