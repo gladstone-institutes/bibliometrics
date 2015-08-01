@@ -16,7 +16,7 @@ python src/score.py --article-scoring propagate --neighbor-scoring indegree outp
 
 ####Evolocumab-core.xgmml
 ```
-python src/xgmml.py output/Evolocumab-core.pklz output/Evolocumab-core.xgmml
+python src/xgmml.py output/Evolocumab-core-scored.pklz output/Evolocumab-core-scored.xgmml
 ```
 Network properties:
 * 1548 articles (1950-2015)
@@ -45,7 +45,7 @@ python src/score.py --article-scoring propagate --neighbor-scoring indegree outp
 
 ####Evolocumab-peripheral.xgmml
 ```
-python src/xgmml.py output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral.xgmml
+python src/xgmml.py output/Evolocumab-peripheral-scored.pklz output/Evolocumab-peripheral-scored.xgmml
 ```
 Network properties:
 * # articles (yyyy-yyyy)
