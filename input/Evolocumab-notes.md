@@ -26,7 +26,9 @@ Network properties:
 
 ####Evolocumab-Pubmed-Search-PMIDs.txt
 For the peripheral network, we will try sampling from the following search term:
-* ldl cholesterol reduction (9722 hits spanning 1971-2015; took 200 pmids from every 6th page:1,7,13,19,...)
+* ldl cholesterol reduction (9722 hits spanning 1971-2015) 
+ * took 200 pmids from every 6th page starting at 1,7,13,19,... to collect sample of 1600
+ * took 200 pmids from every 6th page starting at 4,10,16,22,... to collect alternate sample of 1600 (to see if indegree denom results depend on collection), thus Evolocumab-Pubmed-Search-PMIDs2.txt and "2" versions of subsequent files
 
 ####Evolocumab-peripheral.pklz
 ```
