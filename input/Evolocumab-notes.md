@@ -5,7 +5,7 @@ As of July 30, 2015, evolocumab (Repatha) has not been approved by FDA, but ther
 
 ####Evolocumab-Pubmed-Search-PMIDs.txt
 For the peripheral network, we will try sampling from the following search term:
-* ldl cholesterol reduction (9722 hits spanning 1971-2015)
+* ldl cholesterol reduction (9722 hits spanning 1971-2015; took 200 pmids from every 6th page:1,7,13,19,...)
 
 ####Evolocumab-core.pklz
 ```
