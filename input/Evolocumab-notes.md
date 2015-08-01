@@ -9,14 +9,16 @@ python src/topdown.py --format cse --levels 2 input/Evolocumab-FDA-NDA-Medical.t
 ```
 Ran o/n.
 
-####Evolocumab-core-scored.pklz
+####Evolocumab-core-scored-*.pklz
 ```
-python src/score.py --article-scoring propagate --neighbor-scoring indegree output/Evolocumab-core.pklz output/Evolocumab-core-scored.pklz
+python src/score.py --article-scoring propagate --neighbor-scoring indegree output/Evolocumab-core.pklz output/Evolocumab-core-scored-indegree.pklz
+python src/score.py --article-scoring propagate --neighbor-scoring sum output/Evolocumab-core.pklz output/Evolocumab-core-scored-sum.pklz
 ```
 
-####Evolocumab-core.xgmml
+####Evolocumab-core-scored-*.xgmml
 ```
-python src/xgmml.py output/Evolocumab-core-scored.pklz output/Evolocumab-core-scored.xgmml
+python src/xgmml.py output/Evolocumab-core-scored-indegree.pklz output/Evolocumab-core-scored-indegree.xgmml
+python src/xgmml.py output/Evolocumab-core-scored-sum.pklz output/Evolocumab-core-scored-sum.xgmml
 ```
 Network properties:
 * 1548 articles (1950-2015)
@@ -36,19 +38,21 @@ Note: only level 1 if providing comparable number of pmids from pubmed search, i
 ```
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Evolocumab-Pubmed-Search-PMIDs.txt output/Evolocumab-peripheral.pklz
 ```
-Ran in 30s.
+Ran in 30 sec or 30min (noticed big difference for two different lists of 1600 pmids; not sure why)
 
-####Evolocumab-peripheral-scored.pklz
+####Evolocumab-peripheral-scored-*.pklz
 ```
-python src/score.py --article-scoring propagate --neighbor-scoring indegree output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-scored.pklz
+python src/score.py --article-scoring propagate --neighbor-scoring indegree output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-scored-indegree.pklz
+python src/score.py --article-scoring propagate --neighbor-scoring sum output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-scored-sum.pklz
 ```
 
-####Evolocumab-peripheral.xgmml
+####Evolocumab-peripheral-scored-*.xgmml
 ```
-python src/xgmml.py output/Evolocumab-peripheral-scored.pklz output/Evolocumab-peripheral-scored.xgmml
+python src/xgmml.py output/Evolocumab-peripheral-scored-indegree.pklz output/Evolocumab-peripheral-scored-indegree.xgmml
+python src/xgmml.py output/Evolocumab-peripheral-scored-sum.pklz output/Evolocumab-peripheral-scored-sum.xgmml
 ```
 Network properties:
-* # articles (yyyy-yyyy)
-* # authors
-* # institutions
-* # grantagencies
+* 1598 articles (1992-2015)
+* 7656 authors
+* 4622 institutions
+* 23 grantagencies
