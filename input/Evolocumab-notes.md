@@ -10,7 +10,7 @@ python src/topdown.py --format cse --levels 2 input/Evolocumab-FDA-NDA-Medical.t
 
 ####Evolocumab-core-scored.pklz
 ```
-python src/score.py --article-scoring propagate --neighbor-scoring indegree input/Evolocumab-core.pklz output/Evolocumab-core-scored.pklz
+python src/score.py --article-scoring propagate --neighbor-scoring indegree output/Evolocumab-core.pklz output/Evolocumab-core-scored.pklz
 ```
 
 ####Evolocumab-core.xgmml
@@ -31,13 +31,14 @@ For the peripheral network, we will try sampling from the following search term:
  * took 200 pmids from every 6th page starting at 4,10,16,22,... to collect alternate sample of 1600 (to see if indegree denom results depend on collection), thus Evolocumab-Pubmed-Search-PMIDs2.txt and "2" versions of subsequent files
 
 ####Evolocumab-peripheral.pklz
+Note: only level 1 if providing comparable number of pmids from pubmed search, i.e., comparable to core network article count.
 ```
-python src/topdown.py --format pmid --dont-search-trials --levels 2 input/Evolocumab-Pubmed-Search-PMIDs.txt output/Evolocumab-peripheral.pklz
+python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Evolocumab-Pubmed-Search-PMIDs.txt output/Evolocumab-peripheral.pklz
 ```
 
 ####Evolocumab-peripheral-scored.pklz
 ```
-python src/score.py --article-scoring propagate --neighbor-scoring indegree input/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-scored.pklz
+python src/score.py --article-scoring propagate --neighbor-scoring indegree output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-scored.pklz
 ```
 
 ####Evolocumab-peripheral.xgmml
