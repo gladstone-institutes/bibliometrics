@@ -51,8 +51,8 @@ python src/score.py --article-scoring propagate --neighbor-scoring sum output/Ev
 python src/xgmml.py output/Evolocumab-peripheral-scored-indegree.pklz output/Evolocumab-peripheral-scored-indegree.xgmml
 python src/xgmml.py output/Evolocumab-peripheral-scored-sum.pklz output/Evolocumab-peripheral-scored-sum.xgmml
 ```
-Network properties:
-* 1598 articles (1992-2015)
-* 7656 authors
-* 4622 institutions
-* 23 grantagencies
+Network properties (from peripheral and peripheral2):
+* 1598 articles (1992-2015); 1548 articles (1987-2014)
+* 7656 authors; 7452 authors
+* 4622 institutions; 4165 institutions
+* 23 grantagencies; 37 grantagencies
