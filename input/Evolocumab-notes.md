@@ -69,3 +69,8 @@ Network properties (from peripheral and peripheral2):
 * Pasted authors and score from peripheral-scored-indegree2 author subnetwork into Denom-Indegree2 columns
 * Template formulas calculation ranks and ratios
 * Note: averaged ratios across two samples of peripheral (see Evolocumab-Pubmed-Search-PMIDs*.txt above) to get a better RBR filter criteria, i.e., it covers more of the pubmed search result space, without compromizing the scope and size contraints of a given peripheral network. Two samples of 1600 each (3200) from a total space of 9722 is sufficient. Future analyses might sample more if covering more space.
+
+CPI subnetwork:
+* 342 articles (1974-2014)
+* 27 authors
+* 7 institutes (4 unique)
