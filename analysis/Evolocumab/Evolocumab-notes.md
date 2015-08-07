@@ -24,34 +24,42 @@ Network properties:
 * 1548 articles (1950-2015)
 * 7350 authors
 * 4846 institutions
-* 37 grantagencies
+* 37 grant agencies
+* 26 clinical trials 
 
 
 ####Evolocumab-Pubmed-Search-PMIDs*.txt
 For the peripheral network, we will try sampling from the following search term:
-* ldl cholesterol reduction (9722 hits spanning 1971-2015) 
- * took 200 pmids from every 6th page starting at 1,7,13,19,... to collect sample of 1600
- * took 200 pmids from every 6th page starting at 4,10,16,22,... to collect alternate sample of 1600 (to see if indegree denom results depend on collection), thus Evolocumab-Pubmed-Search-PMIDs2.txt and "2" versions of subsequent files
+* (("1900/1/1"[Date - Publication] : "2015/03/11"[Date - Publication])) AND ldl cholesterol reduction
+ * 9593 hits spanning 1971-2015 
+  * took 200 pmids from every 6th page to collect 1600 pubs, 5 
+   * 1,7,13,...43 | 2,8,14,...44 | 3,9,15,...45 | 4,10,16,..46 | 5,11,17,..47
 
-####Evolocumab-peripheral.pklz
+##Evo5ocumab-peripheral.pklz
 Note: only level 1 if providing comparable number of pmids from pubmed search, i.e., comparable to core network article count.
 ```
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Evolocumab-Pubmed-Search-PMIDs.txt output/Evolocumab-peripheral.pklz
 ```
 Ran in 30 sec or 30min (noticed big difference for two different lists of 1600 pmids; not sure why)
 
-####Evolocumab-peripheral-scored-*.pklz
+####Evolocumab-peripheral-individual-indegree*.pklz
 ```
-python src/score.py --article-scoring propagate --neighbor-scoring indegree output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-scored-indegree.pklz
-python src/score.py --article-scoring propagate --neighbor-scoring sum output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-scored-sum.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-individual-indegree1.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-individual-indegree2.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-individual-indegree3.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-individual-indegree4.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Evolocumab-peripheral.pklz output/Evolocumab-peripheral-individual-indegree5.pklz
 ```
 
 ####Evolocumab-peripheral-scored-*.xgmml
 ```
-python src/xgmml.py output/Evolocumab-peripheral-scored-indegree.pklz output/Evolocumab-peripheral-scored-indegree.xgmml
-python src/xgmml.py output/Evolocumab-peripheral-scored-indegree2.pklz output/Evolocumab-peripheral-scored-indegree2.xgmml
+python src/xgmml.py output/Evolocumab-peripheral-individual-indegree1.pklz output/Evolocumab-peripheral-individual-indegree1.xgmml
+python src/xgmml.py output/Evolocumab-peripheral-individual-indegree2.pklz output/Evolocumab-peripheral-individual-indegree2.xgmml
+python src/xgmml.py output/Evolocumab-peripheral-individual-indegree3.pklz output/Evolocumab-peripheral-individual-indegree3.xgmml
+python src/xgmml.py output/Evolocumab-peripheral-individual-indegree4.pklz output/Evolocumab-peripheral-individual-indegree4.xgmml
+python src/xgmml.py output/Evolocumab-peripheral-individual-indegree5.pklz output/Evolocumab-peripheral-individual-indegree5.xgmml
 ```
-Network properties (from peripheral and peripheral2):
+Network properties (average):
 * 1598 articles (1992-2015); 1548 articles (1987-2014)
 * 7656 authors; 7452 authors
 * 4622 institutions; 4165 institutions
