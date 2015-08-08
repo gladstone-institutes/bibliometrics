@@ -25,7 +25,7 @@ For the peripheral network, we sampled results from the following search term:
  * Note: date range used to bound to latest pub in core network
  * 6616 hits spanning 1989-2011 
   * took 200 pmids from every 7th page to collect 1000 articles, 5 times:
-   * 1,8,15,22,29 | 2,9,16,23,30 | 3,10,17,24,31 | 4,11,18,25,32 | 5,12,19,26,33
+   * 1,8,15,22,29 | 2,9,16,23,30 | 4,11,18,25,32 | 5,12,19,26,33 | 6,13,20,27,31(seq exception for last page to collect more)
    * to generate 5 PMID files to generate 5 independent peripheral networks
 
 ##Ivacaftor-peripheral*.pklz
