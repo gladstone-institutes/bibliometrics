@@ -33,7 +33,7 @@ For the peripheral network, we will try sampling from the following search term:
 * (("1900/1/1"[Date - Publication] : "2015/03/11"[Date - Publication])) AND ldl cholesterol reduction
  * 9593 hits spanning 1971-2015 
   * took 200 pmids from every 6th page to collect 1600 pubs, 5 
-   * 1,7,13,...43 | 2,8,14,...44 | 3,9,15,...45 | 4,10,16,..46 | 5,11,17,..47
+   * 1,7,13,...43 | 2,8,14,...44 | 3,9,15,...45 | 4,10,16,..46 | 5,11,17,..47,48(1794)
 
 ##Evo5ocumab-peripheral.pklz
 Note: only level 1 if providing comparable number of pmids from pubmed search, i.e., comparable to core network article count.
