@@ -64,10 +64,10 @@ python src/xgmml.py output/Evolocumab-peripheral-individual-indegree4.pklz outpu
 python src/xgmml.py output/Evolocumab-peripheral-individual-indegree5.pklz output/Evolocumab-peripheral-individual-indegree5.xgmml
 ```
 Network properties (average):
-* 1598 articles (1992-2015); 1548 articles (1987-2014)
-* 7656 authors; 7452 authors
-* 4622 institutions; 4165 institutions
-* 23 grantagencies; 37 grantagencies
+* ### articles (1971-2015 )
+* ### authors
+* ### institutions
+* ### grantagencies
 
 ####Analysis
 * Opened scored xgmml in Cytoscape
@@ -80,7 +80,7 @@ Network properties (average):
 * Pasted authors and score from peripheral-scored-indegree author subnetwork into Denom-Indegree columns
 * Pasted authors and score from peripheral-scored-indegree2 author subnetwork into Denom-Indegree2 columns
 * Template formulas calculation ranks and ratios
-* Note: averaged ratios across two samples of peripheral (see Evolocumab-Pubmed-Search-PMIDs*.txt above) to get a better RBR filter criteria, i.e., it covers more of the pubmed search result space, without compromizing the scope and size contraints of a given peripheral network. Two samples of 1600 each (3200) from a total space of 9722 is sufficient. Future analyses might sample more if covering more space.
+* Note: averaged ratios across multiple samples of peripheral to get a better RBR filter criteria, i.e., it covers more of the pubmed search result space, without compromizing the scope and size contraints of a given peripheral network. 
 
 CPI subnetwork:
 * 342 articles (1974-2014)
