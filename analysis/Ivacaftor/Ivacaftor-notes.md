@@ -31,16 +31,20 @@ For the peripheral network, we sampled results from the following search term:
 ##Ivacaftor-peripheral*.pklz
 Note: only level 1 if providing comparable number of pmids from pubmed search, i.e., comparable to core network article count.
 ```
-python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ivacaftor-Pubmed-Search-PMIDs.txt output/Ivacaftor-peripheral.pklz
+python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ivacaftor-Pubmed-Search-PMIDs1.txt output/Ivacaftor-peripheral1.pklz
+python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ivacaftor-Pubmed-Search-PMIDs2.txt output/Ivacaftor-peripheral2.pklz
+python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ivacaftor-Pubmed-Search-PMIDs3.txt output/Ivacaftor-peripheral3.pklz
+python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ivacaftor-Pubmed-Search-PMIDs4.txt output/Ivacaftor-peripheral4.pklz
+python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ivacaftor-Pubmed-Search-PMIDs5.txt output/Ivacaftor-peripheral5.pklz
 ``` 
 
 ####Ivacaftor-peripheral-individual-indegree*.pklz
 ```
-python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ivacaftor-peripheral.pklz output/Ivacaftor-peripheral-individual-indegree1.pklz
-python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ivacaftor-peripheral.pklz output/Ivacaftor-peripheral-individual-indegree2.pklz
-python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ivacaftor-peripheral.pklz output/Ivacaftor-peripheral-individual-indegree3.pklz
-python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ivacaftor-peripheral.pklz output/Ivacaftor-peripheral-individual-indegree4.pklz
-python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ivacaftor-peripheral.pklz output/Ivacaftor-peripheral-individual-indegree5.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ivacaftor-peripheral1.pklz output/Ivacaftor-peripheral-individual-indegree1.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ivacaftor-peripheral2.pklz output/Ivacaftor-peripheral-individual-indegree2.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ivacaftor-peripheral3.pklz output/Ivacaftor-peripheral-individual-indegree3.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ivacaftor-peripheral4.pklz output/Ivacaftor-peripheral-individual-indegree4.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ivacaftor-peripheral5.pklz output/Ivacaftor-peripheral-individual-indegree5.pklz
 ```
 
 ####Ivacaftor-peripheral-individual-indegree*.xgmml
