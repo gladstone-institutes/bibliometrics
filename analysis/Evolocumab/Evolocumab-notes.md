@@ -9,16 +9,16 @@ python src/topdown.py --format cse --levels 2 input/Evolocumab-FDA-NDA-Medical.t
 ```
 Ran o/n.
 
-####Evolocumab-core-scored-*.pklz
+####Evolocumab-core-individual-indegree.pklz, Evolocumab-core-propagate-sum.pklz
 ```
-python src/score.py --article-scoring propagate --neighbor-scoring indegree output/Evolocumab-core.pklz output/Evolocumab-core-scored-indegree.pklz
-python src/score.py --article-scoring propagate --neighbor-scoring sum output/Evolocumab-core.pklz output/Evolocumab-core-scored-sum.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Evolocumab-core.pklz output/Evolocumab-core-individual-indegree.pklz
+python src/score.py --article-scoring propagate --neighbor-scoring sum output/Evolocumab-core.pklz output/Evolocumab-core-propagate-sum.pklz
 ```
 
-####Evolocumab-core-scored-*.xgmml
+####Evolocumab-core-individual-indegree.xgmml, Evolocumab-core-propagate-sum.xgmml
 ```
-python src/xgmml.py output/Evolocumab-core-scored-indegree.pklz output/Evolocumab-core-scored-indegree.xgmml
-python src/xgmml.py output/Evolocumab-core-scored-sum.pklz output/Evolocumab-core-scored-sum.xgmml
+python src/xgmml.py output/Evolocumab-core-individual-indegree.pklz output/Evolocumab-core-individual-indegree.xgmml
+python src/xgmml.py output/Evolocumab-core-propagate-sum.pklz output/Evolocumab-core-propagate-sum.xgmml
 ```
 Network properties:
 * 1548 articles (1950-2015)
