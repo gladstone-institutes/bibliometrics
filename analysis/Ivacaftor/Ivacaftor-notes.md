@@ -59,16 +59,16 @@ Network properties (average):
 
 ##Analysis
 
-Opened scored xgmml in Cytoscape
-Selected authors into new subnetwork; selected institutes into new subnetwork
-Exported default node tables for each subnetwork
-Opened csv in excel
-Pasted authors and scores from core-scored-sum author subnetworks into CP-Prop columns in analysis.xlsx template
-Pasted authors and ct_scores from core-scored-sum author subnetworks into CT-Count columns
-Pasted authors and score from core-scored-indegree author subnetworks into CP-Indegree columns
-Pasted authors and score from peripheral-scored-indegree* author subnetworks into Denom-Indegree* columns
-Template formulas calculation ranks and ratios
-Note: averaged ratios across multiple samples of peripheral indegree to get a better RBR filter criteria, i.e., it covers more of the pubmed search result space, without compromizing the scope and size contraints of a given peripheral network. 
+* Opened scored xgmml in Cytoscape
+* Selected authors into new subnetwork; selected institutes into new subnetwork
+* Exported default node tables for each subnetwork
+* Opened csv in excel
+* Pasted authors and scores from core-scored-sum author subnetworks into CP-Prop columns in analysis.xlsx template
+* Pasted authors and ct_scores from core-scored-sum author subnetworks into CT-Count columns
+* Pasted authors and score from core-scored-indegree author subnetworks into CP-Indegree columns
+* Pasted authors and score from peripheral-scored-indegree* author subnetworks into Denom-Indegree* columns
+* Template formulas calculation ranks and ratios
+* Note: averaged ratios across multiple samples of peripheral indegree to get a better RBR filter criteria, i.e., it covers more of the pubmed search result space, without compromizing the scope and size contraints of a given peripheral network. 
 
 
 CPI subnetwork:
