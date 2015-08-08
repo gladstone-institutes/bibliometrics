@@ -5,4 +5,3 @@
 *.pkl
 .venv
 venv/
-output/
