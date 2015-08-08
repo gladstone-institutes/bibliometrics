@@ -26,7 +26,7 @@ For the peripheral network, we sampled results from the following search term:
  * Note: date range used to bound to latest pub in core network
  * 9704 hits spanning 1954-2013 
   * took 200 pmids from every 5th page to collect 2000 articles, 5 times:
-   * 1,6,11,...46 | 2,7,12,...47 | 3,8,13,..48 | 4,9,14,...49 | 5,10,15,...45(1800 articles)
+   * 1,6,11,...46 | 2,7,12,...47 | 3,8,13,..48 | 4,9,14,...49(1904 articles) | 5,10,15,...45(1600 articles)
    * to generate 5 PMID files to generate 5 independent peripheral networks
 
 ##Ipilimumab-peripheral*.pklz
@@ -58,11 +58,10 @@ python src/xgmml.py output/Ipilimumab-peripheral-individual-indegree5.pklz outpu
 ```
 
 Network properties (average):
-* ### articles (yyyy-yyyy)
-* ### authors
-* ### institutions
-* ### grant agencies
-* ### clinical trials
+* 1901 articles (1954-2013)
+* 8126 authors
+* 4495 institutions
+* 32 grant agencies
 
 
 
