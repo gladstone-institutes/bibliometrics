@@ -64,10 +64,10 @@ python src/xgmml.py output/Evolocumab-peripheral-individual-indegree4.pklz outpu
 python src/xgmml.py output/Evolocumab-peripheral-individual-indegree5.pklz output/Evolocumab-peripheral-individual-indegree5.xgmml
 ```
 Network properties (average):
-* ### articles (1971-2015 )
-* ### authors
-* ### institutions
-* ### grantagencies
+* 1639 articles (1971-2015 )
+* 7598 authors
+* 4460 institutions
+* 31 grantagencies
 
 ####Analysis
 * Opened scored xgmml in Cytoscape
