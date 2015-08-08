@@ -44,7 +44,7 @@ python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Evoloc
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Evolocumab-Pubmed-Search-PMIDs4.txt output/Evolocumab-peripheral4.pklz
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Evolocumab-Pubmed-Search-PMIDs5.txt output/Evolocumab-peripheral5.pklz
 ```
-Ran in 26min
+Ran in 9-30 min each.
 
 ####Evolocumab-peripheral-individual-indegree*.pklz
 ```
