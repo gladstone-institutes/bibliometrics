@@ -32,16 +32,20 @@ For the peripheral network, we sampled results from the following search term:
 ##Ipilimumab-peripheral*.pklz
 Note: only level 1 if providing comparable number of pmids from pubmed search, i.e., comparable to core network article count.
 ```
-python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ipilimumab-Pubmed-Search-PMIDs.txt output/Ipilimumab-peripheral.pklz
+python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ipilimumab-Pubmed-Search-PMIDs1.txt output/Ipilimumab-peripheral1.pklz
+python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ipilimumab-Pubmed-Search-PMIDs2.txt output/Ipilimumab-peripheral2.pklz
+python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ipilimumab-Pubmed-Search-PMIDs3.txt output/Ipilimumab-peripheral3.pklz
+python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ipilimumab-Pubmed-Search-PMIDs4.txt output/Ipilimumab-peripheral4.pklz
+python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ipilimumab-Pubmed-Search-PMIDs5.txt output/Ipilimumab-peripheral5.pklz
 ``` 
 
 ####Ipilimumab-peripheral-individual-indegree*.pklz
 ```
-python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ipilimumab-peripheral.pklz output/Ipilimumab-peripheral-individual-indegree1.pklz
-python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ipilimumab-peripheral.pklz output/Ipilimumab-peripheral-individual-indegree2.pklz
-python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ipilimumab-peripheral.pklz output/Ipilimumab-peripheral-individual-indegree3.pklz
-python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ipilimumab-peripheral.pklz output/Ipilimumab-peripheral-individual-indegree4.pklz
-python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ipilimumab-peripheral.pklz output/Ipilimumab-peripheral-individual-indegree5.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ipilimumab-peripheral1.pklz output/Ipilimumab-peripheral-individual-indegree1.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ipilimumab-peripheral2.pklz output/Ipilimumab-peripheral-individual-indegree2.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ipilimumab-peripheral3.pklz output/Ipilimumab-peripheral-individual-indegree3.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ipilimumab-peripheral4.pklz output/Ipilimumab-peripheral-individual-indegree4.pklz
+python src/score.py --article-scoring individual --neighbor-scoring indegree output/Ipilimumab-peripheral5.pklz output/Ipilimumab-peripheral-individual-indegree5.pklz
 ```
 
 ####Ipilimumab-peripheral-individual-indegree*.xgmml
