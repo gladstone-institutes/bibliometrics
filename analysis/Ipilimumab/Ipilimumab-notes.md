@@ -22,11 +22,11 @@ Network properties:
 
 ##Ipilimumab-Pubmed-Search-PMIDs*.txt
 For the peripheral network, we sampled results from the following search term:
-* (("1900/1/1"[Date - Publication] : "2013/07/01"[Date - Publication])) AND melanoma  
+* (("1900/1/1"[Date - Publication] : "2013/07/01"[Date - Publication])) AND antibody melanoma   
  * Note: date range used to bound to latest pub in core network
- * ### hits spanning yyyy-yyyy 
-  * took 200 pmids from every 7th page to collect 2000 articles, 5 times:
-   * 1,8,15,22,29 | 2,9,16,23,30 | 3,10,17,24,31 | 4,11,18,25,32 | 5,12,19,26,33
+ * 9704 hits spanning 1954-2013 
+  * took 200 pmids from every 5th page to collect 2000 articles, 5 times:
+   * 1,6,11,...46 | 2,7,12,...47 | 3,8,13,..48 | 4,9,14,...49 | 5,10,15,...45(1800 articles)
    * to generate 5 PMID files to generate 5 independent peripheral networks
 
 ##Ipilimumab-peripheral*.pklz
@@ -64,16 +64,16 @@ Network properties (average):
 
 ##Analysis
 
-Opened scored xgmml in Cytoscape
-Selected authors into new subnetwork; selected institutes into new subnetwork
-Exported default node tables for each subnetwork
-Opened csv in excel
-Pasted authors and scores from core-scored-sum author subnetworks into CP-Prop columns in analysis.xlsx template
-Pasted authors and ct_scores from core-scored-sum author subnetworks into CT-Count columns
-Pasted authors and score from core-scored-indegree author subnetworks into CP-Indegree columns
-Pasted authors and score from peripheral-scored-indegree* author subnetworks into Denom-Indegree* columns
-Template formulas calculation ranks and ratios
-Note: averaged ratios across multiple samples of peripheral indegree to get a better RBR filter criteria, i.e., it covers more of the pubmed search result space, without compromizing the scope and size contraints of a given peripheral network. 
+* Opened scored xgmml in Cytoscape
+* Selected authors into new subnetwork; selected institutes into new subnetwork
+* Exported default node tables for each subnetwork
+* Opened csv in excel
+* Pasted authors and scores from core-scored-sum author subnetworks into CP-Prop columns in analysis.xlsx template
+* Pasted authors and ct_scores from core-scored-sum author subnetworks into CT-Count columns
+* Pasted authors and score from core-scored-indegree author subnetworks into CP-Indegree columns
+* Pasted authors and score from peripheral-scored-indegree* author subnetworks into Denom-Indegree* columns
+* Template formulas calculation ranks and ratios
+* Note: averaged ratios across multiple samples of peripheral indegree to get a better RBR filter criteria, i.e., it covers more of the pubmed search result space, without compromizing the scope and size contraints of a given peripheral network. 
 
 
 CPI subnetwork:
