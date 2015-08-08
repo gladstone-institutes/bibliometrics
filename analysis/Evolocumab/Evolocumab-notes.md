@@ -44,7 +44,7 @@ python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Evoloc
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Evolocumab-Pubmed-Search-PMIDs4.txt output/Evolocumab-peripheral4.pklz
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Evolocumab-Pubmed-Search-PMIDs5.txt output/Evolocumab-peripheral5.pklz
 ```
-Ran in 30 sec or 30min (noticed big difference for two different lists of 1600 pmids; not sure why)
+Ran in 26min
 
 ####Evolocumab-peripheral-individual-indegree*.pklz
 ```
