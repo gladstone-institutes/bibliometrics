@@ -38,6 +38,7 @@ python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ipilim
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ipilimumab-Pubmed-Search-PMIDs4.txt output/Ipilimumab-peripheral4.pklz
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ipilimumab-Pubmed-Search-PMIDs5.txt output/Ipilimumab-peripheral5.pklz
 ``` 
+Ran in 30-35 minutes each.
 
 ####Ipilimumab-peripheral-individual-indegree*.pklz
 ```
