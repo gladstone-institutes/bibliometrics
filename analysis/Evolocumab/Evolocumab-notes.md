@@ -35,7 +35,7 @@ For the peripheral network, we will try sampling from the following search term:
   * took 200 pmids from every 6th page to collect 1600 pubs, 5 
    * 1,7,13,...43 | 2,8,14,...44 | 3,9,15,...45 | 4,10,16,..46 | 5,11,17,..47,48(1794)
 
-##Evo5ocumab-peripheral.pklz
+##Evolocumab-peripheral*.pklz
 Note: only level 1 if providing comparable number of pmids from pubmed search, i.e., comparable to core network article count.
 ```
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Evolocumab-Pubmed-Search-PMIDs1.txt output/Evolocumab-peripheral1.pklz
