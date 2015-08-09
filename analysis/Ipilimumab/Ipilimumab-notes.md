@@ -59,7 +59,7 @@ python src/xgmml.py output/Ipilimumab-peripheral-individual-indegree5.pklz outpu
 ```
 
 Network properties (average):
-* 1901 articles (1954-2013)
+* 1901 articles (9504 unique articles total)
 * 8126 authors
 * 4495 institutions
 * 32 grant agencies
