@@ -37,6 +37,7 @@ python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ivacaf
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ivacaftor-Pubmed-Search-PMIDs4.txt output/Ivacaftor-peripheral4.pklz
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Ivacaftor-Pubmed-Search-PMIDs5.txt output/Ivacaftor-peripheral5.pklz
 ``` 
+Ran in ~17 min each.
 
 ####Ivacaftor-peripheral-individual-indegree*.pklz
 ```
