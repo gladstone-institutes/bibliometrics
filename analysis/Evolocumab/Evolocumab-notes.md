@@ -64,7 +64,7 @@ python src/xgmml.py output/Evolocumab-peripheral-individual-indegree4.pklz outpu
 python src/xgmml.py output/Evolocumab-peripheral-individual-indegree5.pklz output/Evolocumab-peripheral-individual-indegree5.xgmml
 ```
 Network properties (average):
-* 1639 articles (1971-2015 )
+* 1639 articles (8193 unique articles total)
 * 7598 authors
 * 4460 institutions
 * 31 grantagencies
