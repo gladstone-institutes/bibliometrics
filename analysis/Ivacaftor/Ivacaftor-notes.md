@@ -58,8 +58,10 @@ python src/xgmml.py output/Ivacaftor-peripheral-individual-indegree5.pklz output
 ```
 
 Network properties (average):
-* ...
-
+* 1000 articles (5000 unique articles total)
+* 3878 authors
+* 2679 institutions
+* 29 grant agencies 
 
 
 ##Analysis
