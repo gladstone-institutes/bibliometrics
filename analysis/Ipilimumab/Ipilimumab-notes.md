@@ -81,6 +81,6 @@ Network properties (average):
 
 
 CPI subnetwork:
-* ###  articles (yyy-yyyy)
-* ## authors
-* # institutes (# unique)
+* 433 articles (1966-2012)
+* 15 authors
+* 7 unique institutes
