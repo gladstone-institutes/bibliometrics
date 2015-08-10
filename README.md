@@ -302,3 +302,5 @@ I've included a [VirtualBox](https://www.virtualbox.org/) disk drive that contai
 
 When you set up your VM, you can set its hard disk drive to `Metrics-Ubuntu-VirtualBox-disk.vdi`. The username is `metrics` and password is `metrics`.
 
+#How to Cite
+[![DOI](https://zenodo.org/badge/16664/gladstone-institutes/bibliometrics.svg)](https://zenodo.org/badge/latestdoi/16664/gladstone-institutes/bibliometrics)
