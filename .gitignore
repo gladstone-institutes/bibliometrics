@@ -1,5 +1,4 @@
 *.pyc
-*.xml
 *.csv
 *.sqlite
 *.pkl
