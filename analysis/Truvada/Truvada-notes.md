@@ -31,9 +31,9 @@ Network properties:
 ####Truvada-Pubmed-Search-PMIDs*.txt
 For the peripheral network, we will try sampling from the following search term:
 * (("1900/1/1"[Date - Publication] : "2014/12/01"[Date - Publication])) AND reverse transcriptase inhibitor
- * ### hits spanning YYYY-YYYY 
-  * took ### pmids from every ###th page to collect ### pubs, ### 
-   * 1,7,13,...43 | 2,8,14,...44 | 3,9,15,...45 | 4,10,16,..46 | 5,11,17,..47,48(1794)
+ * 58680 hits spanning 1971-2014 
+  * took 200 pmids from every 10th page (skiping every 6th) to collect 5000 pubs, 5 times 
+   * 1,11,21,...281 | 3,13,14,...283 | 5,15,15,...285 | 7,17,16,..287 | 9,19,17,..47,289
 
 ##Truvada-peripheral*.pklz
 Note: only level 1 if providing comparable number of pmids from pubmed search, i.e., comparable to core network article count.
