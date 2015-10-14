@@ -32,7 +32,10 @@ The scripts depend on a number of Python libraries. All of them can be installed
 
     pip install ipython lxml numpy pandas python-dateutil python-igraph requests requests-cache scipy suds cssselect
 
-(We recommend using the [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) tool so that these libraries are installed locally.)
+ProTip: We recommend using the [virtualenv](http://docs.python-guide.org/en/latest/dev/virtualenvs/) tool so that these libraries are installed locally. Launch with:
+
+    virtualenv venv
+    source venv/bin/activate
 
 If you're having trouble installing lxml using pip, you can install it with Ubuntu's package manager: `sudo apt-get install python-lxml`.
 
