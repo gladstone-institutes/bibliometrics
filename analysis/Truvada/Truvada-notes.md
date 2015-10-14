@@ -1,5 +1,5 @@
 ####Truvada-FDA-NDA-Medical.txt
-Truvada (emtricitabine; tenofovir disoproxil fumarate) was approved on 2 Aug 2004. Unfortunately, there is no bibliography or literature review in the Medical Review of the Approval Package, so there will be no publications linked to the FDA node in this network.
+Truvada (emtricitabine; tenofovir disoproxil fumarate) was approved on 2 Aug 2004. Unfortunately, there is no bibliography or literature review in the Medical Review of the Approval Package, so there will be no publications linked to the FDA node in this network. Note: had to add a publication from the clinical trial set to the input file to avoid runtime error handling 0 FDA-sourced publications.
 
 http://www.accessdata.fda.gov/drugsatfda_docs/nda/2004/021752s000_Truvada_Medr.pdf
 
@@ -21,16 +21,16 @@ python src/xgmml.py output/Truvada-core-individual-indegree.pklz output/Truvada-
 python src/xgmml.py output/Truvada-core-propagate-sum.pklz output/Truvada-core-propagate-sum.xgmml
 ```
 Network properties:
-*  articles (-)
-*  authors
-*  institutions
-*  grant agencies
-*  clinical trials 
+* 4937 articles (1951-2014)
+* 21275 authors
+* 15358 institutions
+* 43 grant agencies
+* 227 clinical trials 
 
 
 ####Truvada-Pubmed-Search-PMIDs*.txt
 For the peripheral network, we will try sampling from the following search term:
-* (("1900/1/1"[Date - Publication] : "YYYY/MM/DD"[Date - Publication])) AND reverse transcriptase inhibitor
+* (("1900/1/1"[Date - Publication] : "2014/12/01"[Date - Publication])) AND reverse transcriptase inhibitor
  * ### hits spanning YYYY-YYYY 
   * took ### pmids from every ###th page to collect ### pubs, ### 
    * 1,7,13,...43 | 2,8,14,...44 | 3,9,15,...45 | 4,10,16,..46 | 5,11,17,..47,48(1794)
