@@ -47,7 +47,7 @@ python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Truvad
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Truvada-Pubmed-Search-PMIDs4.txt output/Truvada-peripheral4.pklz
 python src/topdown.py --format pmid --dont-search-trials --levels 1 input/Truvada-Pubmed-Search-PMIDs5.txt output/Truvada-peripheral5.pklz
 ```
-Ran in 9-30 min each.
+Ran in 90 min each.
 
 ####Truvada-peripheral-individual-indegree*.pklz
 ```
