@@ -67,10 +67,10 @@ python src/xgmml.py output/Truvada-peripheral-individual-indegree4.pklz output/T
 python src/xgmml.py output/Truvada-peripheral-individual-indegree5.pklz output/Truvada-peripheral-individual-indegree5.xgmml
 ```
 Network properties (average):
-* # articles (# unique articles total)
-* # authors
-* # institutions
-* # grantagencies
+* 4999 articles (24995 unique articles total)
+* 23913 authors
+* 12031 institutions
+* 47 grantagencies
 
 ####Analysis
 * Opened scored xgmml in Cytoscape
