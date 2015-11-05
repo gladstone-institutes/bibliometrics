@@ -86,6 +86,6 @@ Network properties (average):
 * Note: averaged ratios across multiple samples of peripheral to get a better RBR filter criteria, i.e., it covers more of the pubmed search result space, without compromizing the scope and size contraints of a given peripheral network. 
 
 CPI subnetwork:
-* # articles (YYYY-YYYY)
+* 2074 articles (1970-2014)
 * 147 authors
 * 11 institutes (5 unique)
