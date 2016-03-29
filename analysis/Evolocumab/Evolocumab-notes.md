@@ -1,7 +1,8 @@
 ####Evolocumab-FDA-NDA-Medical.txt
-As of July 30, 2015, evolocumab (Repatha) has not been approved by FDA, but there are plenty of references to work with in the clicinal trials and the FDA Briefing Document:
+As of July 30, 2015, evolocumab (Repatha) has not been approved by FDA, but there are plenty of references to work with in the clicinal trials, the FDA Briefing Document, and Amgen press release:
 * https://clinicaltrials.gov/ct2/results?term=evolocumab&Search=Search
 * http://www.fda.gov/downloads/AdvisoryCommittees/CommitteesMeetingMaterials/Drugs/EndocrinologicandMetabolicDrugsAdvisoryCommittee/UCM450072.pdf
+* http://www.amgen.com/media/news-releases/2014/11/fda-accepts-amgens-biologics-license-application-for-ldl-cholesterollowering-medication-evolocumab/
 
 ####Evolocumab-core.pklz
 ```
